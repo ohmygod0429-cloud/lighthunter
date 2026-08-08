@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { faqs } from "@/data/faqs";
 import {
   Accordion,
   AccordionContent,
