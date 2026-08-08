@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Cat, Menu, X } from "lucide-react";
 
 const links = [
   { to: "/", label: "首頁" },
@@ -19,7 +19,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
         <Link to="/" className="flex items-center gap-2">
           <span className="grid size-9 place-items-center rounded-full bg-primary text-primary-foreground">
-            🐾
+            <Cat className="size-5" />
           </span>
           <span className="font-display text-xl font-semibold tracking-wide">貓癒所</span>
         </Link>
