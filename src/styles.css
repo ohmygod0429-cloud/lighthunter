@@ -4,6 +4,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-display: "Noto Serif TC", "Songti TC", serif;
+  --font-sans: "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+}
+
 /*
  * Design system definition.
  *
@@ -19,6 +24,10 @@
  */
 
 @theme inline {
+  --color-cream: var(--cream);
+  --color-wood: var(--wood);
+  --color-wood-foreground: var(--wood-foreground);
+  --color-paw: var(--paw);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
