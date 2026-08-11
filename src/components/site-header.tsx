@@ -22,7 +22,7 @@ export function SiteHeader() {
           </span>
           <span className="leading-tight">
             <span className="block font-display text-base tracking-[0.18em] text-gold-gradient">
-              頂級共生未來生態圈
+              獵光者　共生共榮未來生態圈
             </span>
             <span className="block text-[10px] tracking-[0.32em] text-muted-foreground">
               SYMBIOTIC FUTURE ECOSYSTEM

@@ -54,9 +54,9 @@ function Index() {
             GLOBAL FIRST ・ 全球首創
           </p>
           <h1 className="mt-8 font-display text-3xl leading-[1.35] sm:text-5xl md:text-6xl">
-            你是在經營一盤生意，
+            AI人工智能快速翻牌，
             <br className="hidden sm:block" />
-            <span className="text-gold-gradient">還是正在錯過一個時代？</span>
+            <span className="text-gold-gradient">你確定努力就不會被淘汰？</span>
           </h1>
           <p className="mx-auto mt-7 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             全維度生命賦能【頂級未來生態圈】正式啟航！一次入會，終生傳承。
@@ -94,7 +94,7 @@ function Index() {
         </h2>
         <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
           九紫離火運疊加少子化與人口老年化，人們越來越孤獨、越來越缺愛、越來越迷茫。
-          共生共榮的生態圈結合八大板塊，形成一個獨立經濟體與完美的被動收入閉環，
+          共生共贏的生態圈結合八大板塊，形成一個獨立經濟體與「完美的被動收入閉環」，
           進而影響整個社會的人類認知、商業、人文、生活方式與經濟發展。
         </p>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -120,7 +120,7 @@ function Index() {
           />
           <div>
             <p className="text-xs tracking-[0.3em] text-primary">ORIGIN & MISSION</p>
-            <h2 className="mt-4 text-2xl leading-snug sm:text-4xl">關於生態圈：起源與使命</h2>
+            <h2 className="mt-4 text-2xl leading-snug sm:text-4xl">關於 獵光者：起源與使命</h2>
             <p className="mt-6 leading-loose text-muted-foreground">
               單打獨鬥的時代已經結束，「生態圈」才是唯一的未來。我們打破商業、學習與生活的孤島，
               結合多位頂尖企業家與跨界領袖，打造全維度生命共同體，
@@ -215,10 +215,10 @@ function Index() {
             {
               icon: Award,
               title: "現拿 $12,000 提成獎勵",
-              text: "介紹符合資格的資源人才，獎勵即時入袋，不再有無償的義務引薦。",
+              text: "推薦符合資格的資源人才共創未來，獎勵即時入袋，不再有無償的義務引薦。",
             },
             { icon: Handshake, title: "商業精準媒合", text: "跨界資源直接對接可落地的合作與訂單，超越傳統商會的引薦效率。" },
-            { icon: UserSearch, title: "企業精準獵才", text: "會員企業免費使用生態圈人才庫，把對的人放到對的位置。" },
+            { icon: UserSearch, title: "企業精準獵才", text: "會員企業免費媒合生態圈人才，把對的人放到對的位置。" },
           ].map((c) => (
             <article key={c.title} className="glass-card rounded-2xl p-7 shadow-lux">
               <c.icon className="size-6 text-primary" />
