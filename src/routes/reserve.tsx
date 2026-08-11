@@ -12,7 +12,7 @@ export const Route = createFileRoute("/reserve")({
           "線上預約與卡位系統：選擇一次付清或 36 期分期方案，快速對接專屬引路人，完成創始會員席位登記。",
       },
       { property: "og:title", content: "立即卡位創始會員｜頂級共生未來生態圈" },
-      { property: "og:description", content: "填寫表單，專屬引路人將於 24 小時內與你一對一深度對接。" },
+      { property: "og:description", content: "填寫表單，專屬引路人將於 3天內與你一對一深度對接。" },
     ],
   }),
   component: ReservePage,
@@ -20,11 +20,11 @@ export const Route = createFileRoute("/reserve")({
 
 const plans = [
   { id: "full", label: "一次付清 $79,500", note: "終生會員・終生免續費" },
-  { id: "12", label: "分 12 期", note: "每期約 $6,625" },
-  { id: "36", label: "分 36 期", note: "每期約 $2,209" },
+  { id: "12", label: "分 12 期", note: "每期約 $7,011" },
+  { id: "36", label: "分 36 期", note: "每期約 $2,606" },
 ];
 
-const intents = ["立即卡位創始會員", "預約專屬引路人一對一深度對接", "企業精準獵才與商業媒合諮詢"];
+const intents = ["立即卡位創始會員", "預約專屬引路人一對一深度對接", "先加入LINE群，等待對外公開說明會。"];
 
 function ReservePage() {
   const [plan, setPlan] = useState("36");
@@ -35,7 +35,7 @@ function ReservePage() {
       <p className="text-xs tracking-[0.3em] text-primary">RESERVE YOUR SEAT</p>
       <h1 className="mt-4 text-3xl sm:text-5xl">線上預約與卡位</h1>
       <p className="mt-6 leading-loose text-muted-foreground">
-        創始席位全球限額搶位中。填寫以下資訊，專屬引路人將於 24 小時內與你聯繫，完成一對一深度對接。
+        創始席位全球限額搶位中。填寫以下資訊，專屬引路人將於 3天內與你聯繫，完成一對一深度對接。
       </p>
 
       <form
@@ -43,7 +43,7 @@ function ReservePage() {
         onSubmit={(e) => {
           e.preventDefault();
           toast.success("已收到你的卡位申請", {
-            description: "專屬引路人將於 24 小時內與你聯繫。",
+            description: "專屬引路人將於 3天內與你聯繫。",
           });
           (e.currentTarget as HTMLFormElement).reset();
         }}
