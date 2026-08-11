@@ -1,6 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { z } from "zod";
+
+const searchSchema = z.object({
+  name: z.string().optional(),
+});
 
 export const Route = createFileRoute("/reserve/success")({
+  validateSearch: searchSchema,
   head: () => ({
     meta: [
       { title: "預約成功｜專屬引路人將與你聯繫" },

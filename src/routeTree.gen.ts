@@ -15,6 +15,7 @@ import { Route as DimensionsRouteImport } from './routes/dimensions'
 import { Route as FoundingRouteImport } from './routes/founding'
 import { Route as NetworkRouteImport } from './routes/network'
 import { Route as ReserveRouteImport } from './routes/reserve'
+import { Route as ReserveSuccessRouteImport } from './routes/reserve.success'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const ReserveRoute = ReserveRouteImport.update({
   path: '/reserve',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReserveSuccessRoute = ReserveSuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => ReserveRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -53,7 +59,8 @@ export interface FileRoutesByFullPath {
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
   '/network': typeof NetworkRoute
-  '/reserve': typeof ReserveRoute
+  '/reserve': typeof ReserveRouteWithChildren
+  '/reserve/success': typeof ReserveSuccessRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,7 +68,8 @@ export interface FileRoutesByTo {
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
   '/network': typeof NetworkRoute
-  '/reserve': typeof ReserveRoute
+  '/reserve': typeof ReserveRouteWithChildren
+  '/reserve/success': typeof ReserveSuccessRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,14 +78,28 @@ export interface FileRoutesById {
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
   '/network': typeof NetworkRoute
-  '/reserve': typeof ReserveRoute
+  '/reserve': typeof ReserveRouteWithChildren
+  '/reserve/success': typeof ReserveSuccessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/compare' | '/dimensions' | '/founding' | '/network' | '/reserve'
+    | '/'
+    | '/compare'
+    | '/dimensions'
+    | '/founding'
+    | '/network'
+    | '/reserve'
+    | '/reserve/success'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/compare' | '/dimensions' | '/founding' | '/network' | '/reserve'
+  to:
+    | '/'
+    | '/compare'
+    | '/dimensions'
+    | '/founding'
+    | '/network'
+    | '/reserve'
+    | '/reserve/success'
   id:
     | '__root__'
     | '/'
@@ -86,6 +108,7 @@ export interface FileRouteTypes {
     | '/founding'
     | '/network'
     | '/reserve'
+    | '/reserve/success'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,7 +117,7 @@ export interface RootRouteChildren {
   DimensionsRoute: typeof DimensionsRoute
   FoundingRoute: typeof FoundingRoute
   NetworkRoute: typeof NetworkRoute
-  ReserveRoute: typeof ReserveRoute
+  ReserveRoute: typeof ReserveRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -141,8 +164,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReserveRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reserve/success': {
+      id: '/reserve/success'
+      path: '/success'
+      fullPath: '/reserve/success'
+      preLoaderRoute: typeof ReserveSuccessRouteImport
+      parentRoute: typeof ReserveRoute
+    }
   }
 }
+
+interface ReserveRouteChildren {
+  ReserveSuccessRoute: typeof ReserveSuccessRoute
+}
+
+const ReserveRouteChildren: ReserveRouteChildren = {
+  ReserveSuccessRoute: ReserveSuccessRoute,
+}
+
+const ReserveRouteWithChildren =
+  ReserveRoute._addFileChildren(ReserveRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -150,8 +191,18 @@ const rootRouteChildren: RootRouteChildren = {
   DimensionsRoute: DimensionsRoute,
   FoundingRoute: FoundingRoute,
   NetworkRoute: NetworkRoute,
-  ReserveRoute: ReserveRoute,
+  ReserveRoute: ReserveRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
