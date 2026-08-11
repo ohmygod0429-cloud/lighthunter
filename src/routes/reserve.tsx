@@ -29,6 +29,7 @@ const intents = ["立即卡位創始會員", "預約專屬引路人一對一深�
 function ReservePage() {
   const [plan, setPlan] = useState("36");
   const [intent, setIntent] = useState(intents[0]);
+  const navigate = useNavigate();
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-20">
@@ -42,10 +43,15 @@ function ReservePage() {
         className="mt-12 space-y-7"
         onSubmit={(e) => {
           e.preventDefault();
+          const formData = new FormData(e.currentTarget);
+          const name = String(formData.get("name") ?? "");
           toast.success("已收到你的卡位申請", {
             description: "專屬引路人將於 3天內與你聯繫。",
           });
-          (e.currentTarget as HTMLFormElement).reset();
+          void navigate({
+            to: "/reserve/success",
+            search: { name: name || undefined },
+          });
         }}
       >
         <div className="grid gap-5 sm:grid-cols-2">
