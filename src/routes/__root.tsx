@@ -80,13 +80,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "貓癒所｜台北貓咪咖啡廳" },
+      { title: "頂級共生未來生態圈｜創始會員招募" },
       {
         name: "description",
-        content: "貓癒所是台北市的貓咪咖啡廳，木質暖光、手沖咖啡與貓店員的陪伴。",
+        content: "全球首創・全維度生命賦能【頂級共生未來生態圈】創始會員限量招募。",
       },
-      { name: "author", content: "貓癒所" },
-      { property: "og:site_name", content: "貓癒所" },
+      { name: "author", content: "頂級共生未來生態圈" },
+      { property: "og:site_name", content: "頂級共生未來生態圈" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },

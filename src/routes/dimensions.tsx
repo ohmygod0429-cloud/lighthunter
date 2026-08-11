@@ -1,0 +1,80 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { dimensions } from "@/data/ecosystem";
+
+export const Route = createFileRoute("/dimensions")({
+  head: () => ({
+    meta: [
+      { title: "八大頂級維度藍圖｜頂級共生未來生態圈" },
+      {
+        name: "description",
+        content:
+          "商業媒合、個人成長、身心靈提升、全類別賦能課程、極致吃喝玩樂、高質量聯誼、慈善大愛與高端訂製旅遊，八大板塊組成獨立經濟體。",
+      },
+      { property: "og:title", content: "八大頂級維度藍圖｜頂級共生未來生態圈" },
+      { property: "og:description", content: "以互動式卡片展開八大頂級維度資源藍圖。" },
+    ],
+  }),
+  component: DimensionsPage,
+});
+
+function DimensionsPage() {
+  const [active, setActive] = useState<string>(dimensions[0]?.no ?? "01");
+
+  return (
+    <div className="starburst mx-auto max-w-7xl px-5 py-20">
+      <p className="text-xs tracking-[0.3em] text-primary">EIGHT DIMENSIONS</p>
+      <h1 className="mt-4 text-3xl sm:text-5xl">八大頂級維度藍圖</h1>
+      <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
+        八大板塊互相導流、彼此加乘，形成一個獨立經濟體與完美的被動收入閉環。點選任一維度，展開它的完整資源。
+      </p>
+
+      <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {dimensions.map((d) => {
+          const open = active === d.no;
+          return (
+            <button
+              key={d.no}
+              type="button"
+              onClick={() => setActive(d.no)}
+              aria-expanded={open}
+              className={`glass-card rounded-2xl p-6 text-left transition-all hover:-translate-y-1 ${
+                open ? "shadow-glow" : "shadow-lux"
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <d.icon className={`size-6 ${open ? "text-primary" : "text-gold-soft"}`} />
+                <span className="font-display text-sm text-muted-foreground">{d.no}</span>
+              </div>
+              <h2 className="mt-5 text-lg">{d.title}</h2>
+              <p className="mt-2 text-xs tracking-wide text-primary/90">{d.tagline}</p>
+              {open && (
+                <div className="mt-4 border-t border-border/70 pt-4">
+                  <p className="text-sm leading-relaxed text-muted-foreground">{d.detail}</p>
+                  <ul className="mt-4 space-y-1.5 text-sm text-gold-soft">
+                    {d.points.map((p) => (
+                      <li key={p}>・{p}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="mt-16 rule-gold" />
+      <div className="mt-12 flex flex-wrap items-center justify-between gap-6">
+        <p className="max-w-xl leading-loose text-muted-foreground">
+          八大維度不是八張票券，而是一個共同體。你需要的資源，永遠有人已經在圈子裡。
+        </p>
+        <Link
+          to="/reserve"
+          className="rounded-full bg-gold-gradient px-8 py-3.5 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+        >
+          立即卡位創始會員
+        </Link>
+      </div>
+    </div>
+  );
+}

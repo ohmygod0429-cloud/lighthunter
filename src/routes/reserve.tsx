@@ -1,124 +1,153 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export const Route = createFileRoute("/reserve")({
   head: () => ({
     meta: [
-      { title: "線上預約｜貓癒所貓咪咖啡廳訂位" },
+      { title: "立即卡位創始會員｜預約專屬引路人一對一對接" },
       {
         name: "description",
-        content: "線上預約貓癒所的來店時段：選擇日期、時段與人數，我們會在一個工作日內電話確認。",
+        content:
+          "線上預約與卡位系統：選擇一次付清或 36 期分期方案，快速對接專屬引路人，完成創始會員席位登記。",
       },
-      { property: "og:title", content: "線上預約｜貓癒所" },
-      { property: "og:description", content: "選好日期與時段，把療癒的 90 分鐘先留給自己。" },
-      { property: "og:url", content: "/reserve" },
+      { property: "og:title", content: "立即卡位創始會員｜頂級共生未來生態圈" },
+      { property: "og:description", content: "填寫表單，專屬引路人將於 24 小時內與你一對一深度對接。" },
     ],
-    links: [{ rel: "canonical", href: "/reserve" }],
   }),
   component: ReservePage,
 });
 
-const slots = ["11:00 – 12:30", "13:00 – 14:30", "15:00 – 16:30", "17:00 – 18:30", "19:00 – 20:30"];
+const plans = [
+  { id: "full", label: "一次付清 $79,500", note: "終生會員・終生免續費" },
+  { id: "12", label: "分 12 期", note: "每期約 $6,625" },
+  { id: "36", label: "分 36 期", note: "每期約 $2,209" },
+];
+
+const intents = ["立即卡位創始會員", "預約專屬引路人一對一深度對接", "企業精準獵才與商業媒合諮詢"];
 
 function ReservePage() {
-  const [slot, setSlot] = useState("");
-  const [people, setPeople] = useState("2");
+  const [plan, setPlan] = useState("36");
+  const [intent, setIntent] = useState(intents[0]);
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-16">
-      <h1 className="text-4xl">線上預約</h1>
-      <p className="mt-4 leading-loose text-muted-foreground">
-        每個時段為 90 分鐘，同時段最多接待 12 位客人。送出後我們會於一個工作日內以電話或簡訊確認，
-        當日預約請直接來電 02-1234-5678。
+    <div className="mx-auto max-w-3xl px-5 py-20">
+      <p className="text-xs tracking-[0.3em] text-primary">RESERVE YOUR SEAT</p>
+      <h1 className="mt-4 text-3xl sm:text-5xl">線上預約與卡位</h1>
+      <p className="mt-6 leading-loose text-muted-foreground">
+        創始席位全球限額搶位中。填寫以下資訊，專屬引路人將於 24 小時內與你聯繫，完成一對一深度對接。
       </p>
 
       <form
-        className="mt-10 space-y-6 rounded-3xl border border-border bg-card p-8 shadow-soft"
+        className="mt-12 space-y-7"
         onSubmit={(e) => {
           e.preventDefault();
-          const form = e.currentTarget;
-          if (!slot) {
-            toast.error("請選擇來店時段");
-            return;
-          }
-          toast.success("預約申請已送出，我們會盡快與你確認！");
-          form.reset();
-          setSlot("");
-          setPeople("2");
+          toast.success("已收到你的卡位申請", {
+            description: "專屬引路人將於 24 小時內與你聯繫。",
+          });
+          (e.currentTarget as HTMLFormElement).reset();
         }}
       >
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="name">姓名</Label>
-            <Input id="name" name="name" required placeholder="王小貓" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">聯絡電話</Label>
-            <Input id="phone" name="phone" type="tel" required placeholder="0912-345-678" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="date">預約日期</Label>
-            <Input id="date" name="date" type="date" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="people">人數</Label>
-            <Select value={people} onValueChange={setPeople}>
-              <SelectTrigger id="people">
-                <SelectValue placeholder="選擇人數" />
-              </SelectTrigger>
-              <SelectContent>
-                {[1, 2, 3, 4, 5, 6].map((n) => (
-                  <SelectItem key={n} value={String(n)}>
-                    {n} 位
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <label className="block text-sm">
+            <span className="text-gold-soft">姓名</span>
+            <input
+              required
+              name="name"
+              className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+              placeholder="您的姓名"
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="text-gold-soft">聯絡電話</span>
+            <input
+              required
+              name="phone"
+              type="tel"
+              className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+              placeholder="09xx-xxx-xxx"
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="text-gold-soft">電子郵件</span>
+            <input
+              required
+              name="email"
+              type="email"
+              className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+              placeholder="you@example.com"
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="text-gold-soft">產業／職務</span>
+            <input
+              name="industry"
+              className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+              placeholder="例如：科技業／創辦人"
+            />
+          </label>
         </div>
 
-        <div className="space-y-3">
-          <Label>來店時段</Label>
-          <div className="flex flex-wrap gap-2">
-            {slots.map((s) => (
+        <fieldset>
+          <legend className="text-sm text-gold-soft">我想要</legend>
+          <div className="mt-3 grid gap-3">
+            {intents.map((i) => (
               <button
-                key={s}
+                key={i}
                 type="button"
-                onClick={() => setSlot(s)}
-                aria-pressed={slot === s}
-                className={`rounded-full border px-4 py-2 text-sm transition-colors ${
-                  slot === s
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-background hover:bg-secondary"
+                onClick={() => setIntent(i)}
+                className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
+                  intent === i
+                    ? "border-primary/70 bg-primary/10 text-foreground"
+                    : "border-border text-muted-foreground hover:border-primary/40"
                 }`}
               >
-                {s}
+                {i}
               </button>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground">※ 週一為貓咪的公休日，不開放預約。</p>
-        </div>
+        </fieldset>
 
-        <div className="space-y-2">
-          <Label htmlFor="note">備註</Label>
-          <Textarea id="note" name="note" rows={3} placeholder="例如：想見布丁、有帶小孩、對貓毛過敏…" />
-        </div>
+        <fieldset>
+          <legend className="text-sm text-gold-soft">付款方案</legend>
+          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            {plans.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setPlan(p.id)}
+                className={`rounded-xl border px-4 py-4 text-left transition-colors ${
+                  plan === p.id
+                    ? "border-primary/70 bg-primary/10"
+                    : "border-border hover:border-primary/40"
+                }`}
+              >
+                <span className="block text-sm">{p.label}</span>
+                <span className="mt-1 block text-xs text-muted-foreground">{p.note}</span>
+              </button>
+            ))}
+          </div>
+        </fieldset>
 
-        <Button type="submit" className="w-full rounded-full py-6 text-base">
-          送出預約申請
-        </Button>
+        <label className="block text-sm">
+          <span className="text-gold-soft">想優先了解的維度或需求</span>
+          <textarea
+            name="message"
+            rows={4}
+            className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+            placeholder="例如：希望媒合供應鏈資源、想參與身心靈成長課程…"
+          />
+        </label>
+
+        <button
+          type="submit"
+          className="w-full rounded-full bg-gold-gradient py-4 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+        >
+          送出卡位申請
+        </button>
+        <p className="text-center text-xs text-muted-foreground">
+          送出後將由專屬引路人與你確認席位與付款方案，資料僅供本次對接使用。
+        </p>
       </form>
     </div>
   );
