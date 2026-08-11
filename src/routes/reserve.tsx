@@ -79,6 +79,16 @@ function ReservePage() {
             />
           </label>
           <label className="block text-sm">
+            <span className="text-gold-soft">LINE ID</span>
+            <input
+              name="lineId"
+              maxLength={50}
+              pattern="^[a-zA-Z0-9_.-]+$"
+              className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+              placeholder="例如：light.hunter"
+            />
+          </label>
+          <label className="block text-sm">
             <span className="text-gold-soft">產業／職務</span>
             <input
               name="industry"
