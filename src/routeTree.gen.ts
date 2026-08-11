@@ -10,30 +10,35 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as CatsRouteImport } from './routes/cats'
-import { Route as MenuRouteImport } from './routes/menu'
+import { Route as CompareRouteImport } from './routes/compare'
+import { Route as DimensionsRouteImport } from './routes/dimensions'
+import { Route as FoundingRouteImport } from './routes/founding'
+import { Route as NetworkRouteImport } from './routes/network'
 import { Route as ReserveRouteImport } from './routes/reserve'
-import { Route as VisitRouteImport } from './routes/visit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CatsRoute = CatsRouteImport.update({
-  id: '/cats',
-  path: '/cats',
+const DimensionsRoute = DimensionsRouteImport.update({
+  id: '/dimensions',
+  path: '/dimensions',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MenuRoute = MenuRouteImport.update({
-  id: '/menu',
-  path: '/menu',
+const FoundingRoute = FoundingRouteImport.update({
+  id: '/founding',
+  path: '/founding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NetworkRoute = NetworkRouteImport.update({
+  id: '/network',
+  path: '/network',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReserveRoute = ReserveRouteImport.update({
@@ -41,52 +46,55 @@ const ReserveRoute = ReserveRouteImport.update({
   path: '/reserve',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VisitRoute = VisitRouteImport.update({
-  id: '/visit',
-  path: '/visit',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/cats': typeof CatsRoute
-  '/menu': typeof MenuRoute
+  '/compare': typeof CompareRoute
+  '/dimensions': typeof DimensionsRoute
+  '/founding': typeof FoundingRoute
+  '/network': typeof NetworkRoute
   '/reserve': typeof ReserveRoute
-  '/visit': typeof VisitRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/cats': typeof CatsRoute
-  '/menu': typeof MenuRoute
+  '/compare': typeof CompareRoute
+  '/dimensions': typeof DimensionsRoute
+  '/founding': typeof FoundingRoute
+  '/network': typeof NetworkRoute
   '/reserve': typeof ReserveRoute
-  '/visit': typeof VisitRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/cats': typeof CatsRoute
-  '/menu': typeof MenuRoute
+  '/compare': typeof CompareRoute
+  '/dimensions': typeof DimensionsRoute
+  '/founding': typeof FoundingRoute
+  '/network': typeof NetworkRoute
   '/reserve': typeof ReserveRoute
-  '/visit': typeof VisitRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/cats' | '/menu' | '/reserve' | '/visit'
+  fullPaths:
+    '/' | '/compare' | '/dimensions' | '/founding' | '/network' | '/reserve'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/cats' | '/menu' | '/reserve' | '/visit'
-  id: '__root__' | '/' | '/about' | '/cats' | '/menu' | '/reserve' | '/visit'
+  to: '/' | '/compare' | '/dimensions' | '/founding' | '/network' | '/reserve'
+  id:
+    | '__root__'
+    | '/'
+    | '/compare'
+    | '/dimensions'
+    | '/founding'
+    | '/network'
+    | '/reserve'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  CatsRoute: typeof CatsRoute
-  MenuRoute: typeof MenuRoute
+  CompareRoute: typeof CompareRoute
+  DimensionsRoute: typeof DimensionsRoute
+  FoundingRoute: typeof FoundingRoute
+  NetworkRoute: typeof NetworkRoute
   ReserveRoute: typeof ReserveRoute
-  VisitRoute: typeof VisitRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -98,25 +106,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cats': {
-      id: '/cats'
-      path: '/cats'
-      fullPath: '/cats'
-      preLoaderRoute: typeof CatsRouteImport
+    '/dimensions': {
+      id: '/dimensions'
+      path: '/dimensions'
+      fullPath: '/dimensions'
+      preLoaderRoute: typeof DimensionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/menu': {
-      id: '/menu'
-      path: '/menu'
-      fullPath: '/menu'
-      preLoaderRoute: typeof MenuRouteImport
+    '/founding': {
+      id: '/founding'
+      path: '/founding'
+      fullPath: '/founding'
+      preLoaderRoute: typeof FoundingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/network': {
+      id: '/network'
+      path: '/network'
+      fullPath: '/network'
+      preLoaderRoute: typeof NetworkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reserve': {
@@ -126,23 +141,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReserveRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/visit': {
-      id: '/visit'
-      path: '/visit'
-      fullPath: '/visit'
-      preLoaderRoute: typeof VisitRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  CatsRoute: CatsRoute,
-  MenuRoute: MenuRoute,
+  CompareRoute: CompareRoute,
+  DimensionsRoute: DimensionsRoute,
+  FoundingRoute: FoundingRoute,
+  NetworkRoute: NetworkRoute,
   ReserveRoute: ReserveRoute,
-  VisitRoute: VisitRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
