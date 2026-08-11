@@ -191,7 +191,7 @@ function Index() {
                     <td className="px-4 py-4 text-muted-foreground line-through decoration-destructive/60">
                       {r.legacy}
                     </td>
-                    <td className="px-4 py-4">{r.eco}</td>
+                    <td className="whitespace-pre-line px-4 py-4">{r.eco}</td>
                   </tr>
                 ))}
               </tbody>

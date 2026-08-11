@@ -57,7 +57,7 @@ function ComparePage() {
               <tr key={r.label} className="border-t border-border/70 align-top">
                 <td className="px-4 py-4 text-gold-soft">{r.label}</td>
                 <td className="px-4 py-4 text-muted-foreground">{r.legacy}</td>
-                <td className="px-4 py-4">{r.eco}</td>
+                <td className="whitespace-pre-line px-4 py-4">{r.eco}</td>
               </tr>
             ))}
           </tbody>
