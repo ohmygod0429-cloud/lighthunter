@@ -22,7 +22,7 @@ export const Route = createFileRoute("/reserve/success")({
 });
 
 function ReserveSuccessPage() {
-  const { name } = Route.useSearch<{ name?: string }>();
+  const { name } = Route.useSearch();
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-20 text-center">
