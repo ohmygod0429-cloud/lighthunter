@@ -7,7 +7,7 @@ export function SiteFooter() {
         <div>
           <h2 className="font-display text-2xl text-gold-gradient">頂級共生未來生態圈</h2>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            全球首創・全維度生命賦能。一次入會，終生傳承　代代相傳——商業賦能、跨界媒合、生命覺醒與大愛傳承的全維度生命共同體。
+            全球首創・全維度生命賦能。一次承諾，終生傳承　代代世襲——商業賦能、跨界媒合、生命覺醒與大愛傳承的全維度生命共同體。
           </p>
         </div>
 
