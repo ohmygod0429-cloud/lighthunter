@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { VideoSlot } from "@/components/video-slot";
 import { useState } from "react";
 import { dimensions } from "@/data/ecosystem";
 
@@ -75,6 +76,7 @@ function DimensionsPage() {
           立即卡位創始會員
         </Link>
       </div>
-    </div>
+    <VideoSlot slotId="dimensions-page" title="八大維度介紹影片" className="mt-16 px-0" />
+      </div>
   );
 }

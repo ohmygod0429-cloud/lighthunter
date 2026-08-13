@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { VideoSlot } from "@/components/video-slot";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -165,6 +166,7 @@ function ReservePage() {
           送出後將由專屬引路人與你確認席位與付款方案，資料僅供本次對接使用。
         </p>
       </form>
-    </div>
+    <VideoSlot slotId="reserve-page" title="預約說明影片" className="mt-16 px-0" />
+      </div>
   );
 }

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { VideoSlot } from "@/components/video-slot";
 import { compareRows } from "@/data/ecosystem";
 
 export const Route = createFileRoute("/compare")({
@@ -73,6 +74,7 @@ function ComparePage() {
       >
         立即卡位創始會員
       </Link>
-    </div>
+    <VideoSlot slotId="compare-page" title="ROI 對比影片" className="mt-16 px-0" />
+      </div>
   );
 }
