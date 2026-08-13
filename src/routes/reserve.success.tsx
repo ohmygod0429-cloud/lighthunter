@@ -1,5 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
+import lineQr from "@/assets/line-qr.png";
+
+const LINE_GROUP_URL =
+  "https://line.me/ti/g2/bIUtx1-DK-hRNLLSJRi7mcJ3g8RKROP3D6HjHQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
 const searchSchema = z.object({
   name: z.string().optional(),
@@ -53,14 +57,31 @@ function ReserveSuccessPage() {
             <span>準備好你的問題與需求，讓一對一對接更高效。</span>
           </li>
         </ul>
-        <a
-          href="https://line.me/ti/g/XXXXXX"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-6 block w-full rounded-full bg-gold-gradient py-3 text-center text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
-        >
-          加入官方 LINE 群
-        </a>
+
+        <div className="mt-6 flex flex-col items-center gap-5 rounded-2xl border border-primary/25 bg-background/60 p-6 sm:flex-row sm:items-center sm:gap-6">
+          <img
+            src={lineQr}
+            alt="獵光者 LINE 官方群 QR Code，掃碼即可加入社群"
+            width={180}
+            height={180}
+            className="size-44 rounded-xl bg-white p-2 shadow-lux sm:size-48"
+            loading="lazy"
+          />
+          <div className="flex-1 text-center sm:text-left">
+            <p className="text-base font-medium text-foreground">掃碼立即加入 LINE 群</p>
+            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+              開啟 LINE 相機掃描左方 QR Code，或點選下方按鈕一鍵加入「獵光者　共生共榮未來生態圈」社群。
+            </p>
+            <a
+              href={LINE_GROUP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center justify-center rounded-full bg-gold-gradient px-7 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+            >
+              一鍵加入 LINE 群
+            </a>
+          </div>
+        </div>
       </div>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
