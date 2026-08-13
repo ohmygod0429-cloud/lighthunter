@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const DEADLINE = new Date("2026-09-30T23:59:59+08:00").getTime();
+const DEADLINE = new Date("2026-10-12T23:59:59+08:00").getTime();
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
