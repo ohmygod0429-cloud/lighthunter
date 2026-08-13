@@ -5,6 +5,7 @@ import clubLounge from "@/assets/club-lounge.jpg";
 import royalGift from "@/assets/royal-gift.jpg";
 import { dimensions, painPoints, compareRows } from "@/data/ecosystem";
 import { FoundingCountdown } from "@/components/founding-countdown";
+import { VideoSlot } from "@/components/video-slot";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -86,6 +87,8 @@ function Index() {
         </div>
       </section>
 
+      <VideoSlot slotId="home-hero" title="品牌形象影片" className="pt-16" />
+
       {/* 時代痛點 */}
       <section className="starburst mx-auto max-w-7xl px-5 py-24">
         <p className="text-xs tracking-[0.3em] text-primary">THE TURNING POINT</p>
@@ -106,6 +109,7 @@ function Index() {
             </article>
           ))}
         </div>
+        <VideoSlot slotId="home-pain" title="時代痛點影片" className="mt-12 px-0" />
       </section>
 
       {/* 起源與使命 */}
@@ -134,6 +138,7 @@ function Index() {
             </div>
           </div>
         </div>
+        <VideoSlot slotId="home-origin" title="起源與使命影片" className="mt-14" />
       </section>
 
       {/* 八大維度 */}
@@ -167,6 +172,7 @@ function Index() {
             </Link>
           ))}
         </div>
+        <VideoSlot slotId="home-dimensions" title="八大維度影片" className="mt-12 px-0" />
       </section>
 
       {/* 降維打擊 */}
@@ -203,6 +209,7 @@ function Index() {
             查看完整 ROI 對比表 <ArrowRight className="size-4" />
           </Link>
         </div>
+        <VideoSlot slotId="home-compare" title="降維打擊影片" className="mt-12" />
       </section>
 
       {/* 人脈變現 */}
@@ -229,6 +236,7 @@ function Index() {
         <Link to="/network" className="mt-8 inline-flex items-center gap-2 text-sm text-primary hover:underline">
           了解人脈變現機制 <ArrowRight className="size-4" />
         </Link>
+        <VideoSlot slotId="home-network" title="人脈變現影片" className="mt-12 px-0" />
       </section>
 
       {/* 創始禮遇 */}
@@ -267,6 +275,7 @@ function Index() {
             className="rounded-2xl object-cover shadow-lux"
           />
         </div>
+        <VideoSlot slotId="home-founding" title="創始禮遇影片" className="mt-14" />
       </section>
     </div>
   );
