@@ -92,10 +92,11 @@ function Index() {
         <h2 className="mt-4 max-w-3xl text-2xl leading-snug sm:text-4xl">
           時代痛點與起源宣言：孤島的時代已經結束
         </h2>
-        <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
+        <p className="mt-6 max-w-3xl whitespace-pre-line leading-loose text-muted-foreground">
           九紫離火疊加少子化與人口老年化，人們越來越孤獨、越來越缺愛、越來越迷茫。
           共生共贏的生態圈結合八大板塊，形成一個獨立經濟體與「完美的被動收入閉環」，
           進而影響整個社會的人類認知、商業、人文、生活方式與經濟發展。
+          {"\n"}讓我們一起創造一個更美好的帝國，一起走向更幸福喜樂的未來吧！
         </p>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {painPoints.map((p) => (
