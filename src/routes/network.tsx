@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { VideoSlot } from "@/components/video-slot";
 import { Award, Handshake, UserSearch } from "lucide-react";
 import clubLounge from "@/assets/club-lounge.jpg";
 
@@ -86,6 +87,7 @@ function NetworkPage() {
           </Link>
         </div>
       </div>
-    </div>
+    <VideoSlot slotId="network-page" title="人脈變現影片" className="mt-16 px-0" />
+      </div>
   );
 }

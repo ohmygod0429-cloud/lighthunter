@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { VideoSlot } from "@/components/video-slot";
 import royalGift from "@/assets/royal-gift.jpg";
 import { FoundingCountdown } from "@/components/founding-countdown";
 
@@ -69,6 +70,7 @@ function FoundingPage() {
           立即卡位創始會員
         </Link>
       </div>
-    </div>
+    <VideoSlot slotId="founding-page" title="創始禮遇影片" className="mt-16 px-0" />
+      </div>
   );
 }

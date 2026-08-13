@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { SocialLinks } from "@/components/social-links";
 
 export function SiteFooter() {
   return (
@@ -9,6 +10,8 @@ export function SiteFooter() {
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
             全球首創・全維度生命賦能。一次承諾，終生傳承　代代世襲——商業賦能、跨界媒合、生命覺醒與大愛傳承的全維度生命共同體。
           </p>
+          <p className="mt-6 text-xs tracking-[0.28em] text-primary">追蹤我們</p>
+          <SocialLinks className="mt-3" />
         </div>
 
         <div className="space-y-2 text-sm">
