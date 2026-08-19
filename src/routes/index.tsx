@@ -146,7 +146,7 @@ function Index() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs tracking-[0.3em] text-primary">EIGHT DIMENSIONS</p>
-            <h2 className="mt-4 text-2xl sm:text-4xl">八大頂級維度藍圖\u3000世代傳承</h2>
+            <h2 className="mt-4 text-2xl sm:text-4xl">八大頂級維度藍圖 \ 最棒的傳家之寶</h2>
           </div>
           <Link
             to="/dimensions"
