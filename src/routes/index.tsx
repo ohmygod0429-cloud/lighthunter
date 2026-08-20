@@ -60,7 +60,7 @@ function Index() {
             <span className="text-gold-gradient">你確定努力就不會被淘汰？</span>
           </h1>
           <p className="mx-auto mt-7 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            全維度生命賦能【頂級未來生態圈】正式啟航！一次入會，終生傳承。
+            全維度生命賦能【頂級未來生態圈】正式啟航！一次會費，終生傳承 代代相傳。
             <br className="hidden md:block" />
             這不只是一場商業革命，更是一張通往生命最高規格的終極門票。
           </p>
