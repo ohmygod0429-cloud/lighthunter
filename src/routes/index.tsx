@@ -127,7 +127,7 @@ function Index() {
             <p className="text-xs tracking-[0.3em] text-primary">ORIGIN & MISSION</p>
             <h2 className="mt-4 text-2xl leading-snug sm:text-4xl">關於 獵光者：起源與使命</h2>
             <p className="mt-6 leading-loose text-muted-foreground">
-              過膩了單打獨鬥日復一日的日子，「生態圈」是嶄新的未來。我們打破傳統商業與固有生存模式，透過吃喝玩樂．學習．互助共贏．一起做好事，搭配一套完善系統創造被動收入，終結生活的孤島與重蹈覆轍的死循環； 結合多位頂尖企業家與跨界領袖，打造全維度生命共同體， 實現商業賦能、跨界媒合、生命覺醒與大愛傳承。
+              過膩了單打獨鬥日復一日的日子，「生態圈」是嶄新的未來。我們打破傳統商業與固有生存模式，透過吃喝玩樂．學習．互助共贏．一起做好事，搭配一套完善系統一起變美變健康創造被動收入，終結生活的孤島與重蹈覆轍的死循環； 結合多位頂尖企業家與跨界領袖，打造全維度生命共同體， 實現商業賦能、跨界媒合、生命覺醒與大愛傳承。
             </p>
             <div className="mt-8 grid grid-cols-2 gap-4 text-sm">
               {["商業賦能", "跨界媒合", "生命覺醒", "大愛傳承"].map((t) => (
