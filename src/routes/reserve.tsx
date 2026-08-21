@@ -30,9 +30,25 @@ const plans = [
 
 const intents = ["立即卡位創始會員", "預約專屬引路人一對一深度對接", "先加入LINE群，等待對外公開說明會。"];
 
+const reservationSchema = z.object({
+  name: z.string().trim().min(1, "請填寫姓名").max(100, "姓名過長"),
+  phone: z.string().trim().min(6, "請填寫正確的聯絡電話").max(40, "電話過長"),
+  email: z.string().trim().email("電子郵件格式不正確").max(255),
+  line_id: z
+    .string()
+    .trim()
+    .max(50, "LINE ID 過長")
+    .regex(/^[a-zA-Z0-9_.-]*$/, "LINE ID 格式不正確"),
+  industry: z.string().trim().max(100, "產業／職務過長"),
+  intent: z.string().max(200),
+  plan: z.string().max(40),
+  message: z.string().trim().max(1000, "內容請控制在 1000 字以內"),
+});
+
 function ReservePage() {
   const [plan, setPlan] = useState("36");
   const [intent, setIntent] = useState(intents[0]);
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -45,19 +61,59 @@ function ReservePage() {
 
       <form
         className="mt-12 space-y-7"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
+          if (submitting) return;
           const formData = new FormData(e.currentTarget);
-          const name = String(formData.get("name") ?? "");
+          const parsed = reservationSchema.safeParse({
+            name: String(formData.get("name") ?? ""),
+            phone: String(formData.get("phone") ?? ""),
+            email: String(formData.get("email") ?? ""),
+            line_id: String(formData.get("lineId") ?? ""),
+            industry: String(formData.get("industry") ?? ""),
+            intent,
+            plan: plans.find((p) => p.id === plan)?.label ?? plan,
+            message: String(formData.get("message") ?? ""),
+          });
+
+          if (!parsed.success) {
+            toast.error("資料有誤，請確認後再送出", {
+              description: parsed.error.issues[0]?.message,
+            });
+            return;
+          }
+
+          const payload = parsed.data;
+          setSubmitting(true);
+          const { error } = await supabase.from("reservations").insert({
+            name: payload.name,
+            phone: payload.phone,
+            email: payload.email,
+            line_id: payload.line_id || null,
+            industry: payload.industry || null,
+            intent: payload.intent,
+            plan: payload.plan,
+            message: payload.message || null,
+          });
+          setSubmitting(false);
+
+          if (error) {
+            toast.error("送出失敗，請稍後再試", {
+              description: "若持續發生，請直接透過 LINE 與我們聯繫。",
+            });
+            return;
+          }
+
           toast.success("已收到你的卡位申請", {
             description: "專屬引路人將於 3天內與你聯繫。",
           });
           void navigate({
             to: "/reserve/success",
-            search: { name: name || undefined },
+            search: { name: payload.name || undefined },
           });
         }}
       >
+
         <div className="grid gap-5 sm:grid-cols-2">
           <label className="block text-sm">
             <span className="text-gold-soft">姓名</span>
