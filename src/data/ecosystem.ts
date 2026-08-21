@@ -79,7 +79,7 @@ export const dimensions: Dimension[] = [
 export const painPoints = [
   {
     title: "單打獨鬥的天花板",
-    text: "資源、人才、通路都靠自己一個個敲門，時間成本高、成交率低，努力被稀釋在無效的社交裡。",
+    text: "資源、人才、通路都靠自己一個個敲門，時間成本高、成交率低，沒有信任的努力只會被稀釋在無效的社交與價格戰裡。",
   },
   {
     title: "傳統商會的隱形割韭菜",
