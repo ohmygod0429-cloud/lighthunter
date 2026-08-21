@@ -14,6 +14,7 @@ import { Route as CompareRouteImport } from './routes/compare'
 import { Route as DimensionsRouteImport } from './routes/dimensions'
 import { Route as FoundingRouteImport } from './routes/founding'
 import { Route as NetworkRouteImport } from './routes/network'
+import { Route as QaRouteImport } from './routes/qa'
 import { Route as ReserveRouteImport } from './routes/reserve'
 import { Route as ReserveSuccessRouteImport } from './routes/reserve.success'
 
@@ -42,6 +43,11 @@ const NetworkRoute = NetworkRouteImport.update({
   path: '/network',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QaRoute = QaRouteImport.update({
+  id: '/qa',
+  path: '/qa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReserveRoute = ReserveRouteImport.update({
   id: '/reserve',
   path: '/reserve',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
   '/network': typeof NetworkRoute
+  '/qa': typeof QaRoute
   '/reserve': typeof ReserveRouteWithChildren
   '/reserve/success': typeof ReserveSuccessRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
   '/network': typeof NetworkRoute
+  '/qa': typeof QaRoute
   '/reserve': typeof ReserveRouteWithChildren
   '/reserve/success': typeof ReserveSuccessRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
   '/network': typeof NetworkRoute
+  '/qa': typeof QaRoute
   '/reserve': typeof ReserveRouteWithChildren
   '/reserve/success': typeof ReserveSuccessRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/dimensions'
     | '/founding'
     | '/network'
+    | '/qa'
     | '/reserve'
     | '/reserve/success'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/dimensions'
     | '/founding'
     | '/network'
+    | '/qa'
     | '/reserve'
     | '/reserve/success'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/dimensions'
     | '/founding'
     | '/network'
+    | '/qa'
     | '/reserve'
     | '/reserve/success'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   DimensionsRoute: typeof DimensionsRoute
   FoundingRoute: typeof FoundingRoute
   NetworkRoute: typeof NetworkRoute
+  QaRoute: typeof QaRoute
   ReserveRoute: typeof ReserveRouteWithChildren
 }
 
@@ -157,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NetworkRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/qa': {
+      id: '/qa'
+      path: '/qa'
+      fullPath: '/qa'
+      preLoaderRoute: typeof QaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reserve': {
       id: '/reserve'
       path: '/reserve'
@@ -191,6 +211,7 @@ const rootRouteChildren: RootRouteChildren = {
   DimensionsRoute: DimensionsRoute,
   FoundingRoute: FoundingRoute,
   NetworkRoute: NetworkRoute,
+  QaRoute: QaRoute,
   ReserveRoute: ReserveRouteWithChildren,
 }
 export const routeTree = rootRouteImport
