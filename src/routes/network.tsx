@@ -76,7 +76,7 @@ function NetworkPage() {
         <div>
           <h2 className="text-2xl sm:text-3xl">你的下一筆合作，可能就在下一場聚會</h2>
           <p className="mt-6 leading-loose text-muted-foreground">
-            從主題旅遊到私人聚會，從賦能課程到公益專案，每一個場景都被設計成媒合的入口。
+            從主題旅遊到私人聚會，從賦能課程到公益專案，每一個場景都在建立信任的媒合入口。
             資源不再靠運氣流動，而是靠系統流動。
           </p>
           <Link
