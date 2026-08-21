@@ -2,6 +2,9 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { VideoSlot } from "@/components/video-slot";
 import { useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+
 
 export const Route = createFileRoute("/reserve")({
   head: () => ({
