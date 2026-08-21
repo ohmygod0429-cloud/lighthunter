@@ -61,7 +61,7 @@ function FoundingPage() {
       <div className="mt-16 rule-gold" />
       <div className="mt-12 flex flex-wrap items-center justify-between gap-6">
         <p className="max-w-xl leading-loose text-muted-foreground">
-          一次入會，終生傳承。這不只是一場商業革命，更是一張通往生命最高規格的終極門票。
+          一次會費，終生傳承。這不只是一場商業革命，更是一張通往生命最高規格的終極門票。
         </p>
         <Link
           to="/reserve"
