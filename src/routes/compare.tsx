@@ -65,6 +65,99 @@ function ComparePage() {
         </table>
       </div>
 
+      {/* 育兒與學習的隱形黑洞 */}
+      <div className="mt-24">
+        <p className="text-xs tracking-[0.3em] text-primary">COURSE ADVANTAGE</p>
+        <h2 className="mt-4 text-2xl sm:text-4xl">育兒與學習的隱形黑洞</h2>
+        <p className="mt-4 max-w-3xl leading-loose text-muted-foreground">
+          當代父母最深的焦慮，不是「不夠努力」，而是「錢花得極快，卻換不到真正的未來」。讓我們攤開現實的帳單，看看每一個家庭在不知不覺中吞下了多麼龐大的財務黑洞。
+        </p>
+
+        <p className="mt-10 font-display text-lg text-gold-soft">📊 不可承受的年度財務黑洞</p>
+        <p className="mt-3 max-w-3xl leading-loose text-muted-foreground">
+          無論是孩子的才藝、學科補習，還是父母自身為了成長必須進修的專業課程，在當今市場上：單堂課基本底線至少 $800 元／堂，每週孩子與自己各安排 2 堂（每週共 4 堂）。
+        </p>
+
+        <div className="mt-6 overflow-hidden rounded-2xl border border-border">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-card/70 text-xs tracking-widest">
+              <tr>
+                <th className="px-4 py-4 font-normal text-muted-foreground">項目</th>
+                <th className="px-4 py-4 font-normal text-muted-foreground">計算公式（每堂 $800 基準）</th>
+                <th className="px-4 py-4 font-normal text-primary">年度總花費</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { label: "孩子學習與才藝", formula: "2 堂/週 × 52 週 × $800", total: "$83,200" },
+                { label: "成人專業／心靈進修", formula: "2 堂/週 × 52 週 × $800", total: "$83,200" },
+                { label: "隱形教材、交通與時間成本", formula: "額外衍生開銷與試錯成本", total: "$94,400" },
+                { label: "市場傳統總計", formula: "年復一年，無止盡的現金流出", total: "💥 $260,800 / 年" },
+                { label: "3-5 年長期累積", formula: "教育與育兒的無底洞", total: "📉 $1,304,000 以上" },
+              ].map((r) => (
+                <tr key={r.label} className="border-t border-border/70 align-top">
+                  <td className="px-4 py-4 text-gold-soft">{r.label}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{r.formula}</td>
+                  <td className="px-4 py-4 text-gold-gradient font-display">{r.total}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+          殘酷現實：這還只是「基本開銷」。若加上通膨、名師加價、私校學費，一個家庭在教育上的消耗輕則破百萬，重則將家族幾十年的積蓄在不知不覺中掏空。
+        </p>
+
+        <p className="mt-12 font-display text-lg text-gold-soft">🛡️ 獵光者生態圈的降維打擊絕對優勢</p>
+        <p className="mt-3 max-w-3xl leading-loose text-muted-foreground">
+          當別人還在用每堂 800 元的價格在紅海中苦苦掙扎、買心安時，獵光者生態圈直接打破傳統邏輯，提供不可被反駁的降維賦能。
+        </p>
+
+        <div className="mt-6 overflow-hidden rounded-2xl border border-border">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-card/70 text-xs tracking-widest">
+              <tr>
+                <th className="px-4 py-4 font-normal text-muted-foreground">比較維度</th>
+                <th className="px-4 py-4 font-normal text-muted-foreground">傳統育兒與學習</th>
+                <th className="px-4 py-4 font-normal text-primary">獵光者生態圈</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { dim: "師資陣容", legacy: "實力參差不齊的年輕講師、普通補習班老師", eco: "各領域頂尖、身價千萬的資深創始人與導師親授" },
+                { dim: "課程費用", legacy: "每堂 $800～$2,000 不等，堂堂計費", eco: "夥伴專屬權益：頂級課程無限次免費解鎖" },
+                { dim: "資產屬性", legacy: "消費支出：錢花完就沒了，知識帶不走", eco: "家族資產：一次性席位，30 年權益終身世襲" },
+                { dim: "核心差異", legacy: "讓你越學越窮的「現金流黑洞」", eco: "讓子孫三代清清泡在愛裡的「財富與智慧防護網」" },
+              ].map((r) => (
+                <tr key={r.dim} className="border-t border-border/70 align-top">
+                  <td className="px-4 py-4 text-gold-soft">{r.dim}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{r.legacy}</td>
+                  <td className="px-4 py-4">{r.eco}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {[
+            { icon: "💎", title: "零成本獲取頂級資源", text: "省下每年高達 $260,800 以上的重複學費與育兒支出，把本該被市場剝削的血汗錢，轉化為家族的底氣。" },
+            { icon: "🎓", title: "資深導師免費授課", text: "我們邀請的不是普通老師，而是商海實戰贏家。用免費的機制，讓孩子與您直接站在巨人的肩膀上。" },
+            { icon: "📈", title: "世襲式複利累積", text: "傳統教育花錢買心安，生態圈買的是「世襲數位資產」。30 年後，您留給子孫的是一個龐大、自動運轉的智庫與人脈金庫。" },
+          ].map((c) => (
+            <div key={c.title} className="glass-card rounded-2xl p-6">
+              <p className="text-2xl">{c.icon}</p>
+              <p className="mt-3 font-display text-base text-gold-soft">{c.title}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{c.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-10 max-w-3xl leading-loose text-muted-foreground">
+          「與其把錢砸在無止盡的市場內耗，不如一次看懂格局，將資產留給真正值得的未來。」
+        </p>
+      </div>
+
       <p className="mt-10 max-w-3xl leading-loose text-muted-foreground">
         「跟上帝喝咖啡」之後，愛與資源仍能代代相傳——這是傳統會籍永遠給不了的投報率。
       </p>
