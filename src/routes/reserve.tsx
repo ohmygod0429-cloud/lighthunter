@@ -217,10 +217,12 @@ function ReservePage() {
 
         <button
           type="submit"
-          className="w-full rounded-full bg-gold-gradient py-4 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+          disabled={submitting}
+          className="w-full rounded-full bg-gold-gradient py-4 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
         >
-          送出卡位申請
+          {submitting ? "送出中…" : "送出卡位申請"}
         </button>
+
         <p className="text-center text-xs text-muted-foreground">
           送出後將由專屬引路人與你確認席位與付款方案，資料僅供本次對接使用。
         </p>
