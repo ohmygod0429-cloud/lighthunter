@@ -93,7 +93,7 @@ function ComparePage() {
                 { label: "成人專業／心靈進修", formula: "2 堂/週 × 52 週 × $800", total: "$83,200" },
                 { label: "隱形教材、交通與時間成本", formula: "額外衍生開銷與試錯成本", total: "$94,400" },
                 { label: "市場傳統總計", formula: "年復一年，無止盡的現金流出", total: "💥 $260,800 / 年" },
-                { label: "3-5 年長期累積", formula: "教育與育兒的無底洞", total: "📉 $1,304,000 以上" },
+                { label: "3-5 年長期累積", formula: "學習與育兒的無底洞", total: "📉 $1,304,000 以上" },
               ].map((r) => (
                 <tr key={r.label} className="border-t border-border/70 align-top">
                   <td className="px-4 py-4 text-gold-soft">{r.label}</td>
