@@ -62,7 +62,7 @@ function Index() {
           <p className="mx-auto mt-7 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             全維度生命賦能【頂級未來生態圈】正式啟航！一次會費，終生傳承 代代相傳。
             <br className="hidden md:block" />
-            這不只是一場商業革命，更是一張通往生命最高規格的終極門票。
+             這不只是一場商業革命，還是一份可傳承的家業，更是一張通往生命最高規格的終極門票。
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
