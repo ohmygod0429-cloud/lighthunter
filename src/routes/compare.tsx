@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { VideoSlot } from "@/components/video-slot";
-import { compareRows } from "@/data/ecosystem";
+import { compareRows, clubEdgeRows } from "@/data/ecosystem";
 
 export const Route = createFileRoute("/compare")({
   head: () => ({
