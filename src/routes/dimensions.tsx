@@ -27,7 +27,7 @@ function DimensionsPage() {
       <p className="text-xs tracking-[0.3em] text-primary">EIGHT DIMENSIONS</p>
       <h1 className="mt-4 text-3xl sm:text-5xl">八大頂級維度藍圖</h1>
       <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
-        八大板塊互相導流、彼此加乘，形成一個獨立經濟體與完美的被動收入閉環。點選任一維度，展開它的完整資源。
+        為俱樂部會員專屬打造，鏈結全球跨界菁英人脈，解鎖高端商業合作、家族財富傳承，以及全人成長的頂級資源。點選任一維度，展開您在俱樂部的專屬權益。
       </p>
 
       <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
