@@ -8,7 +8,7 @@ const links = [
   { to: "/compare", label: "降維打擊" },
   { to: "/network", label: "人脈變現" },
   { to: "/founding", label: "創始禮遇" },
-  { to: "/qa", label: "常見問題 Q&A" },
+  { to: "/qa", label: "創始會籍 Q&A" },
 ] as const;
 
 export function SiteHeader() {
