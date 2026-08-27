@@ -36,7 +36,7 @@ function ComparePage() {
           </p>
         </div>
         <div className="glass-card rounded-2xl p-7 shadow-glow">
-          <p className="text-xs tracking-[0.28em] text-primary">未來生態圈</p>
+          <p className="text-xs tracking-[0.28em] text-primary">獵光者未來俱樂部</p>
           <p className="mt-4 font-display text-3xl text-gold-gradient">一次 $79,500</p>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             可分 36 期，終生免續費。每月 20 堂以上免費課程，人脈與權益 100% 可傳承。
@@ -50,7 +50,7 @@ function ComparePage() {
             <tr>
               <th className="px-4 py-4 font-normal text-muted-foreground">項目</th>
               <th className="px-4 py-4 font-normal text-muted-foreground">傳統商會</th>
-              <th className="px-4 py-4 font-normal text-primary">未來生態圈</th>
+              <th className="px-4 py-4 font-normal text-primary">獵光者未來俱樂部</th>
             </tr>
           </thead>
           <tbody>
