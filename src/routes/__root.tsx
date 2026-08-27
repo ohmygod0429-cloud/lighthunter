@@ -15,6 +15,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AdminLock } from "@/components/admin-lock";
+import { MembershipBadge } from "@/components/membership-badge";
 
 function NotFoundComponent() {
   return (
