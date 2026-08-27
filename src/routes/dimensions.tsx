@@ -6,14 +6,14 @@ import { dimensions } from "@/data/ecosystem";
 export const Route = createFileRoute("/dimensions")({
   head: () => ({
     meta: [
-      { title: "八大頂級維度藍圖｜頂級共生未來生態圈" },
+      { title: "八大頂級維度藍圖｜獵光者 未來俱樂部" },
       {
         name: "description",
         content:
-          "商業媒合、個人成長、身心靈提升、全類別賦能課程、極致吃喝玩樂、高質量聯誼、慈善大愛與高端訂製旅遊，八大板塊組成獨立經濟體。",
+          "商業媒合、個人成長、身心靈提升、全類別賦能課程、極致吃喝玩樂、高質量聯誼、慈善大愛與高端訂製旅遊，八大會員專屬權益板塊。",
       },
-      { property: "og:title", content: "八大頂級維度藍圖｜頂級共生未來生態圈" },
-      { property: "og:description", content: "以互動式卡片展開八大頂級維度資源藍圖。" },
+      { property: "og:title", content: "八大頂級維度藍圖｜獵光者 未來俱樂部" },
+      { property: "og:description", content: "以互動式卡片展開俱樂部會員的八大專屬權益藍圖。" },
     ],
   }),
   component: DimensionsPage,
