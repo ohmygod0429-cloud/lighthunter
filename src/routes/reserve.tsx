@@ -30,6 +30,9 @@ const plans = [
 
 const intents = ["立即卡位創始會員", "預約專屬引路人一對一深度對接", "先加入LINE群，等待公開說明會。"];
 
+const LINE_GROUP_URL =
+  "https://line.me/ti/g2/bIUtx1-DK-hRNLLSJRi7mcJ3g8RKROP3D6HjHQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
+
 const reservationSchema = z.object({
   name: z.string().trim().min(1, "請填寫姓名").max(100, "姓名過長"),
   phone: z.string().trim().min(6, "請填寫正確的聯絡電話").max(40, "電話過長"),
@@ -184,48 +187,67 @@ function ReservePage() {
           </div>
         </fieldset>
 
-        <fieldset>
-          <legend className="text-sm text-gold-soft">付款方案</legend>
-          <div className="mt-3 grid gap-3 sm:grid-cols-3">
-            {plans.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setPlan(p.id)}
-                className={`rounded-xl border px-4 py-4 text-left transition-colors ${
-                  plan === p.id
-                    ? "border-primary/70 bg-primary/10"
-                    : "border-border hover:border-primary/40"
-                }`}
-              >
-                <span className="block text-sm">{p.label}</span>
-                <span className="mt-1 block text-xs text-muted-foreground">{p.note}</span>
-              </button>
-            ))}
+        {intent === intents[2] ? (
+          <div className="rounded-2xl border border-primary/40 bg-card/60 p-8 text-center">
+            <p className="text-base text-gold-soft">您已被邀請加入「獵光者　未來俱樂部」！</p>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              請點選以下連結加入社群，我們將在 LINE 群內公告公開說明會時間。
+            </p>
+            <a
+              href={LINE_GROUP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-block rounded-full bg-gold-gradient px-8 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+            >
+              加入 LINE 社群
+            </a>
           </div>
-        </fieldset>
+        ) : (
+          <>
+            <fieldset>
+              <legend className="text-sm text-gold-soft">付款方案</legend>
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                {plans.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setPlan(p.id)}
+                    className={`rounded-xl border px-4 py-4 text-left transition-colors ${
+                      plan === p.id
+                        ? "border-primary/70 bg-primary/10"
+                        : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    <span className="block text-sm">{p.label}</span>
+                    <span className="mt-1 block text-xs text-muted-foreground">{p.note}</span>
+                  </button>
+                ))}
+              </div>
+            </fieldset>
 
-        <label className="block text-sm">
-          <span className="text-gold-soft">想優先了解的維度或需求</span>
-          <textarea
-            name="message"
-            rows={4}
-            className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
-            placeholder="例如：希望媒合供應鏈資源、想參與身心靈成長課程…"
-          />
-        </label>
+            <label className="block text-sm">
+              <span className="text-gold-soft">想優先了解的維度或需求</span>
+              <textarea
+                name="message"
+                rows={4}
+                className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+                placeholder="例如：希望媒合供應鏈資源、想參與身心靈成長課程…"
+              />
+            </label>
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full rounded-full bg-gold-gradient py-4 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
-        >
-          {submitting ? "送出中…" : "送出卡位申請"}
-        </button>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full rounded-full bg-gold-gradient py-4 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+            >
+              {submitting ? "送出中…" : "送出卡位申請"}
+            </button>
 
-        <p className="text-center text-xs text-muted-foreground">
-          送出後將由專屬引路人與你確認席位與付款方案，資料僅供本次對接使用。
-        </p>
+            <p className="text-center text-xs text-muted-foreground">
+              送出後將由專屬引路人與你確認席位與付款方案，資料僅供本次對接使用。
+            </p>
+          </>
+        )}
       </form>
     <VideoSlot slotId="reserve-page" title="預約說明影片" className="mt-16 px-0" />
       </div>
