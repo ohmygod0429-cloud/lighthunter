@@ -23,13 +23,13 @@ const cards = [
   {
     icon: Award,
     title: "介紹資源人才 現拿 $12,000",
-    text: "每成功介紹一位符合資格的資源人才加入生態圈共創未來，提成獎勵即時發放。你的人脈第一次有了明確的市場價格。",
+    text: "每成功介紹一位符合資格的資源人才加入獵光者未來俱樂部共創未來，提成獎勵即時發放。你的人脈第一次有了明確的市場價格。",
     points: ["即時發放", "無上限推薦", "終身有效資格"],
   },
   {
     icon: Handshake,
     title: "商業精準媒合",
-    text: "以需求為導向的跨界對接：生態圈替你做完前置篩選，你只負責說清楚講明白。",
+    text: "以需求為導向的跨界對接：獵光者未來俱樂部替你做完前置篩選，你只負責說清楚講明白。",
     points: ["需求導向配對", "跨界資源直接變現", "由引路人全程陪跑"],
   },
   {
@@ -46,7 +46,7 @@ function NetworkPage() {
       <p className="text-xs tracking-[0.3em] text-primary">MONETIZE YOUR NETWORK</p>
       <h1 className="mt-4 text-3xl sm:text-5xl">最強人脈變現與人才媒合</h1>
       <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
-        在傳統商會，引薦是義務；在生態圈，引薦是資產。三大核爆級優勢，讓善意與商業同時成立。
+         在傳統商會，引薦是義務；在獵光者未來俱樂部，引薦是資產。三大核爆級優勢，讓善意與商業同時成立。
       </p>
 
       <div className="mt-14 grid gap-6 lg:grid-cols-3">
@@ -76,7 +76,7 @@ function NetworkPage() {
         <div>
           <h2 className="text-2xl sm:text-3xl">你的下一筆合作，可能就在下一場聚會</h2>
           <p className="mt-6 leading-loose text-muted-foreground">
-            從主題旅遊到私人聚會，從賦能課程到公益專案，每一個場景都在建立信任的媒合入口。
+             從主題旅遊到私人聚會，從賦能課程到公益專案，每一個場景都在建立深層的信任與媒合入口。
             資源不再靠運氣流動，而是靠系統流動。
           </p>
           <Link
