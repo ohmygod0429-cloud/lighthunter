@@ -150,7 +150,7 @@ function ComparePage() {
           殘酷現實：這還只是「基本開銷」。若加上通膨、名師加價、私校學費，一個家庭在教育上的消耗輕則破百萬，重則將家族幾十年的積蓄在不知不覺中掏空。
         </p>
 
-        <p className="mt-12 font-display text-lg text-gold-soft">🛡️ 獵光者生態圈的降維打擊絕對優勢</p>
+        <p className="mt-12 font-display text-lg text-gold-soft">🛡️ 獵光者未來俱樂部的降維打擊絕對優勢</p>
         <p className="mt-3 max-w-3xl leading-loose text-muted-foreground">
           當別人還在用每堂 800 元的價格在紅海中苦苦掙扎、買心安時，獵光者生態圈直接打破傳統邏輯，提供不可被反駁的降維賦能。
         </p>
@@ -161,13 +161,13 @@ function ComparePage() {
               <tr>
                 <th className="px-4 py-4 font-normal text-muted-foreground">比較維度</th>
                 <th className="px-4 py-4 font-normal text-muted-foreground">傳統育兒與學習</th>
-                <th className="px-4 py-4 font-normal text-primary">獵光者生態圈</th>
+                <th className="px-4 py-4 font-normal text-primary">獵光者未來俱樂部</th>
               </tr>
             </thead>
             <tbody>
               {[
-                { dim: "師資陣容", legacy: "無實戰經驗、實力參差不齊的講師，學到的不只有限，還不確定是否正確。", eco: "透過生態圈層層把關各領域頂尖、身價千萬的資深創始人與導師親授" },
-                { dim: "課程費用", legacy: "每堂 $800～$2,000 不等，堂堂計費", eco: "夥伴專屬權益：頂級課程無限次免費解鎖" },
+                { dim: "師資陣容", legacy: "無實戰經驗、實力參差不齊的講師，學到的不只有限，還不確定是否正確。", eco: "透過俱樂部層層把關各領域頂尖、身價千萬的資深創始人與導師親授" },
+                { dim: "課程費用", legacy: "每堂 $800～$2,000 不等，堂堂計費", eco: "會員專屬權益：頂級課程無限次免費解鎖" },
                 { dim: "資產屬性", legacy: "消費支出：錢花完就沒了，知識帶不走", eco: "家族資產：一次性席位，百年權益終身世襲" },
                 { dim: "核心差異", legacy: "讓你越學越窮的「現金流黑洞」", eco: "讓子孫代代侵泡在愛裡的「財富與智慧防護網」" },
               ].map((r) => (
