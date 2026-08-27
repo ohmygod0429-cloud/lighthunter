@@ -28,7 +28,7 @@ const plans = [
   { id: "36", label: "分 36 期", note: "每期約 $2,606" },
 ];
 
-const intents = ["立即卡位創始會員", "預約專屬引路人一對一深度對接", "先加入LINE群，等待對外公開說明會。"];
+const intents = ["立即卡位創始會員", "預約專屬引路人一對一深度對接", "先加入LINE群，等待公開說明會。"];
 
 const reservationSchema = z.object({
   name: z.string().trim().min(1, "請填寫姓名").max(100, "姓名過長"),
