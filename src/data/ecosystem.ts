@@ -1,4 +1,4 @@
-import { Briefcase, TrendingUp, Sparkles, GraduationCap, Wine, HeartHandshake, HandHeart, Plane } from "lucide-react";
+import { Briefcase, UserSearch, HandHeart, GraduationCap, Wine, Plane, Crown, Repeat } from "lucide-react";
 
 export type Dimension = {
   no: string;
@@ -13,77 +13,112 @@ export type Dimension = {
 export const dimensions: Dimension[] = [
   {
     no: "01",
-    title: "商業資源媒合",
-    tagline: "超越 BNI 的精準對接",
+    title: "商業媒合",
+    tagline: "跨界資源直接變現",
     en: "ELITE DEAL FLOW & MATCHING",
-    detail: "跨界資源直接變現，「商業媒合」與「企業精準獵才」雙軌並行，讓每一次相遇都是一筆可落地的訂單。",
-    points: ["跨界資源直接變現", "商業精準媒合", "企業精準獵才"],
+    detail: "精準對接企業家、創業者與高淨值人群，打破傳統商務拓展的信任壁壘，讓每一次相遇都是一筆可落地的訂單。",
+    points: ["跨界資源變現", "高淨值人群對接", "打破信任壁壘"],
     icon: Briefcase,
   },
   {
     no: "02",
-    title: "個人成長",
-    tagline: "鍛鍊國際視野與商業思維",
-    en: "LEADERSHIP GROWTH TRACK",
-    detail: "從決策思維到領導語言，系統性地把你放進頂尖領袖的養成軌道，而非零散的一次性課程。",
-    points: ["國際視野", "商業思維訓練", "頂尖領袖養成"],
-    icon: TrendingUp,
+    title: "企業獵才",
+    tagline: "解決「找對人」的瓶頸",
+    en: "EXECUTIVE TALENT SOURCING",
+    detail: "為會員企業精準匹配高階人才與關鍵合夥人，解決企業經營中最核心的「找對人」瓶頸。",
+    points: ["高階人才匹配", "關鍵合夥人媒合", "免費獵才服務"],
+    icon: UserSearch,
   },
   {
     no: "03",
-    title: "身心靈成長",
-    tagline: "連結高能量顯化",
-    en: "INNER ENERGY & WELLBEING",
-    detail: "在九紫離火運的時代，先照亮自己。活出喜悅、健康、內在豐盛，與宇宙同道同頻，事業才會長久，財富才會亨通。",
-    points: ["高能量顯化", "喜悅與健康", "內在豐盛"],
-    icon: Sparkles,
+    title: "慈善公益",
+    tagline: "提升影響力與 ESG 形象",
+    en: "PHILANTHROPY CIRCLE",
+    detail: "定期舉辦企業家公益行動，提升會員社會影響力與品牌 ESG 形象，同時建立更高維度的精神共鳴。",
+    points: ["企業家公益行動", "品牌 ESG 形象", "高維精神共鳴"],
+    icon: HandHeart,
   },
   {
     no: "04",
-    title: "全類別賦能課程",
-    tagline: "頂尖大師終身引路",
+    title: "每月 20+ 免費賦能課程",
+    tagline: "持續迭代升級",
     en: "LIFETIME MASTERCLASS ACCESS",
-    detail: "AI、自媒體、身心靈、行銷、品牌與管理、才藝、音樂，每月 20 堂以上，終身免費\u3000代代傳承。",
-    points: ["AI 與自媒體", "行銷・品牌・管理", "才藝與音樂"],
+    detail: "涵蓋 AI 應用、商業模式、自媒體、音樂、才藝、身心靈成長等熱門領域，讓會員與團隊持續迭代升級。",
+    points: ["AI 應用與商業模式", "自媒體・音樂・才藝", "身心靈成長"],
     icon: GraduationCap,
   },
   {
     no: "05",
-    title: "極致吃喝玩樂",
-    tagline: "尊榮私人聚會",
-    en: "PRIVATE MEMBERS EVENTS",
-    detail: "以不同活動主題找到興趣相投、喜好相近的伯樂，把品味與人脈一起養成。",
-    points: ["主題私人聚會", "同好圈層", "品味極致人生"],
+    title: "高質量聯誼交友（吃喝玩樂）",
+    tagline: "擺脫嚴肅無趣的傳統交際",
+    en: "CURATED MEMBER GATHERINGS",
+    detail: "透過桌遊、私廚派對、品酒、戶外活動與各種不同類別的活動，在輕鬆氛圍中建立深厚情誼。",
+    points: ["私廚派對與品酒", "桌遊與戶外活動", "輕鬆氛圍深交"],
     icon: Wine,
   },
   {
     no: "06",
-    title: "高質量聯誼交友",
-    tagline: "遠離無效社交",
-    en: "CURATED MEMBER INTRODUCTIONS",
-    detail: "匯聚同頻共振的精英圈子，頂峰相見。你的下一段關係，值得被嚴選。",
-    points: ["同頻圈層", "精英聯誼", "頂峰相見"],
-    icon: HeartHandshake,
+    title: "國內外獨家主題式旅遊專屬折扣",
+    tagline: "告別趕行程與強制購物",
+    en: "BESPOKE GLOBAL RETREATS",
+    detail:
+      "傳統旅行社行程零散、為湊景點拉車數小時，甚至安排強制購物站，讓出國比上班還累。獵光者俱樂部摒棄傳統跟團模式，依會員的「年齡層」與「偏好主題」進行專屬深度訂製，讓旅遊成為一場身心沉浸與高品質社交。",
+    points: [
+      "身心靈成長與靈修之旅：高能量氣場景點、冥想與心靈導師",
+      "高質量聯誼與品味社交遊：輕鬆氛圍中結識優質夥伴",
+      "放鬆型戶外與獨家秘境遊：避開人潮，開闢私人景點",
+      "跨世代家族深度奢旅：彈性步調，長輩與年輕人都滿意",
+    ],
+    icon: Plane,
   },
   {
     no: "07",
-    title: "慈善大愛實踐",
-    tagline: "用生命影響生命",
-    en: "PHILANTHROPY CIRCLE",
-    detail: "將財富化為利益社會的力量，讓成就不只留在財報上，也留在人心裡。",
-    points: ["公益專案", "生命影響生命", "大愛傳承"],
-    icon: HandHeart,
+    title: "泰國皇室御用品牌終身會員 7 折",
+    tagline: "元首級保養與保健，終身 7 折",
+    en: "ROYAL BEAUTY & WELLNESS PRIVILEGE",
+    detail:
+      "享用世界元首級的頂級保養與保健，肌膚與健康一步到位，再享俱樂部專屬終身 7 折尊榮特權。",
+    points: [
+      "元首與皇室級品質背書：多國總統、政商領袖指名使用",
+      "世界第一獨家專利「肌轉」技術：深度修護、逆轉肌齡",
+      "外在美顏 ✕ 內在健康：從細胞源頭到肌膚全方位調理",
+      "會員獨家終身 7 折：省下的金額遠超會費價值",
+    ],
+    icon: Crown,
   },
   {
     no: "08",
-    title: "高端訂製旅遊",
-    tagline: "在奢華旅程中談成千萬級合作",
-    en: "BESPOKE GLOBAL RETREATS",
-    detail: "走遍世界級風景的主題旅遊，移動的董事會，最放鬆時談成最重要的事。",
-    points: ["世界級路線", "主題旅遊", "旅程中的商機"],
-    icon: Plane,
+    title: "被動收入閉環",
+    tagline: "把會費轉化為資產與收益",
+    en: "PASSIVE INCOME LOOP",
+    detail:
+      "透過生態圈內各板塊互相導流與收益共享機制，讓會員不僅能安心學習、拓展人脈與同頻人深度連結，更能建立可持續的被動收益流。",
+    points: ["板塊互相導流", "收益共享機制", "可持續被動收益"],
+    icon: Repeat,
   },
 ];
+
+export const clubEdgeRows = [
+  {
+    label: "時間與精神成本",
+    bni: "早起打卡、繁重的引薦 KPI，壓力極大",
+    learning: "買課後自行觀看，缺乏互動與人脈延續",
+    club: "無強制 KPI 壓力，在質感社交（吃喝玩樂）中自然對接資源",
+  },
+  {
+    label: "財務回報機制",
+    bni: "僅靠會員私下轉介紹，無系統回饋",
+    learning: "純消費支出，無商業變現與收益機制",
+    club: "內建「被動收入閉環」，讓入會費轉化為資產與收益",
+  },
+  {
+    label: "權益覆蓋廣度",
+    bni: "純商務交流，缺乏生活與靈性成長",
+    learning: "純知識傳授，缺乏實體商業資源與優惠",
+    club: "全方位覆蓋（商業＋獵才＋每月 20+ 課程＋獨家旅遊折扣＋7 折尊榮權益）",
+  },
+];
+
 
 export const painPoints = [
   {
