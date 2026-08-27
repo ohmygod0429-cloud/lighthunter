@@ -6,9 +6,9 @@ export function SiteFooter() {
     <footer className="mt-24 border-t border-border bg-card/40">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-3">
         <div>
-          <h2 className="font-display text-2xl text-gold-gradient">頂級共生未來生態圈</h2>
+          <h2 className="font-display text-2xl text-gold-gradient">獵光者　未來俱樂部</h2>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            全球首創・全維度生命賦能。一次承諾，終生傳承　代代世襲——商業賦能、跨界媒合、生命覺醒與大愛傳承的全維度生命共同體。
+            全球菁英私人俱樂部。一次會籍，終生傳承　代代世襲——會員專屬權益、跨界菁英對接、家族傳承與資源共享。
           </p>
           <p className="mt-6 text-xs tracking-[0.28em] text-primary">追蹤我們</p>
           <SocialLinks className="mt-3" />
@@ -46,7 +46,7 @@ export function SiteFooter() {
         </div>
       </div>
       <p className="border-t border-border/70 py-6 text-center text-xs tracking-widest text-muted-foreground">
-        © {new Date().getFullYear()} SYMBIOTIC FUTURE ECOSYSTEM ・ 頂級共生未來生態圈
+        © {new Date().getFullYear()} THE LIGHTHUNTER PRIVATE CLUB ・ 獵光者　未來俱樂部
       </p>
     </footer>
   );

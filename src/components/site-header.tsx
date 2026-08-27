@@ -8,7 +8,7 @@ const links = [
   { to: "/compare", label: "降維打擊" },
   { to: "/network", label: "人脈變現" },
   { to: "/founding", label: "創始禮遇" },
-  { to: "/qa", label: "常見問題 Q&A" },
+  { to: "/qa", label: "創始會籍 Q&A" },
 ] as const;
 
 export function SiteHeader() {
@@ -23,10 +23,10 @@ export function SiteHeader() {
           </span>
           <span className="leading-tight">
             <span className="block font-display text-base tracking-[0.18em] text-gold-gradient">
-              獵光者　共生共榮未來生態圈
+              獵光者　未來俱樂部
             </span>
             <span className="block text-[10px] tracking-[0.32em] text-muted-foreground">
-              SYMBIOTIC FUTURE ECOSYSTEM
+              THE LIGHTHUNTER PRIVATE CLUB
             </span>
           </span>
         </Link>

@@ -6,14 +6,14 @@ import { dimensions } from "@/data/ecosystem";
 export const Route = createFileRoute("/dimensions")({
   head: () => ({
     meta: [
-      { title: "八大頂級維度藍圖｜頂級共生未來生態圈" },
+      { title: "八大頂級維度藍圖｜獵光者 未來俱樂部" },
       {
         name: "description",
         content:
-          "商業媒合、個人成長、身心靈提升、全類別賦能課程、極致吃喝玩樂、高質量聯誼、慈善大愛與高端訂製旅遊，八大板塊組成獨立經濟體。",
+          "商業媒合、個人成長、身心靈提升、全類別賦能課程、極致吃喝玩樂、高質量聯誼、慈善大愛與高端訂製旅遊，八大會員專屬權益板塊。",
       },
-      { property: "og:title", content: "八大頂級維度藍圖｜頂級共生未來生態圈" },
-      { property: "og:description", content: "以互動式卡片展開八大頂級維度資源藍圖。" },
+      { property: "og:title", content: "八大頂級維度藍圖｜獵光者 未來俱樂部" },
+      { property: "og:description", content: "以互動式卡片展開俱樂部會員的八大專屬權益藍圖。" },
     ],
   }),
   component: DimensionsPage,
@@ -27,7 +27,7 @@ function DimensionsPage() {
       <p className="text-xs tracking-[0.3em] text-primary">EIGHT DIMENSIONS</p>
       <h1 className="mt-4 text-3xl sm:text-5xl">八大頂級維度藍圖</h1>
       <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
-        八大板塊互相導流、彼此加乘，形成一個獨立經濟體與完美的被動收入閉環。點選任一維度，展開它的完整資源。
+        為俱樂部會員專屬打造，鏈結全球跨界菁英人脈，解鎖高端商業合作、家族財富傳承，以及全人成長的頂級資源。點選任一維度，展開您在俱樂部的專屬權益。
       </p>
 
       <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -49,6 +49,7 @@ function DimensionsPage() {
               </div>
               <h2 className="mt-5 text-lg">{d.title}</h2>
               <p className="mt-2 text-xs tracking-wide text-primary/90">{d.tagline}</p>
+              <p className="mt-1 text-[10px] tracking-[0.2em] text-muted-foreground">{d.en}</p>
               {open && (
                 <div className="mt-4 border-t border-border/70 pt-4">
                   <p className="text-sm leading-relaxed text-muted-foreground">{d.detail}</p>
@@ -67,7 +68,7 @@ function DimensionsPage() {
       <div className="mt-16 rule-gold" />
       <div className="mt-12 flex flex-wrap items-center justify-between gap-6">
         <p className="max-w-xl leading-loose text-muted-foreground whitespace-pre-line">
-          八大維度不是八張票券，而是一個共同體。{"\n"}你需要的資源，圈子裡都有。
+          八大維度不是八張票券，而是一張會籍卡的完整權益。{"\n"}你需要的資源與人，俱樂部裡都有，並且可傳承給家人。
         </p>
         <Link
           to="/reserve"

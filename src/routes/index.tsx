@@ -10,13 +10,13 @@ import { VideoSlot } from "@/components/video-slot";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "頂級共生未來生態圈｜創始會員限量招募" },
+      { title: "獵光者 未來俱樂部｜創始會籍限量招募" },
       {
         name: "description",
         content:
           "全球首創・全維度生命賦能【頂級共生未來生態圈】創始會員招募。八大頂級維度、一次入會終生傳承、介紹資源人才現拿 $12,000 獎勵。",
       },
-      { property: "og:title", content: "頂級共生未來生態圈｜創始會員限量招募" },
+      { property: "og:title", content: "獵光者 未來俱樂部｜創始會籍限量招募" },
       {
         property: "og:description",
         content: "一次入會，終生傳承。這不只是一場商業革命，更是一張通往生命最高規格的終極門票。",
@@ -28,8 +28,8 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "頂級共生未來生態圈",
-          description: "全球首創・全維度生命賦能的共生共榮生態圈，八大板塊形成獨立經濟體。",
+          name: "獵光者 未來俱樂部",
+          description: "全球菁英私人俱樂部，八大會員專屬權益板塊，跨界菁英對接與家族傳承。",
         }),
       },
     ],
@@ -97,7 +97,7 @@ function Index() {
         </h2>
         <p className="mt-6 max-w-3xl whitespace-pre-line leading-loose text-muted-foreground">
           九紫離火疊加少子化與人口老年化，人們越來越孤獨、越來越缺愛、越來越迷茫。
-          共生共贏的生態圈結合八大板塊，形成一個獨立經濟體與「完美的被動收入閉環」，
+          俱樂部以八大會員專屬權益板塊，串起「跨界菁英對接」與「家族傳承與資源共享」，
           進而影響整個社會的人類認知、商業、人文、生活方式與經濟發展。
           {"\n"}讓我們一起創造一個更美好的帝國，走向更幸福喜樂的未來吧！
         </p>
@@ -168,6 +168,7 @@ function Index() {
               </div>
               <h3 className="mt-5 text-lg">{d.title}</h3>
               <p className="mt-2 text-xs tracking-wide text-primary/90">{d.tagline}</p>
+              <p className="mt-1 text-[10px] tracking-[0.2em] text-muted-foreground">{d.en}</p>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{d.detail}</p>
             </Link>
           ))}

@@ -15,6 +15,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AdminLock } from "@/components/admin-lock";
+import { MembershipBadge } from "@/components/membership-badge";
 
 function NotFoundComponent() {
   return (
@@ -81,13 +82,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "頂級共生未來生態圈｜創始會員招募" },
+      { title: "獵光者｜未來俱樂部" },
       {
         name: "description",
-        content: "全球首創・全維度生命賦能【頂級共生未來生態圈】創始會員限量招募。",
+        content: "獵光者 未來俱樂部｜全球菁英私人俱樂部，創始會籍限量招募，跨界菁英對接與家族傳承權益。",
       },
-      { name: "author", content: "頂級共生未來生態圈" },
-      { property: "og:site_name", content: "頂級共生未來生態圈" },
+      { name: "author", content: "獵光者 未來俱樂部" },
+      { property: "og:site_name", content: "獵光者 未來俱樂部" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
@@ -139,6 +140,7 @@ function RootComponent() {
         </main>
         <SiteFooter />
       </div>
+      <MembershipBadge />
       <AdminLock />
       <Toaster />
     </QueryClientProvider>
