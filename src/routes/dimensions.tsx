@@ -49,6 +49,7 @@ function DimensionsPage() {
               </div>
               <h2 className="mt-5 text-lg">{d.title}</h2>
               <p className="mt-2 text-xs tracking-wide text-primary/90">{d.tagline}</p>
+              <p className="mt-1 text-[10px] tracking-[0.2em] text-muted-foreground">{d.en}</p>
               {open && (
                 <div className="mt-4 border-t border-border/70 pt-4">
                   <p className="text-sm leading-relaxed text-muted-foreground">{d.detail}</p>
