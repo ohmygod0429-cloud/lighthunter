@@ -46,7 +46,7 @@ export function SiteFooter() {
         </div>
       </div>
       <p className="border-t border-border/70 py-6 text-center text-xs tracking-widest text-muted-foreground">
-        © {new Date().getFullYear()} SYMBIOTIC FUTURE ECOSYSTEM ・ 頂級共生未來生態圈
+        © {new Date().getFullYear()} THE LIGHTHUNTER PRIVATE CLUB ・ 獵光者　未來俱樂部
       </p>
     </footer>
   );
