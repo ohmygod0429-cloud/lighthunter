@@ -68,7 +68,7 @@ function DimensionsPage() {
       <div className="mt-16 rule-gold" />
       <div className="mt-12 flex flex-wrap items-center justify-between gap-6">
         <p className="max-w-xl leading-loose text-muted-foreground whitespace-pre-line">
-          八大維度不是八張票券，而是一張會籍卡的完整權益。{"\n"}你需要的資源與人，俱樂部裡都有，並且可傳承給家人。
+          八大維度不是八張票券，而是一張會籍卡的完整權益。{"\n"}你需要的資源與人脈，俱樂部裡都有，並且可傳承給家人。
         </p>
         <Link
           to="/reserve"
