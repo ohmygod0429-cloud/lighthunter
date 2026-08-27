@@ -140,6 +140,7 @@ function RootComponent() {
         </main>
         <SiteFooter />
       </div>
+      <MembershipBadge />
       <AdminLock />
       <Toaster />
     </QueryClientProvider>
