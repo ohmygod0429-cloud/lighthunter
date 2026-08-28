@@ -110,6 +110,8 @@ function ReservePage() {
             email: payload.email,
             line_id: payload.line_id || null,
             industry: payload.industry || null,
+            interests: payload.interests || null,
+            reasons: payload.reasons || null,
             intent: payload.intent,
             plan: payload.plan,
             message: payload.message || null,
