@@ -33,7 +33,7 @@ const intents = ["立即卡位創始會員", "預約專屬引路人一對一深�
 const LINE_GROUP_URL =
   "https://line.me/ti/g2/bIUtx1-DK-hRNLLSJRi7mcJ3g8RKROP3D6HjHQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
-const LINE_OFFICIAL_URL = "https://lin.ee/rIr1KjC";
+const LINE_OFFICIAL_URL = "https://lin.ee/9n0cOis";
 
 const reservationSchema = z.object({
   name: z.string().trim().min(1, "請填寫姓名").max(100, "姓名過長"),
@@ -176,7 +176,12 @@ function ReservePage() {
               <button
                 key={i}
                 type="button"
-                onClick={() => setIntent(i)}
+                onClick={() => {
+                  setIntent(i);
+                  if (i === intents[1] && typeof window !== "undefined") {
+                    window.open(LINE_OFFICIAL_URL, "_blank", "noopener,noreferrer");
+                  }
+                }}
                 className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
                   intent === i
                     ? "border-primary/70 bg-primary/10 text-foreground"
@@ -206,22 +211,17 @@ function ReservePage() {
           </div>
         ) : intent === intents[1] ? (
           <div className="rounded-2xl border border-primary/40 bg-card/60 p-8 text-center">
-            <p className="text-base text-gold-soft">預約專屬引路人一對一深度對接</p>
+            <p className="text-base text-gold-soft">已為你開啟 LINE 官方帳號</p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              請點選以下連結加入 LINE 官方帳號，專屬引路人將與您聯繫，安排一對一深度對接。
+              專屬引路人將在 LINE 上與你聯繫，安排一對一深度對接。若未自動開啟，請點選下方連結手動加入。
             </p>
             <a
               href={LINE_OFFICIAL_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-block transition-transform hover:-translate-y-0.5"
+              className="mt-6 inline-block rounded-full bg-gold-gradient px-8 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
             >
-              <img
-                src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png"
-                alt="加入好友"
-                height={36}
-                className="mx-auto"
-              />
+              直接加入 LINE 官方
             </a>
           </div>
         ) : (
