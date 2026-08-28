@@ -214,9 +214,15 @@ function ReservePage() {
               href={LINE_OFFICIAL_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-block rounded-full bg-gold-gradient px-8 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+              className="mt-6 inline-block transition-transform hover:-translate-y-0.5"
             >
-              加入 LINE 官方帳號
+              <img
+                src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png"
+                alt="加入好友"
+                height={36}
+                border={0}
+                className="mx-auto"
+              />
             </a>
           </div>
         ) : (
