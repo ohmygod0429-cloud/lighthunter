@@ -30,6 +30,15 @@ const plans = [
 
 const intents = ["立即卡位創始會員", "預約專屬引路人一對一深度對接", "先加入LINE群，等待公開說明會。"];
 
+const reasonOptions = [
+  "商會／結盟",
+  "找志同道合的朋友／聯誼",
+  "跟著皇室一起變美／變健康",
+  "免費課程",
+  "獨家旅遊折扣",
+  "被動收入／創業",
+];
+
 const LINE_GROUP_URL =
   "https://line.me/ti/g2/bIUtx1-DK-hRNLLSJRi7mcJ3g8RKROP3D6HjHQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
@@ -45,6 +54,8 @@ const reservationSchema = z.object({
     .max(50, "LINE ID 過長")
     .regex(/^[a-zA-Z0-9_.-]*$/, "LINE ID 格式不正確"),
   industry: z.string().trim().max(100, "產業／職務過長"),
+  interests: z.string().trim().max(200, "興趣／專長過長"),
+  reasons: z.string().max(500, "感興趣的原因過長"),
   intent: z.string().max(200),
   plan: z.string().max(40),
   message: z.string().trim().max(1000, "內容請控制在 1000 字以內"),
@@ -54,6 +65,7 @@ function ReservePage() {
   const [plan, setPlan] = useState("36");
   const [intent, setIntent] = useState(intents[0]);
   const [submitting, setSubmitting] = useState(false);
+  const [reasons, setReasons] = useState<string[]>([]);
   const navigate = useNavigate();
 
   return (
@@ -76,6 +88,8 @@ function ReservePage() {
             email: String(formData.get("email") ?? ""),
             line_id: String(formData.get("lineId") ?? ""),
             industry: String(formData.get("industry") ?? ""),
+            interests: String(formData.get("interests") ?? ""),
+            reasons: reasons.join("・"),
             intent,
             plan: plans.find((p) => p.id === plan)?.label ?? plan,
             message: String(formData.get("message") ?? ""),
@@ -96,6 +110,8 @@ function ReservePage() {
             email: payload.email,
             line_id: payload.line_id || null,
             industry: payload.industry || null,
+            interests: payload.interests || null,
+            reasons: payload.reasons || null,
             intent: payload.intent,
             plan: payload.plan,
             message: payload.message || null,
@@ -167,7 +183,44 @@ function ReservePage() {
               placeholder="例如：科技業／創辦人"
             />
           </label>
+          <label className="block text-sm">
+            <span className="text-gold-soft">興趣／專長</span>
+            <input
+              name="interests"
+              maxLength={200}
+              className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+              placeholder="例如：投資、簡報設計、瑜伽"
+            />
+          </label>
         </div>
+
+        <fieldset>
+          <legend className="text-sm text-gold-soft">感興趣的原因？（可複選）</legend>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {reasonOptions.map((r) => (
+              <label
+                key={r}
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-colors ${
+                  reasons.includes(r)
+                    ? "border-primary/70 bg-primary/10 text-foreground"
+                    : "border-border text-muted-foreground hover:border-primary/40"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 accent-primary"
+                  checked={reasons.includes(r)}
+                  onChange={() => {
+                    setReasons((prev) =>
+                      prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r],
+                    );
+                  }}
+                />
+                {r}
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
         <fieldset>
           <legend className="text-sm text-gold-soft">我想要</legend>

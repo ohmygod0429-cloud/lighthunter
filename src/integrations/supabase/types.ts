@@ -21,11 +21,13 @@ export type Database = {
           id: string
           industry: string | null
           intent: string
+          interests: string | null
           line_id: string | null
           message: string | null
           name: string
           phone: string
           plan: string
+          reasons: string | null
         }
         Insert: {
           created_at?: string
@@ -33,11 +35,13 @@ export type Database = {
           id?: string
           industry?: string | null
           intent: string
+          interests?: string | null
           line_id?: string | null
           message?: string | null
           name: string
           phone: string
           plan: string
+          reasons?: string | null
         }
         Update: {
           created_at?: string
@@ -45,11 +49,13 @@ export type Database = {
           id?: string
           industry?: string | null
           intent?: string
+          interests?: string | null
           line_id?: string | null
           message?: string | null
           name?: string
           phone?: string
           plan?: string
+          reasons?: string | null
         }
         Relationships: []
       }
