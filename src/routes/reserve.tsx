@@ -88,6 +88,8 @@ function ReservePage() {
             email: String(formData.get("email") ?? ""),
             line_id: String(formData.get("lineId") ?? ""),
             industry: String(formData.get("industry") ?? ""),
+            interests: String(formData.get("interests") ?? ""),
+            reasons: reasons.join("・"),
             intent,
             plan: plans.find((p) => p.id === plan)?.label ?? plan,
             message: String(formData.get("message") ?? ""),
