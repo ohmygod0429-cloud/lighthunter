@@ -183,7 +183,44 @@ function ReservePage() {
               placeholder="例如：科技業／創辦人"
             />
           </label>
+          <label className="block text-sm">
+            <span className="text-gold-soft">興趣／專長</span>
+            <input
+              name="interests"
+              maxLength={200}
+              className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+              placeholder="例如：投資、簡報設計、瑜伽"
+            />
+          </label>
         </div>
+
+        <fieldset>
+          <legend className="text-sm text-gold-soft">感興趣的原因？（可複選）</legend>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {reasonOptions.map((r) => (
+              <label
+                key={r}
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-colors ${
+                  reasons.includes(r)
+                    ? "border-primary/70 bg-primary/10 text-foreground"
+                    : "border-border text-muted-foreground hover:border-primary/40"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 accent-primary"
+                  checked={reasons.includes(r)}
+                  onChange={() => {
+                    setReasons((prev) =>
+                      prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r],
+                    );
+                  }}
+                />
+                {r}
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
         <fieldset>
           <legend className="text-sm text-gold-soft">我想要</legend>
