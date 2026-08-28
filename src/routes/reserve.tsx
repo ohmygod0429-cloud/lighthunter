@@ -33,7 +33,7 @@ const intents = ["立即卡位創始會員", "預約專屬引路人一對一深�
 const LINE_GROUP_URL =
   "https://line.me/ti/g2/bIUtx1-DK-hRNLLSJRi7mcJ3g8RKROP3D6HjHQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
-const LINE_OFFICIAL_URL = "https://lin.ee/9n0cOis";
+const LINE_OFFICIAL_URL = "https://lin.ee/rIr1KjC";
 
 const reservationSchema = z.object({
   name: z.string().trim().min(1, "請填寫姓名").max(100, "姓名過長"),
@@ -214,9 +214,14 @@ function ReservePage() {
               href={LINE_OFFICIAL_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-block rounded-full bg-gold-gradient px-8 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+              className="mt-6 inline-block transition-transform hover:-translate-y-0.5"
             >
-              加入 LINE 官方帳號
+              <img
+                src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png"
+                alt="加入好友"
+                height={36}
+                className="mx-auto"
+              />
             </a>
           </div>
         ) : (
