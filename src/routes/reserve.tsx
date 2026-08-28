@@ -211,22 +211,17 @@ function ReservePage() {
           </div>
         ) : intent === intents[1] ? (
           <div className="rounded-2xl border border-primary/40 bg-card/60 p-8 text-center">
-            <p className="text-base text-gold-soft">預約專屬引路人一對一深度對接</p>
+            <p className="text-base text-gold-soft">已為你開啟 LINE 官方帳號</p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              請點選以下連結加入 LINE 官方帳號，專屬引路人將與您聯繫，安排一對一深度對接。
+              專屬引路人將在 LINE 上與你聯繫，安排一對一深度對接。若未自動開啟，請點選下方連結手動加入。
             </p>
             <a
               href={LINE_OFFICIAL_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-block transition-transform hover:-translate-y-0.5"
+              className="mt-6 inline-block rounded-full bg-gold-gradient px-8 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
             >
-              <img
-                src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png"
-                alt="加入好友"
-                height={36}
-                className="mx-auto"
-              />
+              直接加入 LINE 官方
             </a>
           </div>
         ) : (
