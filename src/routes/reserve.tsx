@@ -30,6 +30,15 @@ const plans = [
 
 const intents = ["立即卡位創始會員", "預約專屬引路人一對一深度對接", "先加入LINE群，等待公開說明會。"];
 
+const reasonOptions = [
+  "商會／結盟",
+  "找志同道合的朋友／聯誼",
+  "跟著皇室一起變美／變健康",
+  "免費課程",
+  "獨家旅遊折扣",
+  "被動收入／創業",
+];
+
 const LINE_GROUP_URL =
   "https://line.me/ti/g2/bIUtx1-DK-hRNLLSJRi7mcJ3g8RKROP3D6HjHQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
