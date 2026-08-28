@@ -45,6 +45,8 @@ const reservationSchema = z.object({
     .max(50, "LINE ID 過長")
     .regex(/^[a-zA-Z0-9_.-]*$/, "LINE ID 格式不正確"),
   industry: z.string().trim().max(100, "產業／職務過長"),
+  interests: z.string().trim().max(200, "興趣／專長過長"),
+  reasons: z.string().max(500, "感興趣的原因過長"),
   intent: z.string().max(200),
   plan: z.string().max(40),
   message: z.string().trim().max(1000, "內容請控制在 1000 字以內"),
