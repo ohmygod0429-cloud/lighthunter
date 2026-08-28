@@ -33,7 +33,7 @@ const intents = ["立即卡位創始會員", "預約專屬引路人一對一深�
 const LINE_GROUP_URL =
   "https://line.me/ti/g2/bIUtx1-DK-hRNLLSJRi7mcJ3g8RKROP3D6HjHQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
-const LINE_OFFICIAL_URL = "https://lin.ee/9n0cOis";
+const LINE_OFFICIAL_URL = "https://lin.ee/rIr1KjC";
 
 const reservationSchema = z.object({
   name: z.string().trim().min(1, "請填寫姓名").max(100, "姓名過長"),
