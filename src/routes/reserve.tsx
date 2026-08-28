@@ -65,6 +65,7 @@ function ReservePage() {
   const [plan, setPlan] = useState("36");
   const [intent, setIntent] = useState(intents[0]);
   const [submitting, setSubmitting] = useState(false);
+  const [reasons, setReasons] = useState<string[]>([]);
   const navigate = useNavigate();
 
   return (
