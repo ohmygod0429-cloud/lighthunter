@@ -176,7 +176,12 @@ function ReservePage() {
               <button
                 key={i}
                 type="button"
-                onClick={() => setIntent(i)}
+                onClick={() => {
+                  setIntent(i);
+                  if (i === intents[1] && typeof window !== "undefined") {
+                    window.open(LINE_OFFICIAL_URL, "_blank", "noopener,noreferrer");
+                  }
+                }}
                 className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
                   intent === i
                     ? "border-primary/70 bg-primary/10 text-foreground"
