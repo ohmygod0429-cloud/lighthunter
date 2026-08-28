@@ -33,6 +33,8 @@ const intents = ["立即卡位創始會員", "預約專屬引路人一對一深�
 const LINE_GROUP_URL =
   "https://line.me/ti/g2/bIUtx1-DK-hRNLLSJRi7mcJ3g8RKROP3D6HjHQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
+const LINE_OFFICIAL_URL = "https://lin.ee/9n0cOis";
+
 const reservationSchema = z.object({
   name: z.string().trim().min(1, "請填寫姓名").max(100, "姓名過長"),
   phone: z.string().trim().min(6, "請填寫正確的聯絡電話").max(40, "電話過長"),
@@ -200,6 +202,21 @@ function ReservePage() {
               className="mt-6 inline-block rounded-full bg-gold-gradient px-8 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
             >
               加入 LINE 社群
+            </a>
+          </div>
+        ) : intent === intents[1] ? (
+          <div className="rounded-2xl border border-primary/40 bg-card/60 p-8 text-center">
+            <p className="text-base text-gold-soft">預約專屬引路人一對一深度對接</p>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              請點選以下連結加入 LINE 官方帳號，專屬引路人將與您聯繫，安排一對一深度對接。
+            </p>
+            <a
+              href={LINE_OFFICIAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-block rounded-full bg-gold-gradient px-8 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+            >
+              加入 LINE 官方帳號
             </a>
           </div>
         ) : (
