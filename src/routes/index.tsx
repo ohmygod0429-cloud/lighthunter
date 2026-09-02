@@ -124,7 +124,7 @@ function Index() {
             className="mb-14 rounded-2xl object-cover shadow-lux"
           />
           <p className="text-xs tracking-[0.3em] text-primary">MISSION & VISION</p>
-          <h2 className="mt-4 text-2xl leading-snug sm:text-4xl">烈光者未來俱樂部｜使命與願景</h2>
+          <h2 className="mt-4 text-2xl leading-snug sm:text-4xl">獵光者未來俱樂部｜使命與願景</h2>
 
           <div className="mt-12">
             <h3 className="text-lg text-gold-soft">【我們的核心使命】</h3>
@@ -134,7 +134,7 @@ function Index() {
           </div>
 
           <div className="mt-12">
-            <h3 className="text-lg text-gold-soft">【為什麼創立烈光者未來俱樂部？】</h3>
+            <h3 className="text-lg text-gold-soft">【為什麼創立獵光者未來俱樂部？】</h3>
             <div className="mt-4 space-y-5 leading-loose text-muted-foreground">
               <p>
                 時代更迭的速度已遠超人類心靈所能承受的極限。AI的飛速崛起、海量資訊的外部干擾，本該連結世界的科技，反而讓心與心之間築起高牆。
@@ -142,7 +142,7 @@ function Index() {
               <p>
                 放眼當下社會，詐騙猖獗、人心動盪、惡性案件頻傳。我們看清了動亂背後的根源——不是人心變壞，而是人們深陷在「缺愛、缺錢、缺乏安全感」的集體恐慌中。伴隨少子化趨勢，越來越多獨生子女在面對父母老去或離世時，獨自承受巨大的精神重壓與無助。血緣網絡日漸稀薄，現代人正淪為一座座在風雨中飄搖的孤島。
               </p>
-              <p>這正是「烈光者未來俱樂部」誕生的原因。</p>
+              <p>這正是「獵光者未來俱樂部」誕生的原因。</p>
               <p>
                 我們不只是一個社群，更是一個超越血緣、性別、種族與疆界的全球精神大家庭。我們要讓每個走進來的人，不再孤身對抗世界的風浪，而是找到同頻共振的至親家人，重新體會被深愛、被理解與被善待的溫度。
               </p>
@@ -150,7 +150,7 @@ function Index() {
           </div>
 
           <div className="mt-12">
-            <h3 className="text-lg text-gold-soft">【烈光者未來俱樂部的核心理念】</h3>
+            <h3 className="text-lg text-gold-soft">【獵光者未來俱樂部的核心理念】</h3>
             <div className="mt-6 grid gap-6 md:grid-cols-3">
               <article className="glass-card rounded-2xl p-7 shadow-lux">
                 <h4 className="text-base text-gold-soft">心靈療癒與歸屬：從孤島重回「大家庭」</h4>
@@ -177,7 +177,7 @@ function Index() {
             <p className="text-lg leading-loose text-gold-soft">
               讓世界因我們而和解，讓黑夜因光芒而退散。
               <br />
-              我們是烈光者，在這裡，你永遠有家，永遠有光。
+              我們是獵光者，在這裡，你永遠有家，永遠有光。
             </p>
           </div>
         </div>
