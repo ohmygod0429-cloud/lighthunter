@@ -112,33 +112,76 @@ function Index() {
         <VideoSlot slotId="home-pain" title="時代痛點影片" className="mt-12 px-0" />
       </section>
 
-      {/* 起源與使命 */}
+      {/* 使命與願景 */}
       <section className="surface-royal border-y border-border py-24">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 md:grid-cols-2">
+        <div className="mx-auto max-w-5xl px-5">
           <img
             src={clubLounge}
             alt="頂級私人俱樂部中的企業家身影，暖金光線映照大理石與夜景"
             loading="lazy"
             width={1600}
             height={1008}
-            className="rounded-2xl object-cover shadow-lux"
+            className="mb-14 rounded-2xl object-cover shadow-lux"
           />
-          <div>
-            <p className="text-xs tracking-[0.3em] text-primary">ORIGIN & MISSION</p>
-            <h2 className="mt-4 text-2xl leading-snug sm:text-4xl">關於 獵光者：起源與使命</h2>
-            <p className="mt-6 leading-loose text-muted-foreground">
-              過膩了單打獨鬥日復一日的日子，「生態圈」是嶄新的未來。我們打破傳統商業與固有生存模式，透過吃喝玩樂．學習．互助共贏．一起做好事，搭配一套完善系統一起變美．變健康創造【被動收入】，終結生活的孤島與重蹈覆轍「現實ｖｓ生活」的死循環； 結合多位頂尖企業家與跨界領袖，打造全維度生命共同體， 實現商業賦能、跨界媒合、生命覺醒與大愛傳承。
+          <p className="text-xs tracking-[0.3em] text-primary">MISSION & VISION</p>
+          <h2 className="mt-4 text-2xl leading-snug sm:text-4xl">烈光者未來俱樂部｜使命與願景</h2>
+
+          <div className="mt-12">
+            <h3 className="text-lg text-gold-soft">【我們的核心使命】</h3>
+            <p className="mt-4 leading-loose text-muted-foreground">
+              跨越血緣與種族，重塑人類最深層的連結。為迷茫的心靈提供避風港，為破碎的世界點亮希望之火；讓每位走進來的靈魂，都能在愛、安全感與豐盛中共振，世世代代傳承不息。
             </p>
-            <div className="mt-8 grid grid-cols-2 gap-4 text-sm">
-              {["商業賦能", "跨界媒合", "生命覺醒", "大愛傳承"].map((t) => (
-                <p key={t} className="rounded-xl border border-primary/25 px-4 py-3 text-gold-soft">
-                  {t}
-                </p>
-              ))}
+          </div>
+
+          <div className="mt-12">
+            <h3 className="text-lg text-gold-soft">【為什麼創立烈光者未來俱樂部？】</h3>
+            <div className="mt-4 space-y-5 leading-loose text-muted-foreground">
+              <p>
+                時代更迭的速度已遠超人類心靈所能承受的極限。AI的飛速崛起、海量資訊的外部干擾，本該連結世界的科技，反而讓心與心之間築起高牆。
+              </p>
+              <p>
+                放眼當下社會，詐騙猖獗、人心動盪、惡性案件頻傳。我們看清了動亂背後的根源——不是人心變壞，而是人們深陷在「缺愛、缺錢、缺乏安全感」的集體恐慌中。伴隨少子化趨勢，越來越多獨生子女在面對父母老去或離世時，獨自承受巨大的精神重壓與無助。血緣網絡日漸稀薄，現代人正淪為一座座在風雨中飄搖的孤島。
+              </p>
+              <p>這正是「烈光者未來俱樂部」誕生的原因。</p>
+              <p>
+                我們不只是一個社群，更是一個超越血緣、性別、種族與疆界的全球精神大家庭。我們要讓每個走進來的人，不再孤身對抗世界的風浪，而是找到同頻共振的至親家人，重新體會被深愛、被理解與被善待的溫度。
+              </p>
             </div>
           </div>
+
+          <div className="mt-12">
+            <h3 className="text-lg text-gold-soft">【烈光者未來俱樂部的核心理念】</h3>
+            <div className="mt-6 grid gap-6 md:grid-cols-3">
+              <article className="glass-card rounded-2xl p-7 shadow-lux">
+                <h4 className="text-base text-gold-soft">心靈療癒與歸屬：從孤島重回「大家庭」</h4>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  在這裡，真誠是唯一的通行證。我們提供最溫暖的包容與支持，讓破碎的心靈得以修復。無論原生家庭如何，你在這裡都能結識宛如結拜手足般的至親夥伴，建立終生不離不棄的情感支撐，告別孤獨與迷茫。
+                </p>
+              </article>
+              <article className="glass-card rounded-2xl p-7 shadow-lux">
+                <h4 className="text-base text-gold-soft">八大板塊賦能：終結焦慮，實現「身心自足」</h4>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  沒有物質的安全感，心靈難以真正安頓。俱樂部透過健全的八大賦能板塊，協助夥伴建立穩健的被動收入系統。當生存的恐慌被豐盛取代，你將能真正放下緊繃與恐懼，輕鬆自如地活出發光發熱的自己。
+                </p>
+              </article>
+              <article className="glass-card rounded-2xl p-7 shadow-lux">
+                <h4 className="text-base text-gold-soft">跨血緣的永恆守護：世世代代的家族傳承</h4>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  這份連結超越姓氏，超越時間。我們為下一代打造永續的避風港與資源網絡，即便面對家庭結構變遷與少子化挑戰，孩子們依然能在大生態的守護下成長，讓愛與豐盛成為可以世代延續的家業。
+                </p>
+              </article>
+            </div>
+          </div>
+
+          <div className="mt-14 text-center">
+            <p className="text-lg leading-loose text-gold-soft">
+              讓世界因我們而和解，讓黑夜因光芒而退散。
+              <br />
+              我們是烈光者，在這裡，你永遠有家，永遠有光。
+            </p>
+          </div>
         </div>
-        <VideoSlot slotId="home-origin" title="起源與使命影片" className="mt-14" />
+        <VideoSlot slotId="home-origin" title="使命與願景影片" className="mt-14" />
       </section>
 
       {/* 八大維度 */}
