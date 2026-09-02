@@ -65,40 +65,6 @@ function ComparePage() {
         </table>
       </div>
 
-      {/* 與傳統社群的降維打擊對比 */}
-      <div className="mt-24">
-        <p className="text-xs tracking-[0.3em] text-primary">THE CLUB EDGE</p>
-        <h2 className="mt-4 text-2xl sm:text-4xl">與時下傳統社群的「降維打擊」對比分析</h2>
-        <p className="mt-4 max-w-3xl leading-loose text-muted-foreground">
-          傳統商會或社群通常有三大痛點：門檻高效益低、只有付出沒有回報、內容單一。「獵光者未來俱樂部」正是針對這些痛點進行全方位的降維打擊。
-        </p>
-        <div className="mt-10 overflow-x-auto rounded-2xl border border-border">
-          <table className="w-full min-w-[720px] text-left text-sm">
-            <thead className="bg-card/70 text-xs tracking-widest">
-              <tr>
-                <th className="px-4 py-4 font-normal text-muted-foreground">評比維度</th>
-                <th className="px-4 py-4 font-normal text-muted-foreground">傳統 BNI／商業商會</th>
-                <th className="px-4 py-4 font-normal text-muted-foreground">一般付費學習社群</th>
-                <th className="px-4 py-4 font-normal text-primary">獵光者未來俱樂部（降維打擊）</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clubEdgeRows.map((r) => (
-                <tr key={r.label} className="border-t border-border/70 align-top">
-                  <td className="px-4 py-4 text-gold-soft">{r.label}</td>
-                  <td className="px-4 py-4 text-muted-foreground line-through decoration-destructive/50">
-                    {r.bni}
-                  </td>
-                  <td className="px-4 py-4 text-muted-foreground line-through decoration-destructive/50">
-                    {r.learning}
-                  </td>
-                  <td className="px-4 py-4">{r.club}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
 
       {/* 育兒與學習的隱形黑洞 */}
