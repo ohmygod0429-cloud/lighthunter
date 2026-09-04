@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      membership_applications: {
+        Row: {
+          agree_chatham: boolean
+          agree_no_selling: boolean
+          business_email: string
+          contact: string
+          core_value: string
+          created_at: string
+          full_name: string
+          id: string
+          industry: string
+          liquid_assets: string
+          pillars: string | null
+          prior_orgs: string | null
+          referrer: string | null
+          revenue_band: string
+          title_company: string
+        }
+        Insert: {
+          agree_chatham?: boolean
+          agree_no_selling?: boolean
+          business_email: string
+          contact: string
+          core_value: string
+          created_at?: string
+          full_name: string
+          id?: string
+          industry: string
+          liquid_assets: string
+          pillars?: string | null
+          prior_orgs?: string | null
+          referrer?: string | null
+          revenue_band: string
+          title_company: string
+        }
+        Update: {
+          agree_chatham?: boolean
+          agree_no_selling?: boolean
+          business_email?: string
+          contact?: string
+          core_value?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          industry?: string
+          liquid_assets?: string
+          pillars?: string | null
+          prior_orgs?: string | null
+          referrer?: string | null
+          revenue_band?: string
+          title_company?: string
+        }
+        Relationships: []
+      }
       reservations: {
         Row: {
           created_at: string
