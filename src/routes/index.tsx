@@ -1,25 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Award, Handshake, UserSearch } from "lucide-react";
+import { ArrowRight, ArrowDown, ShieldCheck, Crown } from "lucide-react";
 import heroCosmos from "@/assets/hero-cosmos.jpg";
 import clubLounge from "@/assets/club-lounge.jpg";
-import royalGift from "@/assets/royal-gift.jpg";
-import { dimensions, painPoints, compareRows } from "@/data/ecosystem";
+import { legacyCompare, vettingSteps } from "@/data/pillars";
+import { PillarMatrix } from "@/components/pillar-matrix";
+import { RoiCalculator } from "@/components/roi-calculator";
 import { FoundingCountdown } from "@/components/founding-countdown";
 import { VideoSlot } from "@/components/video-slot";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "獵光者 未來俱樂部｜創始會籍限量招募" },
+      { title: "獵光者 未來俱樂部｜全球頂級生命生態圈・席次審核制" },
       {
         name: "description",
         content:
-          "全球首創・全維度生命賦能【頂級共生未來生態圈】創始會員招募。八大頂級維度、一次入會終生傳承、介紹資源人才現拿 $12,000 獎勵。",
+          "8 大核心賦能維度 × 跨代財富傳承 × 全球頂級生活特權。獵光者未來俱樂部整合跨國商業對接、前瞻心智賦能、極致健康特權與世襲被動收益，採推薦與審核入會制。",
       },
-      { property: "og:title", content: "獵光者 未來俱樂部｜創始會籍限量招募" },
+      { property: "og:title", content: "獵光者 未來俱樂部｜超越傳統商會維度的生命生態圈" },
       {
         property: "og:description",
-        content: "一次入會，終生傳承。這不只是一場商業革命，更是一張通往生命最高規格的終極門票。",
+        content: "不隨時代逐流，我們聚合點亮未來的光。8 大權益矩陣、年均 240+ 堂賦能、跨代世襲會籍。",
       },
     ],
     scripts: [
@@ -29,7 +30,8 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "獵光者 未來俱樂部",
-          description: "全球菁英私人俱樂部，八大會員專屬權益板塊，跨界菁英對接與家族傳承。",
+          description:
+            "全球頂級私人俱樂部，八大核心賦能維度、跨代世襲會籍與嚴格推薦審查制度。",
         }),
       },
     ],
@@ -37,50 +39,66 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const trustBadges = [
+  "8 大全維度權益矩陣",
+  "年均 240+ 堂前瞻賦能交付",
+  "跨代世襲權益機制",
+  "嚴格推薦審查制度",
+];
+
 function Index() {
   return (
     <div>
-      {/* Hero */}
+      {/* 1. Hero：身分認同與格局定調 */}
       <section className="relative isolate overflow-hidden">
         <img
           src={heroCosmos}
-          alt="金色星芒光暈在深邃曜石黑與皇家星空藍中綻放，象徵共生生態圈的能量網絡"
+          alt="金色光影粒子在深曜黑夜空中緩慢流動，中央為帶有十字光芒的獵光者徽標意象"
           width={1920}
           height={1088}
-          className="absolute inset-0 size-full object-cover opacity-70"
+          className="absolute inset-0 size-full object-cover opacity-60"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,oklch(0.13_0.017_265/0.72),oklch(0.13_0.017_265/0.94))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,oklch(0.11_0.014_265/0.78),oklch(0.11_0.014_265/0.96))]" />
         <div className="relative mx-auto max-w-5xl px-5 py-28 text-center md:py-40">
-          <p className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-5 py-2 text-[11px] tracking-[0.3em] text-primary">
-            GLOBAL FIRST ・ 全球首創
+          <p className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-5 py-2 text-[10px] tracking-[0.28em] text-primary sm:text-[11px]">
+            GLOBAL GLOW FUTURE CLUB ｜ 超越傳統商會維度的全球生命生態圈
           </p>
           <h1 className="mt-8 font-display text-3xl leading-[1.35] sm:text-5xl md:text-6xl">
-            AI人工智能快速翻牌，
+            不隨時代逐流，
             <br className="hidden sm:block" />
-            <span className="text-gold-gradient">你確定努力就不會被淘汰？</span>
+            <span className="text-gold-gradient">我們聚合點亮未來的光。</span>
           </h1>
-          <p className="mx-auto mt-7 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            全維度生命賦能【頂級未來生態圈】正式啟航！一次會費，終生傳承 代代相傳。
-            <br className="hidden md:block" />
-             這不只是一場商業革命，還是一份可傳承的家業，更是一張通往生命最高規格的終極門票。
+          <p className="mx-auto mt-7 max-w-3xl text-sm leading-loose text-muted-foreground sm:text-base">
+            打破傳統商會的社交耗損與單向付出。獵光者未來俱樂部，整合「跨國商業對接、前瞻心智賦能、極致健康特權與世襲被動收益」，為少數遠見者建構世代傳承的生態護城河。
+          </p>
+          <p className="mt-6 text-xs tracking-[0.24em] text-primary/90 sm:text-sm">
+            8 大核心賦能維度 × 跨代財富傳承 × 全球頂級生活特權
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
-              to="/reserve"
-              className="rounded-full bg-gold-gradient px-8 py-3.5 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+              to="/apply"
+              className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-8 py-3.5 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
             >
-              立即卡位創始會員
+              申請入會席次審核 <ArrowRight className="size-4" />
             </Link>
-            <Link
-              to="/reserve"
-              className="rounded-full border border-primary/50 px-8 py-3.5 text-sm text-primary transition-colors hover:bg-primary/10"
+            <a
+              href="#pillars"
+              className="inline-flex items-center gap-2 rounded-full border border-primary/50 px-8 py-3.5 text-sm text-primary transition-colors hover:bg-primary/10"
             >
-              預約專屬引路人一對一深度對接
-            </Link>
+              探索八大核心板塊 <ArrowDown className="size-4" />
+            </a>
           </div>
+          <ul className="mx-auto mt-14 flex max-w-3xl flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] tracking-[0.18em] text-muted-foreground">
+            {trustBadges.map((b) => (
+              <li key={b} className="flex items-center gap-2">
+                <span className="size-1 rounded-full bg-primary" />
+                {b}
+              </li>
+            ))}
+          </ul>
           <div className="mx-auto mt-14 max-w-xl">
             <p className="mb-4 text-xs tracking-[0.28em] text-muted-foreground">
-              創始席位・全球限額搶位中
+              創始席次・全球限額審核中
             </p>
             <FoundingCountdown />
           </div>
@@ -89,237 +107,178 @@ function Index() {
 
       <VideoSlot slotId="home-hero" title="品牌形象影片" className="pt-16" />
 
-      {/* 時代痛點 */}
+      {/* 2. 痛點對比 */}
       <section className="starburst mx-auto max-w-7xl px-5 py-24">
-        <p className="text-xs tracking-[0.3em] text-primary">THE TURNING POINT</p>
-        <h2 className="mt-4 max-w-3xl text-2xl leading-snug sm:text-4xl">
-          時代痛點與起源宣言：孤島的時代已經結束
+        <p className="text-xs tracking-[0.3em] text-primary">WHY LEGACY NETWORKS FAIL</p>
+        <h2 className="mt-4 max-w-3xl font-display text-2xl leading-snug sm:text-4xl">
+          為什麼傳統商會已經過時？
         </h2>
-        <p className="mt-6 max-w-3xl whitespace-pre-line leading-loose text-muted-foreground">
-          九紫離火疊加少子化與人口老年化，人們越來越孤獨、越來越缺愛、越來越迷茫。
-          俱樂部以八大會員專屬權益板塊，串起「跨界菁英對接」與「家族傳承與資源共享」，
-          進而影響整個社會的人類認知、商業、人文、生活方式與經濟發展。
-          {"\n"}讓我們一起創造一個更美好的帝國，走向更幸福喜樂的未來吧！
+        <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
+          時間、人情與金錢都在流失，卻換不到可傳承的資產。我們用生態閉環，取代單向付出的社交耗損。
         </p>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {painPoints.map((p) => (
-            <article key={p.title} className="glass-card rounded-2xl p-7 shadow-lux">
-              <h3 className="text-lg text-gold-soft">{p.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{p.text}</p>
+        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          {legacyCompare.map((c) => (
+            <article
+              key={c.name}
+              className={`rounded-2xl p-8 ${
+                c.tone === "club"
+                  ? "glass-card border-primary/40 shadow-glow"
+                  : "border border-border bg-card/40"
+              }`}
+            >
+              <h3
+                className={`font-display text-lg ${
+                  c.tone === "club" ? "text-gold-gradient" : "text-muted-foreground"
+                }`}
+              >
+                {c.name}
+              </h3>
+              <ul className="mt-6 space-y-3 text-sm leading-relaxed">
+                {c.points.map((p) => (
+                  <li
+                    key={p}
+                    className={
+                      c.tone === "club"
+                        ? "flex gap-2 text-foreground"
+                        : "flex gap-2 text-muted-foreground"
+                    }
+                  >
+                    <span
+                      className={`mt-2 size-1 shrink-0 rounded-full ${
+                        c.tone === "club" ? "bg-primary" : "bg-muted-foreground/60"
+                      }`}
+                    />
+                    {p}
+                  </li>
+                ))}
+              </ul>
             </article>
           ))}
         </div>
-        <VideoSlot slotId="home-pain" title="時代痛點影片" className="mt-12 px-0" />
-      </section>
-
-      {/* 使命與願景 */}
-      <section className="surface-royal border-y border-border py-24">
-        <div className="mx-auto max-w-5xl px-5">
-          <img
-            src={clubLounge}
-            alt="頂級私人俱樂部中的企業家身影，暖金光線映照大理石與夜景"
-            loading="lazy"
-            width={1600}
-            height={1008}
-            className="mb-14 rounded-2xl object-cover shadow-lux"
-          />
-          <p className="text-xs tracking-[0.3em] text-primary">MISSION & VISION</p>
-          <h2 className="mt-4 text-2xl leading-snug sm:text-4xl">獵光者未來俱樂部｜使命與願景</h2>
-
-          <div className="mt-12">
-            <h3 className="text-lg text-gold-soft">【我們的核心使命】</h3>
-            <p className="mt-4 leading-loose text-muted-foreground">
-              跨越血緣與種族，重塑人類最深層的連結。為迷茫的心靈提供避風港，為破碎的世界點亮希望之火；讓每位走進來的靈魂，都能在愛、安全感與豐盛中共振，世世代代傳承不息。
-            </p>
-          </div>
-
-          <div className="mt-12">
-            <h3 className="text-lg text-gold-soft">【為什麼創立獵光者未來俱樂部？】</h3>
-            <div className="mt-4 space-y-5 leading-loose text-muted-foreground">
-              <p>
-                時代更迭的速度已遠超人類心靈所能承受的極限。AI的飛速崛起、海量資訊的外部干擾，本該連結世界的科技，反而讓心與心之間築起高牆。
-              </p>
-              <p>
-                放眼當下社會，詐騙猖獗、人心動盪、惡性案件頻傳。我們看清了動亂背後的根源——不是人心變壞，而是人們深陷在「缺愛、缺錢、缺乏安全感」的集體恐慌中。伴隨少子化趨勢，越來越多獨生子女在面對父母老去或離世時，獨自承受巨大的精神重壓與無助。血緣網絡日漸稀薄，現代人正淪為一座座在風雨中飄搖的孤島。
-              </p>
-              <p>這正是「獵光者未來俱樂部」誕生的原因。</p>
-              <p>
-                我們不只是一個社群，更是一個超越血緣、性別、種族與疆界的全球精神大家庭。我們要讓每個走進來的人，不再孤身對抗世界的風浪，而是找到同頻共振的至親家人，重新體會被深愛、被理解與被善待的溫度。
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-12">
-            <h3 className="text-lg text-gold-soft">【獵光者未來俱樂部的核心理念】</h3>
-            <div className="mt-6 grid gap-6 md:grid-cols-3">
-              <article className="glass-card rounded-2xl p-7 shadow-lux">
-                <h4 className="text-base text-gold-soft">心靈療癒與歸屬：從孤島重回「大家庭」</h4>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  在這裡，真誠是唯一的通行證。我們提供最溫暖的包容與支持，讓破碎的心靈得以修復。無論原生家庭如何，你在這裡都能結識宛如結拜手足般的至親夥伴，建立終生不離不棄的情感支撐，告別孤獨與迷茫。
-                </p>
-              </article>
-              <article className="glass-card rounded-2xl p-7 shadow-lux">
-                <h4 className="text-base text-gold-soft">八大板塊賦能：終結焦慮，實現「身心自足」</h4>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  沒有物質的安全感，心靈難以真正安頓。俱樂部透過健全的八大賦能板塊，協助夥伴建立穩健的被動收入系統。當生存的恐慌被豐盛取代，你將能真正放下緊繃與恐懼，輕鬆自如地活出發光發熱的自己。
-                </p>
-              </article>
-              <article className="glass-card rounded-2xl p-7 shadow-lux">
-                <h4 className="text-base text-gold-soft">跨血緣的永恆守護：世世代代的家族傳承</h4>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  這份連結超越姓氏，超越時間。我們為下一代打造永續的避風港與資源網絡，即便面對家庭結構變遷與少子化挑戰，孩子們依然能在大生態的守護下成長，讓愛與豐盛成為可以世代延續的家業。
-                </p>
-              </article>
-            </div>
-          </div>
-
-          <div className="mt-14 text-center">
-            <p className="text-lg leading-loose text-gold-soft">
-              讓世界因我們而和解，讓黑夜因光芒而退散。
-              <br />
-              我們是獵光者，在這裡，你永遠有家，永遠有光。
-            </p>
-          </div>
-        </div>
-        <VideoSlot slotId="home-origin" title="使命與願景影片" className="mt-14" />
-      </section>
-
-      {/* 八大維度 */}
-      <section className="mx-auto max-w-7xl px-5 py-24">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs tracking-[0.3em] text-primary">EIGHT DIMENSIONS</p>
-            <h2 className="mt-4 text-2xl sm:text-4xl">八大頂級維度藍圖 \ 最棒的傳家之寶</h2>
-          </div>
-          <Link
-            to="/dimensions"
-            className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-          >
-            展開完整藍圖 <ArrowRight className="size-4" />
-          </Link>
-        </div>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {dimensions.map((d) => (
-            <Link
-              key={d.no}
-              to="/dimensions"
-              className="group glass-card rounded-2xl p-6 transition-all hover:-translate-y-1 hover:shadow-glow"
-            >
-              <div className="flex items-center justify-between">
-                <d.icon className="size-6 text-primary" />
-                <span className="font-display text-sm text-muted-foreground">{d.no}</span>
-              </div>
-              <h3 className="mt-5 text-lg">{d.title}</h3>
-              <p className="mt-2 text-xs tracking-wide text-primary/90">{d.tagline}</p>
-              <p className="mt-1 text-[10px] tracking-[0.2em] text-muted-foreground">{d.en}</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{d.detail}</p>
-            </Link>
-          ))}
-        </div>
-        <VideoSlot slotId="home-dimensions" title="八大維度影片" className="mt-12 px-0" />
-      </section>
-
-      {/* 降維打擊 */}
-      <section className="surface-royal border-y border-border py-24">
-        <div className="mx-auto max-w-6xl px-5">
-          <p className="text-xs tracking-[0.3em] text-primary">ROI COMPARISON</p>
-          <h2 className="mt-4 text-2xl sm:text-4xl">降維打擊：終結傳統商會的隱形成本</h2>
-          <div className="mt-10 overflow-hidden rounded-2xl border border-border">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-card/70 text-xs tracking-widest">
-                <tr>
-                  <th className="px-4 py-4 font-normal text-muted-foreground">項目</th>
-                  <th className="px-4 py-4 font-normal text-muted-foreground">傳統商會</th>
-                  <th className="px-4 py-4 font-normal text-primary">未來生態圈</th>
-                </tr>
-              </thead>
-              <tbody>
-                {compareRows.slice(0, 4).map((r) => (
-                  <tr key={r.label} className="border-t border-border/70 align-top">
-                    <td className="px-4 py-4 text-gold-soft">{r.label}</td>
-                    <td className="px-4 py-4 text-muted-foreground line-through decoration-destructive/60">
-                      {r.legacy}
-                    </td>
-                    <td className="whitespace-pre-line px-4 py-4">{r.eco}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="mt-8">
           <Link
             to="/compare"
-            className="mt-8 inline-flex items-center gap-2 text-sm text-primary hover:underline"
+            className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
           >
-            查看完整 ROI 對比表 <ArrowRight className="size-4" />
+            查看完整成本與 ROI 對比 <ArrowRight className="size-4" />
           </Link>
         </div>
-        <VideoSlot slotId="home-compare" title="降維打擊影片" className="mt-12" />
+        <VideoSlot slotId="home-pain" title="痛點對比影片" className="mt-12 px-0" />
       </section>
 
-      {/* 人脈變現 */}
-      <section className="mx-auto max-w-7xl px-5 py-24">
-        <p className="text-xs tracking-[0.3em] text-primary">MONETIZE YOUR NETWORK</p>
-        <h2 className="mt-4 text-2xl sm:text-4xl">最強人脈變現與人才媒合</h2>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {[
-            {
-              icon: Award,
-              title: "現拿 $12,000 提成獎勵",
-              text: "推薦符合資格的資源人才共創未來，獎勵即時入袋，不再有無償的義務引薦。",
-            },
-            { icon: Handshake, title: "商業精準媒合", text: "跨界資源直接對接可落地的合作與訂單，超越傳統商會的引薦效率。" },
-            { icon: UserSearch, title: "企業精準獵才", text: "會員企業免費媒合生態圈人才，把對的人放到對的位置。" },
-          ].map((c) => (
-            <article key={c.title} className="glass-card rounded-2xl p-7 shadow-lux">
-              <c.icon className="size-6 text-primary" />
-              <h3 className="mt-5 text-lg text-gold-soft">{c.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{c.text}</p>
-            </article>
-          ))}
+      {/* 3. 八大板塊互動矩陣 */}
+      <section id="pillars" className="surface-royal scroll-mt-24 border-y border-border py-24">
+        <div className="mx-auto max-w-7xl px-5">
+          <p className="text-xs tracking-[0.3em] text-primary">THE 8 PILLARS</p>
+          <h2 className="mt-4 font-display text-2xl leading-snug sm:text-4xl">
+            八大核心賦能維度<span className="text-gold-gradient">・互動權益矩陣</span>
+          </h2>
+          <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
+            八大板塊不是八張票券，而是一張會籍卡的完整權益。點選任一板塊展開交付細節與證明元素。
+          </p>
+          <div className="mt-12">
+            <PillarMatrix />
+          </div>
+          <div className="mt-8">
+            <Link
+              to="/dimensions"
+              className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+            >
+              展開完整板塊藍圖 <ArrowRight className="size-4" />
+            </Link>
+          </div>
         </div>
-        <Link to="/network" className="mt-8 inline-flex items-center gap-2 text-sm text-primary hover:underline">
-          了解人脈變現機制 <ArrowRight className="size-4" />
-        </Link>
-        <VideoSlot slotId="home-network" title="人脈變現影片" className="mt-12 px-0" />
+        <VideoSlot slotId="home-dimensions" title="八大板塊影片" className="mt-14" />
       </section>
 
-      {/* 創始禮遇 */}
-      <section className="surface-royal border-t border-border py-24">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 md:grid-cols-2">
+      {/* 4. 價值試算計算器 */}
+      <section className="mx-auto max-w-7xl px-5 py-24">
+        <p className="text-xs tracking-[0.3em] text-primary">INTERACTIVE ROI CALCULATOR</p>
+        <h2 className="mt-4 font-display text-2xl leading-snug sm:text-4xl">
+          價值試算：<span className="text-gold-gradient">你的會籍到底值多少？</span>
+        </h2>
+        <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
+          拉動下方參數，即時看見年度可省下的實質金額、賦能課程的等值市場價值，以及生態合夥人的潛在被動收益區間。
+        </p>
+        <div className="mt-12">
+          <RoiCalculator />
+        </div>
+      </section>
+
+      {/* 5. 跨代傳承與身心靈精神 */}
+      <section className="surface-royal border-y border-border py-24">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-2">
           <div>
-            <p className="text-xs tracking-[0.3em] text-primary">FOUNDING PRIVILEGE</p>
-            <h2 className="mt-4 text-2xl leading-snug sm:text-4xl">
-              限時創始禮遇：<span className="text-gold-gradient">泰國皇室御用商品四套</span>
+            <p className="text-xs tracking-[0.3em] text-primary">ECOSYSTEM PHILOSOPHY</p>
+            <h2 className="mt-4 font-display text-2xl leading-snug sm:text-4xl">
+              超越血緣與國界的<span className="text-gold-gradient">心智共同體</span>
             </h2>
-            <p className="mt-6 leading-loose text-muted-foreground">
-              現在加入，加碼免費贈送「泰國皇室御用保養品整整四套」（可加價換購保健食品）。
-              創始會員同時擁有世代傳承權益——100% 資產與人脈可傳承給子女或愛人。
-            </p>
+            <div className="mt-8 space-y-5 leading-loose text-muted-foreground">
+              <p>
+                獵光者的精神內核，是一個超越血緣、性別、種族與疆界的全球心智共同體。我們相信，真正的頂級圈層不只交換資源，更彼此點亮——讓每個走進來的人，不再孤身對抗世界的風浪。
+              </p>
+              <p>
+                我們奉行「世襲制度」：會籍權益具備傳承性，不僅服務這一代創始人，更為下一代鋪墊最高規格的起跑點與人脈護城河。你留給子孫的，不是一次性的消費紀錄，而是一座持續運轉的智庫與人脈金庫。
+              </p>
+              <p className="font-display text-lg text-gold-soft">
+                讓世界因我們而和解，讓黑夜因光芒而退散。
+                <br />
+                我們是獵光者，在這裡，你永遠有家，永遠有光。
+              </p>
+            </div>
             <div className="mt-9 flex flex-wrap gap-4">
               <Link
-                to="/reserve"
-                className="rounded-full bg-gold-gradient px-8 py-3.5 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+                to="/qa"
+                className="inline-flex items-center gap-2 rounded-full border border-primary/50 px-7 py-3 text-sm text-primary transition-colors hover:bg-primary/10"
               >
-                立即卡位創始會員
-              </Link>
-              <Link
-                to="/founding"
-                className="rounded-full border border-primary/50 px-8 py-3.5 text-sm text-primary transition-colors hover:bg-primary/10"
-              >
-                查看創始禮遇細節
+                <Crown className="size-4" /> 創始會籍 Q&amp;A
               </Link>
             </div>
           </div>
           <img
-            src={royalGift}
-            alt="四套泰國皇室御用保養品禮盒陳列於黑色大理石與皇家藍絲綢上"
+            src={clubLounge}
+            alt="頂級私人俱樂部閉門沙龍，暖金光線映照大理石與城市夜景"
             loading="lazy"
-            width={1408}
+            width={1600}
             height={1008}
             className="rounded-2xl object-cover shadow-lux"
           />
         </div>
-        <VideoSlot slotId="home-founding" title="創始禮遇影片" className="mt-14" />
+        <VideoSlot slotId="home-origin" title="精神內核影片" className="mt-14" />
+      </section>
+
+      {/* 6. 嚴格入會流程 */}
+      <section className="mx-auto max-w-7xl px-5 py-24">
+        <p className="text-xs tracking-[0.3em] text-primary">VETTING &amp; APPLICATION FLOW</p>
+        <h2 className="mt-4 font-display text-2xl leading-snug sm:text-4xl">
+          嚴格入會流程：<span className="text-gold-gradient">四道審核，一次授階</span>
+        </h2>
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {vettingSteps.map((s) => (
+            <article key={s.step} className="glass-card rounded-2xl p-7 shadow-lux">
+              <p className="font-display text-3xl text-gold-gradient">{s.step}</p>
+              <h3 className="mt-4 font-display text-lg">{s.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+            </article>
+          ))}
+        </div>
+        <div className="glass-card mt-14 flex flex-col items-center gap-6 rounded-2xl p-10 text-center shadow-glow">
+          <ShieldCheck className="size-7 text-primary" />
+          <h3 className="font-display text-xl leading-snug sm:text-2xl">
+            席次有限，且僅開放給價值對等的遠見者。
+          </h3>
+          <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            我們不開放線上直接付費入會。完成申請後，秘書處將進行背景與商譽初審，合格者由創始團隊親自安排 1
+            對 1 視訊面談或閉門品茶會晤。
+          </p>
+          <Link
+            to="/apply"
+            className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-8 py-3.5 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5"
+          >
+            申請入會席次審核 <ArrowRight className="size-4" />
+          </Link>
+        </div>
+        <VideoSlot slotId="home-founding" title="入會流程影片" className="mt-14 px-0" />
       </section>
     </div>
   );
