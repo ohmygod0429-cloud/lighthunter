@@ -63,11 +63,12 @@ function Index() {
           <p className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-5 py-2 text-[10px] tracking-[0.28em] text-primary sm:text-[11px]">
             GLOBAL GLOW FUTURE CLUB ｜ 超越傳統商會維度的全球生命生態圈
           </p>
-          <h1 className="mt-8 font-display text-3xl leading-[1.35] sm:text-5xl md:text-6xl">
-            不隨時代逐流，
+          <h1 className="mt-8 font-display text-2xl leading-[1.5] sm:text-4xl md:text-5xl">
+            一個專為善良有愛，注重美與健康、
             <br className="hidden sm:block" />
-            <span className="text-gold-gradient">我們聚合點亮未來的光。</span>
+            <span className="text-gold-gradient">敢於成就大事、創造財富、改善世界的領導者而設的私密社團。</span>
           </h1>
+
           <p className="mx-auto mt-7 max-w-3xl text-sm leading-loose text-muted-foreground sm:text-base">
             打破傳統商會的社交耗損與單向付出。獵光者未來俱樂部，整合「跨國商業對接、前瞻心智賦能、極致健康特權與世襲被動收益」，為少數遠見者建構世代傳承的生態護城河。
           </p>
