@@ -4,7 +4,7 @@ import { Menu, X, Sparkles } from "lucide-react";
 
 const links = [
   { to: "/", label: "首頁" },
-  { to: "/dimensions", label: "八大維度" },
+  { to: "/dimensions", label: "八大板塊" },
   { to: "/compare", label: "降維打擊" },
   { to: "/network", label: "人脈變現" },
   { to: "/founding", label: "創始禮遇" },
