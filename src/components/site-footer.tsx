@@ -28,20 +28,23 @@ export function SiteFooter() {
           <Link to="/founding" className="block text-muted-foreground hover:text-foreground">
             創始會員限時禮遇
           </Link>
+          <Link to="/apply" className="block text-muted-foreground hover:text-foreground">
+            申請入會席次審核
+          </Link>
           <Link to="/reserve" className="block text-muted-foreground hover:text-foreground">
-            線上預約與卡位
+            線上預約與加入 LINE
           </Link>
         </div>
 
         <div className="space-y-3 text-sm text-muted-foreground">
           <p className="mb-3 text-xs tracking-[0.28em] text-primary">創始席位</p>
-          <p>全球限額搶位中，名額遞減。</p>
+          <p>全球限額審核中，席次遞減。</p>
           <p>一次性終生會員 $79,500（可分 36 期）</p>
           <Link
-            to="/reserve"
+            to="/apply"
             className="mt-2 inline-block rounded-full border border-primary/60 px-5 py-2.5 text-primary transition-colors hover:bg-primary/10"
           >
-            預約專屬引路人一對一深度對接
+            申請入會席次審核
           </Link>
         </div>
       </div>
