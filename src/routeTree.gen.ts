@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApplyRouteImport } from './routes/apply'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as DimensionsRouteImport } from './routes/dimensions'
 import { Route as FoundingRouteImport } from './routes/founding'
@@ -21,6 +22,11 @@ import { Route as ReserveSuccessRouteImport } from './routes/reserve.success'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApplyRoute = ApplyRouteImport.update({
+  id: '/apply',
+  path: '/apply',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompareRoute = CompareRouteImport.update({
@@ -61,6 +67,7 @@ const ReserveSuccessRoute = ReserveSuccessRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/apply': typeof ApplyRoute
   '/compare': typeof CompareRoute
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/apply': typeof ApplyRoute
   '/compare': typeof CompareRoute
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/apply': typeof ApplyRoute
   '/compare': typeof CompareRoute
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/apply'
     | '/compare'
     | '/dimensions'
     | '/founding'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/apply'
     | '/compare'
     | '/dimensions'
     | '/founding'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/apply'
     | '/compare'
     | '/dimensions'
     | '/founding'
@@ -125,6 +137,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApplyRoute: typeof ApplyRoute
   CompareRoute: typeof CompareRoute
   DimensionsRoute: typeof DimensionsRoute
   FoundingRoute: typeof FoundingRoute
@@ -140,6 +153,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apply': {
+      id: '/apply'
+      path: '/apply'
+      fullPath: '/apply'
+      preLoaderRoute: typeof ApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compare': {
@@ -207,6 +227,7 @@ const ReserveRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApplyRoute: ApplyRoute,
   CompareRoute: CompareRoute,
   DimensionsRoute: DimensionsRoute,
   FoundingRoute: FoundingRoute,

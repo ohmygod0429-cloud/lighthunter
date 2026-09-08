@@ -9,14 +9,13 @@ export function PillarMatrix() {
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {pillars.map((p, i) => {
         const active = open === p.no;
-        const wide = i >= 6; // 3 + 3 + 2 佈局
+        const wide = i >= 6; // 3 + 3 + 2 佈局：最後兩張加寬
         return (
           <article
             key={p.no}
             className={`glass-card group rounded-2xl p-7 transition-all ${
               active ? "shadow-glow" : "hover:-translate-y-1 hover:shadow-glow"
-            } ${wide ? "lg:col-span-3/2 lg:[grid-column:span_3_/_span_3] xl:[grid-column:span_3_/_span_3]" : ""}`}
-            style={wide ? { gridColumn: "span 1" } : undefined}
+            } ${wide ? "lg:col-span-3 lg:grid lg:grid-cols-2 lg:gap-8" : ""}`}
           >
             <button
               type="button"

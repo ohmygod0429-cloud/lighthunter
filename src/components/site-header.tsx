@@ -4,7 +4,7 @@ import { Menu, X, Sparkles } from "lucide-react";
 
 const links = [
   { to: "/", label: "首頁" },
-  { to: "/dimensions", label: "八大維度" },
+  { to: "/dimensions", label: "八大板塊" },
   { to: "/compare", label: "降維打擊" },
   { to: "/network", label: "人脈變現" },
   { to: "/founding", label: "創始禮遇" },
@@ -44,10 +44,10 @@ export function SiteHeader() {
             </Link>
           ))}
           <Link
-            to="/reserve"
+            to="/apply"
             className="ml-3 rounded-full bg-gold-gradient px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5"
           >
-            立即卡位
+            申請審核預約
           </Link>
         </nav>
 
@@ -74,11 +74,11 @@ export function SiteHeader() {
             </Link>
           ))}
           <Link
-            to="/reserve"
+            to="/apply"
             onClick={() => setOpen(false)}
             className="mt-4 block rounded-full bg-gold-gradient py-3 text-center text-sm font-medium text-primary-foreground"
           >
-            立即卡位創始會員
+            申請入會席次審核
           </Link>
         </nav>
       )}

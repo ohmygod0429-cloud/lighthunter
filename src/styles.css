@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-display: "Noto Serif TC", "Songti TC", serif;
+  --font-display: "Cinzel", "Playfair Display", "Noto Serif TC", "Songti TC", serif;
   --font-sans: "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
 }
 
