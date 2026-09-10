@@ -124,17 +124,16 @@ function Apply() {
 
   const validateStep = () => {
     if (step === 1) {
-      if (!fullName.trim() || !titleCompany.trim() || !contact.trim() || !email.trim()) {
+      if (!fullName.trim() || !titleCompany.trim() || !phone.trim() || !messenger.trim() || !email.trim()) {
         toast.error("請完整填寫第 1 階段所有欄位。");
         return false;
       }
-      const domain = email.split("@")[1]?.toLowerCase() ?? "";
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         toast.error("請輸入有效的電子郵件地址。");
         return false;
       }
-      if (blockedDomains.includes(domain)) {
-        toast.error("請使用企業網域信箱（不接受 Gmail、Yahoo 等公共信箱）。");
+      if (!lifePhoto || !headshotPhoto) {
+        toast.error("請上傳一張生活照與一張大頭照。");
         return false;
       }
       return true;
