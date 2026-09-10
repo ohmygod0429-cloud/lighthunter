@@ -25,7 +25,7 @@ export const dimensions: Dimension[] = [
     title: "企業獵才",
     tagline: "解決「找對人」的瓶頸",
     en: "EXECUTIVE TALENT SOURCING",
-    detail: "為會員企業精準匹配高階人才與關鍵合夥人，解決企業經營中最核心的「找對人」瓶頸。",
+    detail: "會員企業可免費透過俱樂部招募人才與關鍵合夥人，解決企業經營中最核心的「找對人」瓶頸。",
     points: ["高階人才匹配", "關鍵合夥人媒合", "免費獵才服務"],
     icon: UserSearch,
   },
