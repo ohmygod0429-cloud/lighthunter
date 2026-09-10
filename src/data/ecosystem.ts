@@ -34,8 +34,8 @@ export const dimensions: Dimension[] = [
     title: "慈善公益",
     tagline: "提升影響力與 ESG 形象",
     en: "PHILANTHROPY CIRCLE",
-    detail: "定期舉辦企業家公益行動，提升會員社會影響力與品牌 ESG 形象，同時建立更高維度的精神共鳴。",
-    points: ["企業家公益行動", "品牌 ESG 形象", "高維精神共鳴"],
+    detail: "不定期舉辦公益行動與公益快閃活動，提昌在實踐中傳愛．與宇宙眾生共舞，同時建立更高維度的精神共鳴。",
+    points: ["公益行動＆快閃公益", "企業家品牌 ESG 形象", "高維精神共鳴"],
     icon: HandHeart,
   },
   {
