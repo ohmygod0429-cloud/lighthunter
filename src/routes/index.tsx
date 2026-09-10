@@ -66,7 +66,7 @@ function Index() {
           <h1 className="mt-8 font-display text-2xl leading-[1.5] sm:text-4xl md:text-5xl">
             一個專為善良有愛，注重美與健康、
             <br className="hidden sm:block" />
-            <span className="text-gold-gradient">敢於成就大事、創造財富、改善世界的領導者而設的私密社團。</span>
+            <span className="text-gold-gradient">敢於成就大事、創造財富、改善世界的同路人而設的私密社團。</span>
           </h1>
 
           <p className="mx-auto mt-7 max-w-3xl text-sm leading-loose text-muted-foreground sm:text-base">
