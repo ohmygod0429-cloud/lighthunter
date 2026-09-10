@@ -52,7 +52,7 @@ export const dimensions: Dimension[] = [
     title: "高質量聯誼交友（吃喝玩樂）",
     tagline: "擺脫嚴肅無趣的傳統交際",
     en: "CURATED MEMBER GATHERINGS",
-    detail: "透過桌遊、私廚派對、品酒、戶外活動與各種不同類別的活動，在輕鬆氛圍中建立深厚情誼。",
+    detail: "透過桌遊、私廚派對、品酒、戶外活動與各種不同類別的活動，依照個人喜好找到伯樂與同好，在輕鬆氛圍中建立深厚情誼。",
     points: ["私廚派對與品酒", "桌遊與戶外活動", "輕鬆氛圍深交"],
     icon: Wine,
   },
