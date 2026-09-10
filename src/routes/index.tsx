@@ -70,7 +70,7 @@ function Index() {
           </h1>
 
           <p className="mx-auto mt-7 max-w-3xl text-sm leading-loose text-muted-foreground sm:text-base">
-            打破傳統商會的社交耗損與單向付出。獵光者未來俱樂部，整合「跨國商業對接、前瞻心智賦能、極致健康特權與世襲被動收益」，為少數遠見者建構世代傳承的生態護城河。
+            打破傳統商會的社交耗損與單向付出。獵光者未來俱樂部，整合「跨國商業對接、前瞻心智賦能、極致健康特權與世襲被動收益」，為善良有愛的遠見者建構世代傳承的生態護城河。
           </p>
           <p className="mt-6 text-xs tracking-[0.24em] text-primary/90 sm:text-sm">
             8 大核心賦能維度 × 跨代財富傳承 × 全球頂級生活特權
