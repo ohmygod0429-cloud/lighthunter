@@ -49,8 +49,6 @@ const industries = [
   "其他專業服務",
 ];
 
-const blockedDomains = ["gmail.com", "yahoo.com", "yahoo.com.tw", "hotmail.com", "outlook.com", "icloud.com", "qq.com", "163.com", "me.com", "msn.com"];
-
 const inputClass =
   "mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/70 focus:border-primary/70";
 
