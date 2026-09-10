@@ -170,31 +170,46 @@ function Apply() {
     if (validateStep()) setStep((s) => Math.min(4, s + 1));
   };
 
+  const uploadPhoto = async (file: File, folder: string) => {
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabase.storage.from("application-photos").upload(path, file);
+    if (error) throw error;
+    return path;
+  };
+
   const submit = async () => {
     if (!validateStep()) return;
     setSubmitting(true);
-    const { error } = await supabase.from("membership_applications").insert({
-      full_name: fullName.trim(),
-      title_company: titleCompany.trim(),
-      contact: contact.trim(),
-      business_email: email.trim(),
-      revenue_band: revenue,
-      liquid_assets: assets,
-      industry,
-      pillars: picked.join("、"),
-      core_value: coreValue.trim(),
-      prior_orgs: priorOrgs.trim() || null,
-      referrer: referrer.trim() || null,
-      agree_no_selling: agreeSelling,
-      agree_chatham: agreeChatham,
-    });
-    setSubmitting(false);
-    if (error) {
+    try {
+      const lifePath = lifePhoto ? await uploadPhoto(lifePhoto, "life") : null;
+      const headshotPath = headshotPhoto ? await uploadPhoto(headshotPhoto, "headshot") : null;
+      const { error } = await supabase.from("membership_applications").insert({
+        full_name: fullName.trim(),
+        title_company: titleCompany.trim(),
+        phone: phone.trim(),
+        messenger: messenger.trim(),
+        business_email: email.trim(),
+        life_photo_path: lifePath,
+        headshot_path: headshotPath,
+        revenue_band: revenue,
+        liquid_assets: assets,
+        industry,
+        pillars: picked.join("、"),
+        core_value: coreValue.trim(),
+        prior_orgs: priorOrgs.trim() || null,
+        referrer: referrer.trim() || null,
+        agree_no_selling: agreeSelling,
+        agree_chatham: agreeChatham,
+      });
+      if (error) throw error;
+      setDone(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
       toast.error("送出失敗，請稍後再試。");
-      return;
+    } finally {
+      setSubmitting(false);
     }
-    setDone(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (done) {
