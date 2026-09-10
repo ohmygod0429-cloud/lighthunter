@@ -283,11 +283,41 @@ function Apply() {
               <Field label="現任職稱與所屬企業" hint="請填公司完整全稱與官方網站。">
                 <input className={inputClass} value={titleCompany} onChange={(e) => setTitleCompany(e.target.value)} placeholder="執行長／〇〇股份有限公司 www.example.com" />
               </Field>
-              <Field label="私人手機 / WeChat / LINE">
-                <input className={inputClass} value={contact} onChange={(e) => setContact(e.target.value)} placeholder="0912-345-678 或 LINE ID" />
+              <Field label="私人手機" hint="需可接收來電或簡訊，供秘書處聯繫。">
+                <input className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="0912-345-678" />
               </Field>
-              <Field label="商務電子郵件" hint="僅接受企業網域信箱，不接受 Gmail、Yahoo 等公共信箱。">
-                <input className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@yourcompany.com" />
+              <Field label="WeChat / LINE">
+                <input className={inputClass} value={messenger} onChange={(e) => setMessenger(e.target.value)} placeholder="LINE ID 或 WeChat ID" />
+              </Field>
+              <Field label="電子郵件" hint="接受企業網域信箱，亦接受 Gmail、Yahoo 等公共信箱。">
+                <input className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@yourcompany.com 或 you@gmail.com" />
+              </Field>
+              <Field
+                label="上傳生活照與大頭照"
+                hint="請上傳一張真實生活照與一張大頭照，供審查身分與圈層純度。禁止過度美顏濾鏡與 AI 生成圖片，一經查證將駁回申請。"
+              >
+                <div className="mt-2 grid gap-4 sm:grid-cols-2">
+                  <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-input bg-card/40 px-4 py-6 text-center text-xs text-muted-foreground transition-colors hover:border-primary/60">
+                    <span className="text-gold-soft">生活照</span>
+                    <span className="truncate">{lifePhoto ? lifePhoto.name : "點選上傳檔案"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => setLifePhoto(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                  <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-input bg-card/40 px-4 py-6 text-center text-xs text-muted-foreground transition-colors hover:border-primary/60">
+                    <span className="text-gold-soft">大頭照</span>
+                    <span className="truncate">{headshotPhoto ? headshotPhoto.name : "點選上傳檔案"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => setHeadshotPhoto(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                </div>
               </Field>
             </>
           )}
