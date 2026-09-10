@@ -101,8 +101,11 @@ function Apply() {
 
   const [fullName, setFullName] = useState("");
   const [titleCompany, setTitleCompany] = useState("");
-  const [contact, setContact] = useState("");
+  const [phone, setPhone] = useState("");
+  const [messenger, setMessenger] = useState("");
   const [email, setEmail] = useState("");
+  const [lifePhoto, setLifePhoto] = useState<File | null>(null);
+  const [headshotPhoto, setHeadshotPhoto] = useState<File | null>(null);
   const [revenue, setRevenue] = useState("");
   const [assets, setAssets] = useState("");
   const [industry, setIndustry] = useState("");
