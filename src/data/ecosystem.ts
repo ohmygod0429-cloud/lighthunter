@@ -43,7 +43,7 @@ export const dimensions: Dimension[] = [
     title: "每月 20+ 免費賦能課程",
     tagline: "持續迭代升級",
     en: "LIFETIME MASTERCLASS ACCESS",
-    detail: "涵蓋 AI 應用、商業模式、自媒體、音樂、才藝、身心靈成長等熱門領域，讓會員與團隊持續迭代升級。",
+    detail: "涵蓋 AI 應用、商業模式、自媒體、音樂、各類才藝、身心靈成長等熱門領域，讓會員與團隊持續迭代升級。",
     points: ["AI 應用與商業模式", "自媒體・音樂・才藝", "身心靈成長"],
     icon: GraduationCap,
   },
