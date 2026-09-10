@@ -19,13 +19,17 @@ export type Database = {
           agree_chatham: boolean
           agree_no_selling: boolean
           business_email: string
-          contact: string
+          contact: string | null
           core_value: string
           created_at: string
           full_name: string
+          headshot_path: string | null
           id: string
           industry: string
+          life_photo_path: string | null
           liquid_assets: string
+          messenger: string | null
+          phone: string | null
           pillars: string | null
           prior_orgs: string | null
           referrer: string | null
@@ -36,13 +40,17 @@ export type Database = {
           agree_chatham?: boolean
           agree_no_selling?: boolean
           business_email: string
-          contact: string
+          contact?: string | null
           core_value: string
           created_at?: string
           full_name: string
+          headshot_path?: string | null
           id?: string
           industry: string
+          life_photo_path?: string | null
           liquid_assets: string
+          messenger?: string | null
+          phone?: string | null
           pillars?: string | null
           prior_orgs?: string | null
           referrer?: string | null
@@ -53,13 +61,17 @@ export type Database = {
           agree_chatham?: boolean
           agree_no_selling?: boolean
           business_email?: string
-          contact?: string
+          contact?: string | null
           core_value?: string
           created_at?: string
           full_name?: string
+          headshot_path?: string | null
           id?: string
           industry?: string
+          life_photo_path?: string | null
           liquid_assets?: string
+          messenger?: string | null
+          phone?: string | null
           pillars?: string | null
           prior_orgs?: string | null
           referrer?: string | null

@@ -49,8 +49,6 @@ const industries = [
   "其他專業服務",
 ];
 
-const blockedDomains = ["gmail.com", "yahoo.com", "yahoo.com.tw", "hotmail.com", "outlook.com", "icloud.com", "qq.com", "163.com", "me.com", "msn.com"];
-
 const inputClass =
   "mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/70 focus:border-primary/70";
 
@@ -103,8 +101,11 @@ function Apply() {
 
   const [fullName, setFullName] = useState("");
   const [titleCompany, setTitleCompany] = useState("");
-  const [contact, setContact] = useState("");
+  const [phone, setPhone] = useState("");
+  const [messenger, setMessenger] = useState("");
   const [email, setEmail] = useState("");
+  const [lifePhoto, setLifePhoto] = useState<File | null>(null);
+  const [headshotPhoto, setHeadshotPhoto] = useState<File | null>(null);
   const [revenue, setRevenue] = useState("");
   const [assets, setAssets] = useState("");
   const [industry, setIndustry] = useState("");
@@ -123,17 +124,16 @@ function Apply() {
 
   const validateStep = () => {
     if (step === 1) {
-      if (!fullName.trim() || !titleCompany.trim() || !contact.trim() || !email.trim()) {
+      if (!fullName.trim() || !titleCompany.trim() || !phone.trim() || !messenger.trim() || !email.trim()) {
         toast.error("請完整填寫第 1 階段所有欄位。");
         return false;
       }
-      const domain = email.split("@")[1]?.toLowerCase() ?? "";
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         toast.error("請輸入有效的電子郵件地址。");
         return false;
       }
-      if (blockedDomains.includes(domain)) {
-        toast.error("請使用企業網域信箱（不接受 Gmail、Yahoo 等公共信箱）。");
+      if (!lifePhoto || !headshotPhoto) {
+        toast.error("請上傳一張生活照與一張大頭照。");
         return false;
       }
       return true;
@@ -170,31 +170,46 @@ function Apply() {
     if (validateStep()) setStep((s) => Math.min(4, s + 1));
   };
 
+  const uploadPhoto = async (file: File, folder: string) => {
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabase.storage.from("application-photos").upload(path, file);
+    if (error) throw error;
+    return path;
+  };
+
   const submit = async () => {
     if (!validateStep()) return;
     setSubmitting(true);
-    const { error } = await supabase.from("membership_applications").insert({
-      full_name: fullName.trim(),
-      title_company: titleCompany.trim(),
-      contact: contact.trim(),
-      business_email: email.trim(),
-      revenue_band: revenue,
-      liquid_assets: assets,
-      industry,
-      pillars: picked.join("、"),
-      core_value: coreValue.trim(),
-      prior_orgs: priorOrgs.trim() || null,
-      referrer: referrer.trim() || null,
-      agree_no_selling: agreeSelling,
-      agree_chatham: agreeChatham,
-    });
-    setSubmitting(false);
-    if (error) {
+    try {
+      const lifePath = lifePhoto ? await uploadPhoto(lifePhoto, "life") : null;
+      const headshotPath = headshotPhoto ? await uploadPhoto(headshotPhoto, "headshot") : null;
+      const { error } = await supabase.from("membership_applications").insert({
+        full_name: fullName.trim(),
+        title_company: titleCompany.trim(),
+        phone: phone.trim(),
+        messenger: messenger.trim(),
+        business_email: email.trim(),
+        life_photo_path: lifePath,
+        headshot_path: headshotPath,
+        revenue_band: revenue,
+        liquid_assets: assets,
+        industry,
+        pillars: picked.join("、"),
+        core_value: coreValue.trim(),
+        prior_orgs: priorOrgs.trim() || null,
+        referrer: referrer.trim() || null,
+        agree_no_selling: agreeSelling,
+        agree_chatham: agreeChatham,
+      });
+      if (error) throw error;
+      setDone(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
       toast.error("送出失敗，請稍後再試。");
-      return;
+    } finally {
+      setSubmitting(false);
     }
-    setDone(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (done) {
@@ -268,11 +283,41 @@ function Apply() {
               <Field label="現任職稱與所屬企業" hint="請填公司完整全稱與官方網站。">
                 <input className={inputClass} value={titleCompany} onChange={(e) => setTitleCompany(e.target.value)} placeholder="執行長／〇〇股份有限公司 www.example.com" />
               </Field>
-              <Field label="私人手機 / WeChat / LINE">
-                <input className={inputClass} value={contact} onChange={(e) => setContact(e.target.value)} placeholder="0912-345-678 或 LINE ID" />
+              <Field label="私人手機" hint="需可接收來電或簡訊，供秘書處聯繫。">
+                <input className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="0912-345-678" />
               </Field>
-              <Field label="商務電子郵件" hint="僅接受企業網域信箱，不接受 Gmail、Yahoo 等公共信箱。">
-                <input className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@yourcompany.com" />
+              <Field label="WeChat / LINE">
+                <input className={inputClass} value={messenger} onChange={(e) => setMessenger(e.target.value)} placeholder="LINE ID 或 WeChat ID" />
+              </Field>
+              <Field label="電子郵件" hint="接受企業網域信箱，亦接受 Gmail、Yahoo 等公共信箱。">
+                <input className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@yourcompany.com 或 you@gmail.com" />
+              </Field>
+              <Field
+                label="上傳生活照與大頭照"
+                hint="請上傳一張真實生活照與一張大頭照，供審查身分與圈層純度。禁止過度美顏濾鏡與 AI 生成圖片，一經查證將駁回申請。"
+              >
+                <div className="mt-2 grid gap-4 sm:grid-cols-2">
+                  <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-input bg-card/40 px-4 py-6 text-center text-xs text-muted-foreground transition-colors hover:border-primary/60">
+                    <span className="text-gold-soft">生活照</span>
+                    <span className="truncate">{lifePhoto ? lifePhoto.name : "點選上傳檔案"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => setLifePhoto(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                  <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-input bg-card/40 px-4 py-6 text-center text-xs text-muted-foreground transition-colors hover:border-primary/60">
+                    <span className="text-gold-soft">大頭照</span>
+                    <span className="truncate">{headshotPhoto ? headshotPhoto.name : "點選上傳檔案"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => setHeadshotPhoto(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                </div>
               </Field>
             </>
           )}
