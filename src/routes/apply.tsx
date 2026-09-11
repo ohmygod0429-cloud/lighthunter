@@ -24,21 +24,6 @@ export const Route = createFileRoute("/apply")({
   component: Apply,
 });
 
-const revenueBands = [
-  "新台幣 1,000 萬以下",
-  "新台幣 1,000 萬 – 5,000 萬",
-  "新台幣 5,000 萬 – 1 億",
-  "新台幣 1 億 – 5 億",
-  "新台幣 5 億以上",
-];
-
-const assetBands = [
-  "100 萬美元以下",
-  "100 萬 – 300 萬美元",
-  "300 萬 – 1,000 萬美元",
-  "1,000 萬美元以上",
-];
-
 const industries = [
   "科技創新",
   "製造出口",
