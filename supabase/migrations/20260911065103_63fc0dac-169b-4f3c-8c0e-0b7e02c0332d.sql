@@ -1,0 +1,1 @@
+ALTER TABLE public.membership_applications ADD COLUMN birth_date text;

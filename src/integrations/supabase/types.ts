@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           agree_chatham: boolean
           agree_no_selling: boolean
+          birth_date: string | null
           business_email: string
           contact: string | null
           core_value: string
@@ -40,6 +41,7 @@ export type Database = {
         Insert: {
           agree_chatham?: boolean
           agree_no_selling?: boolean
+          birth_date?: string | null
           business_email: string
           contact?: string | null
           core_value: string
@@ -62,6 +64,7 @@ export type Database = {
         Update: {
           agree_chatham?: boolean
           agree_no_selling?: boolean
+          birth_date?: string | null
           business_email?: string
           contact?: string | null
           core_value?: string
