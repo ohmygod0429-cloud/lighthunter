@@ -17,27 +17,12 @@ export const Route = createFileRoute("/apply")({
       { property: "og:title", content: "申請入會席次審核｜獵光者 未來俱樂部" },
       {
         property: "og:description",
-        content: "四階段審核申請表：基本資歷、事業體量、資源交換、入會公約。",
+        content: "三階段審核申請表：基本資歷、資源交換、入會公約。",
       },
     ],
   }),
   component: Apply,
 });
-
-const revenueBands = [
-  "新台幣 1,000 萬以下",
-  "新台幣 1,000 萬 – 5,000 萬",
-  "新台幣 5,000 萬 – 1 億",
-  "新台幣 1 億 – 5 億",
-  "新台幣 5 億以上",
-];
-
-const assetBands = [
-  "100 萬美元以下",
-  "100 萬 – 300 萬美元",
-  "300 萬 – 1,000 萬美元",
-  "1,000 萬美元以上",
-];
 
 const industries = [
   "科技創新",
@@ -106,8 +91,6 @@ function Apply() {
   const [email, setEmail] = useState("");
   const [lifePhoto, setLifePhoto] = useState<File | null>(null);
   const [headshotPhoto, setHeadshotPhoto] = useState<File | null>(null);
-  const [revenue, setRevenue] = useState("");
-  const [assets, setAssets] = useState("");
   const [industry, setIndustry] = useState("");
   const [picked, setPicked] = useState<string[]>([]);
   const [coreValue, setCoreValue] = useState("");
@@ -137,6 +120,10 @@ function Apply() {
         toast.error("請填寫持有證照欄位，若無請填「無」。");
         return false;
       }
+      if (!industry) {
+        toast.error("請選擇主要行業領域。");
+        return false;
+      }
       if (!lifePhoto || !headshotPhoto) {
         toast.error("請上傳一張生活照與一張大頭照。");
         return false;
@@ -144,13 +131,6 @@ function Apply() {
       return true;
     }
     if (step === 2) {
-      if (!revenue || !assets || !industry) {
-        toast.error("請完成事業體量與資產維度的三項選擇。");
-        return false;
-      }
-      return true;
-    }
-    if (step === 3) {
       if (picked.length === 0) {
         toast.error("請至少選擇 1 個最關注的板塊。");
         return false;
@@ -161,7 +141,7 @@ function Apply() {
       }
       return true;
     }
-    if (step === 4) {
+    if (step === 3) {
       if (!agreeSelling || !agreeChatham) {
         toast.error("請確認並勾選兩項入會公約。");
         return false;
@@ -172,7 +152,7 @@ function Apply() {
   };
 
   const next = () => {
-    if (validateStep()) setStep((s) => Math.min(4, s + 1));
+    if (validateStep()) setStep((s) => Math.min(3, s + 1));
   };
 
   const uploadPhoto = async (file: File, folder: string) => {
@@ -197,8 +177,8 @@ function Apply() {
         business_email: email.trim(),
         life_photo_path: lifePath,
         headshot_path: headshotPath,
-        revenue_band: revenue,
-        liquid_assets: assets,
+        revenue_band: "未填",
+        liquid_assets: "未填",
         industry,
         pillars: picked.join("、"),
         core_value: coreValue.trim(),
@@ -257,10 +237,10 @@ function Apply() {
           申請入會<span className="text-gold-gradient">席次審核</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl leading-loose text-muted-foreground">
-          獵光者未來俱樂部採推薦與審核入會制，席次稀缺。以下四個階段用於確認價值對等與圈層純度，請據實填寫。
+          獵光者未來俱樂部採推薦與審核入會制，席次稀缺。以下三個階段用於確認價值對等與圈層純度，請據實填寫。
         </p>
         <ol className="mt-10 flex flex-wrap items-center justify-center gap-3 text-xs">
-          {vettingSteps.map((s, i) => (
+          {vettingSteps.slice(0, 3).map((s, i) => (
             <li
               key={s.step}
               className={`rounded-full border px-4 py-2 tracking-wide ${
@@ -271,8 +251,8 @@ function Apply() {
                     : "border-border text-muted-foreground"
               }`}
             >
-              {s.step}・
-              {["基本資歷", "事業體量", "資源交換", "入會公約"][i]}
+              {i + 1}・
+              {["基本資歷", "資源交換", "入會公約"][i]}
             </li>
           ))}
         </ol>
@@ -300,6 +280,16 @@ function Apply() {
               </Field>
               <Field label="是否持有任何類別證照？" hint="請列出您持有的專業證照或資格，若無請填「無」。">
                 <input className={inputClass} value={licenses} onChange={(e) => setLicenses(e.target.value)} placeholder="如：會計師、律師、CFP、無" />
+              </Field>
+              <Field label="主要行業領域">
+                <select className={inputClass} value={industry} onChange={(e) => setIndustry(e.target.value)}>
+                  <option value="">請選擇</option>
+                  {industries.map((i) => (
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
+                  ))}
+                </select>
               </Field>
               <Field
                 label="上傳生活照與大頭照"
@@ -331,43 +321,10 @@ function Apply() {
             </>
           )}
 
+
           {step === 2 && (
             <>
-              <h2 className="font-display text-xl">第 2 階段｜事業體量與資產維度</h2>
-              <Field label="企業上一年度年營收規模">
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {revenueBands.map((r) => (
-                    <Chip key={r} active={revenue === r} onClick={() => setRevenue(r)}>
-                      {r}
-                    </Chip>
-                  ))}
-                </div>
-              </Field>
-              <Field label="可自由支配流動資產淨值">
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {assetBands.map((a) => (
-                    <Chip key={a} active={assets === a} onClick={() => setAssets(a)}>
-                      {a}
-                    </Chip>
-                  ))}
-                </div>
-              </Field>
-              <Field label="主要行業領域">
-                <select className={inputClass} value={industry} onChange={(e) => setIndustry(e.target.value)}>
-                  <option value="">請選擇</option>
-                  {industries.map((i) => (
-                    <option key={i} value={i}>
-                      {i}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-            </>
-          )}
-
-          {step === 3 && (
-            <>
-              <h2 className="font-display text-xl">第 3 階段｜資源交換與板塊適配</h2>
+              <h2 className="font-display text-xl">第 2 階段｜資源交換與板塊適配</h2>
               <Field label="您最關注的八大板塊（最多 3 項）">
                 <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   {pillars.map((p) => (
@@ -395,9 +352,9 @@ function Apply() {
             </>
           )}
 
-          {step === 4 && (
+          {step === 3 && (
             <>
-              <h2 className="font-display text-xl">第 4 階段｜入會承諾與審查公約</h2>
+              <h2 className="font-display text-xl">第 3 階段｜入會承諾與審查公約</h2>
               <Field label="推薦人會籍編號（選填）" hint="若無推薦人，將自動轉入秘書處獨立背調與排隊清單。">
                 <input className={inputClass} value={referrer} onChange={(e) => setReferrer(e.target.value)} placeholder="會員編號與姓名" />
               </Field>
@@ -429,7 +386,7 @@ function Apply() {
             >
               <ArrowLeft className="size-4" /> 上一步
             </button>
-            {step < 4 ? (
+            {step < 3 ? (
               <button
                 type="button"
                 onClick={next}
