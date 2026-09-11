@@ -140,8 +140,8 @@ function Apply() {
         toast.error("請至少選擇 1 個最關注的板塊。");
         return false;
       }
-      if (coreValue.trim().length < 80) {
-        toast.error("「核心稀缺價值」請以 80–200 字具體說明。");
+      if (!coreValue.trim()) {
+        toast.error("請填寫「核心稀缺價值」。");
         return false;
       }
       return true;
@@ -345,15 +345,13 @@ function Apply() {
               </Field>
               <Field
                 label="您能為俱樂部貢獻的「核心稀缺價值」"
-                hint="獵光者是一個價值對等的圈層：請說明您或您的企業能為其他會員提供何種不可替代的資源、通路、技術或決策支持（80–200 字）。"
+                hint="獵光者是一個價值對等的圈層：請說明您或您的企業能為其他會員提供何種不可替代的資源、通路、技術或決策支持。"
               >
                 <textarea
                   className={`${inputClass} min-h-36`}
                   value={coreValue}
                   onChange={(e) => setCoreValue(e.target.value)}
-                  maxLength={400}
                 />
-                <p className="mt-2 text-xs text-muted-foreground">{coreValue.trim().length} 字</p>
               </Field>
               <Field label="您過去參與過的高端商會或組織" hint="如 BNI、扶輪社、YPO、各大商會或校友會；若無請填「無」。">
                 <input className={inputClass} value={priorOrgs} onChange={(e) => setPriorOrgs(e.target.value)} />
