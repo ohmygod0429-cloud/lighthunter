@@ -113,6 +113,7 @@ function Apply() {
   const [coreValue, setCoreValue] = useState("");
   const [priorOrgs, setPriorOrgs] = useState("");
   const [referrer, setReferrer] = useState("");
+  const [licenses, setLicenses] = useState("");
   const [agreeSelling, setAgreeSelling] = useState(false);
   const [agreeChatham, setAgreeChatham] = useState(false);
 
