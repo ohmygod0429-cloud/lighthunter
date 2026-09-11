@@ -17,7 +17,7 @@ export const Route = createFileRoute("/apply")({
       { property: "og:title", content: "申請入會席次審核｜獵光者 未來俱樂部" },
       {
         property: "og:description",
-        content: "四階段審核申請表：基本資歷、事業體量、資源交換、入會公約。",
+        content: "三階段審核申請表：基本資歷、資源交換、入會公約。",
       },
     ],
   }),
