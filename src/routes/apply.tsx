@@ -106,8 +106,6 @@ function Apply() {
   const [email, setEmail] = useState("");
   const [lifePhoto, setLifePhoto] = useState<File | null>(null);
   const [headshotPhoto, setHeadshotPhoto] = useState<File | null>(null);
-  const [revenue, setRevenue] = useState("");
-  const [assets, setAssets] = useState("");
   const [industry, setIndustry] = useState("");
   const [picked, setPicked] = useState<string[]>([]);
   const [coreValue, setCoreValue] = useState("");
