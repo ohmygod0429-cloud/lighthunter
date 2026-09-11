@@ -133,6 +133,10 @@ function Apply() {
         toast.error("請輸入有效的電子郵件地址。");
         return false;
       }
+      if (!licenses.trim()) {
+        toast.error("請填寫持有證照欄位，若無請填「無」。");
+        return false;
+      }
       if (!lifePhoto || !headshotPhoto) {
         toast.error("請上傳一張生活照與一張大頭照。");
         return false;
@@ -200,6 +204,7 @@ function Apply() {
         core_value: coreValue.trim(),
         prior_orgs: priorOrgs.trim() || null,
         referrer: referrer.trim() || null,
+        licenses: licenses.trim(),
         agree_no_selling: agreeSelling,
         agree_chatham: agreeChatham,
       });
@@ -292,6 +297,9 @@ function Apply() {
               </Field>
               <Field label="電子郵件" hint="接受企業網域信箱，亦接受 Gmail、Yahoo 等公共信箱。">
                 <input className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@yourcompany.com 或 you@gmail.com" />
+              </Field>
+              <Field label="是否持有任何類別證照？" hint="請列出您持有的專業證照或資格，若無請填「無」。">
+                <input className={inputClass} value={licenses} onChange={(e) => setLicenses(e.target.value)} placeholder="如：會計師、律師、CFP、無" />
               </Field>
               <Field
                 label="上傳生活照與大頭照"
