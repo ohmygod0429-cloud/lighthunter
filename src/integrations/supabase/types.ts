@@ -26,6 +26,7 @@ export type Database = {
           headshot_path: string | null
           id: string
           industry: string
+          licenses: string | null
           life_photo_path: string | null
           liquid_assets: string
           messenger: string | null
@@ -47,6 +48,7 @@ export type Database = {
           headshot_path?: string | null
           id?: string
           industry: string
+          licenses?: string | null
           life_photo_path?: string | null
           liquid_assets: string
           messenger?: string | null
@@ -68,6 +70,7 @@ export type Database = {
           headshot_path?: string | null
           id?: string
           industry?: string
+          licenses?: string | null
           life_photo_path?: string | null
           liquid_assets?: string
           messenger?: string | null
