@@ -317,8 +317,14 @@ function Apply() {
                   ))}
                 </select>
               </Field>
-              <Field label="私人手機" hint="需可接收來電或簡訊，供秘書處聯繫。">
-                <input className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="0912-345-678" />
+              <Field label="私人手機" hint="需可接收來電或簡訊，供秘書處聯繫（限 10 碼數字）。">
+                <input
+                  inputMode="numeric"
+                  className={inputClass}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                  placeholder="0912345678"
+                />
               </Field>
               <Field label="WeChat / LINE">
                 <input className={inputClass} value={messenger} onChange={(e) => setMessenger(e.target.value)} placeholder="LINE ID 或 WeChat ID" />
