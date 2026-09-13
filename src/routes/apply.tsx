@@ -285,8 +285,24 @@ function Apply() {
               <Field label="真實姓名" hint="需與護照／身分證件一致，以供背景初查。">
                 <input className={inputClass} value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="王〇〇" />
               </Field>
-              <Field label="出生年月日" hint="供年齡與身分核對之用。">
-                <input type="date" className={inputClass} value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+              <Field label="出生年月日" hint="請填寫西元日期供年齡與身分核對之用。例：1989/04/02">
+                <input
+                  inputMode="numeric"
+                  className={inputClass}
+                  value={birthDate}
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, "").slice(0, 8);
+                    let formatted = digits;
+                    if (digits.length > 4) {
+                      formatted = digits.slice(0, 4) + "/" + digits.slice(4);
+                    }
+                    if (digits.length > 6) {
+                      formatted = digits.slice(0, 4) + "/" + digits.slice(4, 6) + "/" + digits.slice(6);
+                    }
+                    setBirthDate(formatted);
+                  }}
+                  placeholder="YYYY/MM/DD"
+                />
               </Field>
               <Field label="現任職稱與所屬企業" hint="請填公司完整全稱或官方網站，如自由接案者或老師請填寫職稱／年資。">
                 <input className={inputClass} value={titleCompany} onChange={(e) => setTitleCompany(e.target.value)} placeholder="執行長／〇〇股份有限公司 www.example.com" />
