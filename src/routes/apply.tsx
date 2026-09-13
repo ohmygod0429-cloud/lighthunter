@@ -113,8 +113,21 @@ function Apply() {
         toast.error("請完整填寫第 1 階段所有欄位。");
         return false;
       }
+      if (/\d/.test(fullName)) {
+        toast.error("真實姓名不可包含數字。");
+        return false;
+      }
       if (!birthDate) {
         toast.error("請填寫出生年月日。");
+        return false;
+      }
+      if (birthDate.replace(/\D/g, "").length !== 8) {
+        toast.error("出生年月日請填寫完整 8 碼西元日期（年 4 碼／月 2 碼／日 2 碼）。");
+        return false;
+      }
+      const phoneDigits = phone.replace(/\D/g, "");
+      if (phoneDigits.length !== 10) {
+        toast.error("私人手機請填寫完整 10 碼數字。");
         return false;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -272,8 +285,24 @@ function Apply() {
               <Field label="真實姓名" hint="需與護照／身分證件一致，以供背景初查。">
                 <input className={inputClass} value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="王〇〇" />
               </Field>
-              <Field label="出生年月日" hint="供年齡與身分核對之用。">
-                <input type="date" className={inputClass} value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+              <Field label="出生年月日" hint="請填寫西元日期供年齡與身分核對之用。例：1989/04/02">
+                <input
+                  inputMode="numeric"
+                  className={inputClass}
+                  value={birthDate}
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, "").slice(0, 8);
+                    let formatted = digits;
+                    if (digits.length > 4) {
+                      formatted = digits.slice(0, 4) + "/" + digits.slice(4);
+                    }
+                    if (digits.length > 6) {
+                      formatted = digits.slice(0, 4) + "/" + digits.slice(4, 6) + "/" + digits.slice(6);
+                    }
+                    setBirthDate(formatted);
+                  }}
+                  placeholder="YYYY/MM/DD"
+                />
               </Field>
               <Field label="現任職稱與所屬企業" hint="請填公司完整全稱或官方網站，如自由接案者或老師請填寫職稱／年資。">
                 <input className={inputClass} value={titleCompany} onChange={(e) => setTitleCompany(e.target.value)} placeholder="執行長／〇〇股份有限公司 www.example.com" />
@@ -288,8 +317,14 @@ function Apply() {
                   ))}
                 </select>
               </Field>
-              <Field label="私人手機" hint="需可接收來電或簡訊，供秘書處聯繫。">
-                <input className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="0912-345-678" />
+              <Field label="私人手機" hint="需可接收來電或簡訊，供秘書處聯繫（限 10 碼數字）。">
+                <input
+                  inputMode="numeric"
+                  className={inputClass}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                  placeholder="0912345678"
+                />
               </Field>
               <Field label="WeChat / LINE">
                 <input className={inputClass} value={messenger} onChange={(e) => setMessenger(e.target.value)} placeholder="LINE ID 或 WeChat ID" />
