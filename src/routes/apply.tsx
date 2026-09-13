@@ -113,8 +113,21 @@ function Apply() {
         toast.error("請完整填寫第 1 階段所有欄位。");
         return false;
       }
+      if (/\d/.test(fullName)) {
+        toast.error("真實姓名不可包含數字。");
+        return false;
+      }
       if (!birthDate) {
         toast.error("請填寫出生年月日。");
+        return false;
+      }
+      if (birthDate.replace(/\D/g, "").length !== 8) {
+        toast.error("出生年月日請填寫完整 8 碼西元日期（年 4 碼／月 2 碼／日 2 碼）。");
+        return false;
+      }
+      const phoneDigits = phone.replace(/\D/g, "");
+      if (phoneDigits.length !== 10) {
+        toast.error("私人手機請填寫完整 10 碼數字。");
         return false;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
