@@ -17,7 +17,9 @@ export type Database = {
       membership_applications: {
         Row: {
           agree_chatham: boolean
+          agree_etiquette: boolean
           agree_no_selling: boolean
+          agree_truthful: boolean
           birth_date: string | null
           business_email: string
           contact: string | null
@@ -30,6 +32,7 @@ export type Database = {
           licenses: string | null
           life_photo_path: string | null
           liquid_assets: string
+          meeting_time_pref: string | null
           messenger: string | null
           phone: string | null
           pillars: string | null
@@ -40,7 +43,9 @@ export type Database = {
         }
         Insert: {
           agree_chatham?: boolean
+          agree_etiquette?: boolean
           agree_no_selling?: boolean
+          agree_truthful?: boolean
           birth_date?: string | null
           business_email: string
           contact?: string | null
@@ -53,6 +58,7 @@ export type Database = {
           licenses?: string | null
           life_photo_path?: string | null
           liquid_assets: string
+          meeting_time_pref?: string | null
           messenger?: string | null
           phone?: string | null
           pillars?: string | null
@@ -63,7 +69,9 @@ export type Database = {
         }
         Update: {
           agree_chatham?: boolean
+          agree_etiquette?: boolean
           agree_no_selling?: boolean
+          agree_truthful?: boolean
           birth_date?: string | null
           business_email?: string
           contact?: string | null
@@ -76,6 +84,7 @@ export type Database = {
           licenses?: string | null
           life_photo_path?: string | null
           liquid_assets?: string
+          meeting_time_pref?: string | null
           messenger?: string | null
           phone?: string | null
           pillars?: string | null
