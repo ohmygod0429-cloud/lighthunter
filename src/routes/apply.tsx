@@ -400,25 +400,56 @@ function Apply() {
 
           {step === 3 && (
             <>
-              <h2 className="font-display text-xl">第 3 階段｜入會承諾與審查公約</h2>
-              <Field label="推薦人會籍編號（選填）" hint="若無推薦人，將自動轉入秘書處獨立背調與排隊清單。">
-                <input className={inputClass} value={referrer} onChange={(e) => setReferrer(e.target.value)} placeholder="會員編號與姓名" />
+              <h2 className="font-display text-xl">第 3 階段｜會籍諮詢預審與交流預約</h2>
+              <p className="leading-loose text-muted-foreground">
+                感謝您完成前階段資料填寫。獵光者未來俱樂部採「嚴格實名審查與邀請面試制」，以確保每位入會夥伴皆具備極高的商務信用與共同成長願景。請完成最後的交流預約確認：
+              </p>
+
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-gold-soft">一、會員承諾與社群共識</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  <span className="text-foreground/80">隱私與誠信首重：</span>遵守高端社群交流禮儀，嚴格保守內部商務機密，杜絕任何未經授權的廣告騷擾。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  <span className="text-foreground/80">生態活躍共榮機制：</span>本俱樂部為實質資源共享平台，採「活躍會籍維護制」，入會後享有完整專屬體驗期，後續僅需維持基本生態日常互動與支持，即可長期解鎖八大維度所有特權（具體細節將於一對一會晤時為您完整說明）。
+                </p>
+                <p className="text-sm font-medium text-gold-soft">二、專屬面試與權益解鎖預約</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  通過線上初審後，我們的創始理事將於 48 小時內與您進行 15 分鐘的線上／線下專屬深度交流，為您詳細拆解商業媒合對接方式、客製化旅遊優惠及泰國皇室御用品牌專屬禮遇。
+                </p>
+              </div>
+
+              <label className="flex cursor-pointer gap-3 rounded-xl border border-border p-5 text-sm leading-relaxed text-muted-foreground">
+                <input type="checkbox" checked={agreeEtiquette} onChange={(e) => setAgreeEtiquette(e.target.checked)} className="mt-1 size-4 accent-primary" />
+                <span>我承諾遵守高端商務交流禮儀與隱私規範。</span>
+              </label>
+              <label className="flex cursor-pointer gap-3 rounded-xl border border-border p-5 text-sm leading-relaxed text-muted-foreground">
+                <input type="checkbox" checked={agreeTruthful} onChange={(e) => setAgreeTruthful(e.target.checked)} className="mt-1 size-4 accent-primary" />
+                <span>我確認所填寫之個人與企業經歷屬實，並同意接受理事會的一對一交流審核。</span>
+              </label>
+
+              <Field label="方便進行 15 分鐘專屬交流的時間">
+                <div className="mt-3 flex flex-wrap gap-3">
+                  {["平日下午", "平日晚上", "週末時段"].map((opt) => (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => setMeetingTimePref(opt)}
+                      className={`rounded-full border px-5 py-2.5 text-sm transition-colors ${
+                        meetingTimePref === opt
+                          ? "border-primary bg-primary/15 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/50"
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
               </Field>
-              <label className="flex cursor-pointer gap-3 rounded-xl border border-border p-5 text-sm leading-relaxed text-muted-foreground">
-                <input type="checkbox" checked={agreeSelling} onChange={(e) => setAgreeSelling(e.target.checked)} className="mt-1 size-4 accent-primary" />
-                <span>
-                  我充分理解獵光者未來俱樂部禁止任何未經授權的產品直銷、保險推銷或侵擾式拉客行為。經查證屬實者，俱樂部有權無條件終止其會籍且不予退款。
-                </span>
-              </label>
-              <label className="flex cursor-pointer gap-3 rounded-xl border border-border p-5 text-sm leading-relaxed text-muted-foreground">
-                <input type="checkbox" checked={agreeChatham} onChange={(e) => setAgreeChatham(e.target.checked)} className="mt-1 size-4 accent-primary" />
-                <span>
-                  我同意在所有會內私密會議與交流中遵守 Chatham House Rule（查特姆研究所守則），絕不對外洩露任何會員的商業機密與隱私言論。
-                </span>
-              </label>
+
               <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
                 <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" />
-                送出後不代表入會成立。秘書處完成初審後，合格候選人將收到專屬邀請函與 1 對 1 會晤安排。
+                送出後不代表入會成立。通過線上初審者，創始理事將於 48 小時內與您聯繫安排專屬交流會晤。
               </p>
             </>
           )}
