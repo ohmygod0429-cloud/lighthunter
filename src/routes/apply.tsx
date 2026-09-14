@@ -161,8 +161,8 @@ function Apply() {
       return true;
     }
     if (step === 3) {
-      if (!agreeEtiquette || !agreeTruthful) {
-        toast.error("請確認並勾選兩項會員承諾。");
+      if (!agreeEtiquette || !agreeTruthful || !agreeHouseRules) {
+        toast.error("請確認並勾選所有會員承諾與家規共識。");
         return false;
       }
       if (!meetingTimePref) {
