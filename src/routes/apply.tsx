@@ -96,10 +96,10 @@ function Apply() {
   const [picked, setPicked] = useState<string[]>([]);
   const [coreValue, setCoreValue] = useState("");
   const [priorOrgs, setPriorOrgs] = useState("");
-  const [referrer, setReferrer] = useState("");
   const [licenses, setLicenses] = useState("");
-  const [agreeSelling, setAgreeSelling] = useState(false);
-  const [agreeChatham, setAgreeChatham] = useState(false);
+  const [agreeEtiquette, setAgreeEtiquette] = useState(false);
+  const [agreeTruthful, setAgreeTruthful] = useState(false);
+  const [meetingTimePref, setMeetingTimePref] = useState("");
 
   const togglePillar = (t: string) => {
     setPicked((prev) =>
@@ -160,8 +160,12 @@ function Apply() {
       return true;
     }
     if (step === 3) {
-      if (!agreeSelling || !agreeChatham) {
-        toast.error("請確認並勾選兩項入會公約。");
+      if (!agreeEtiquette || !agreeTruthful) {
+        toast.error("請確認並勾選兩項會員承諾。");
+        return false;
+      }
+      if (!meetingTimePref) {
+        toast.error("請選擇方便進行專屬交流的時間。");
         return false;
       }
       return true;
@@ -202,10 +206,10 @@ function Apply() {
         pillars: picked.join("、"),
         core_value: coreValue.trim(),
         prior_orgs: priorOrgs.trim() || null,
-        referrer: referrer.trim() || null,
         licenses: licenses.trim(),
-        agree_no_selling: agreeSelling,
-        agree_chatham: agreeChatham,
+        agree_etiquette: agreeEtiquette,
+        agree_truthful: agreeTruthful,
+        meeting_time_pref: meetingTimePref,
       });
       if (error) throw error;
       setDone(true);
@@ -271,7 +275,7 @@ function Apply() {
               }`}
             >
               {i + 1}・
-              {["基本資歷", "資源交換", "入會公約"][i]}
+              {["基本資歷", "資源交換", "會籍預審"][i]}
             </li>
           ))}
         </ol>
@@ -443,7 +447,7 @@ function Apply() {
                 disabled={submitting}
                 className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-7 py-3 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5 disabled:opacity-60"
               >
-                {submitting ? "送出中…" : "提交審核申請"} <ArrowRight className="size-4" />
+                {submitting ? "送出中…" : "送出審核資料，預約理事專屬交流會晤"} <ArrowRight className="size-4" />
               </button>
             )}
           </div>
