@@ -417,6 +417,28 @@ function Apply() {
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   通過線上初審後，我們的創始理事將於 48 小時內與您進行 15 分鐘的線上／線下專屬深度交流，為您詳細拆解商業媒合對接方式、客製化旅遊優惠及泰國皇室御用品牌專屬禮遇。
                 </p>
+                <p className="text-sm font-medium text-gold-soft">三、家規共識</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  凡善良有愛，認同以下家規者，經過審核通過即可。
+                </p>
+                <div className="glass-card rounded-2xl p-6">
+                  <p className="text-center text-gold-soft">我讚嘆宇宙與之同頻</p>
+                  <div className="mt-4 grid gap-1 text-center text-sm leading-relaxed text-muted-foreground">
+                    <p>以愛為始　以善為念</p>
+                    <p>以信為本　堅守信念</p>
+                    <p>知行合一　與道同行</p>
+                    <p>起心動念　天地合一</p>
+                    <p>互助護愛　不分彼此</p>
+                    <p>不嚼口舌　不造紛爭</p>
+                    <p>互為貴人　資源共享</p>
+                    <p>相互托舉　一生同行</p>
+                    <p>嚴守家規　守護家園</p>
+                    <p>提好字　說好話</p>
+                    <p>做好事　做好人</p>
+                    <p className="text-gold-soft">走向光　成為光</p>
+                    <p className="text-gold-soft">德到　得道　得到</p>
+                  </div>
+                </div>
               </div>
 
               <label className="flex cursor-pointer gap-3 rounded-xl border border-border p-5 text-sm leading-relaxed text-muted-foreground">
