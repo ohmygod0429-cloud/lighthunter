@@ -450,6 +450,10 @@ function Apply() {
                 <input type="checkbox" checked={agreeTruthful} onChange={(e) => setAgreeTruthful(e.target.checked)} className="mt-1 size-4 accent-primary" />
                 <span>我確認所填寫之個人與企業經歷屬實，並同意接受理事會的一對一交流審核。</span>
               </label>
+              <label className="flex cursor-pointer gap-3 rounded-xl border border-border p-5 text-sm leading-relaxed text-muted-foreground">
+                <input type="checkbox" checked={agreeHouseRules} onChange={(e) => setAgreeHouseRules(e.target.checked)} className="mt-1 size-4 accent-primary" />
+                <span>我已閱讀並認同以上家規，承諾以愛為始、以善為念，與同頻人共同守護獵光者未來俱樂部。</span>
+              </label>
 
               <Field label="方便進行 15 分鐘專屬交流的時間">
                 <div className="mt-3 flex flex-wrap gap-3">
