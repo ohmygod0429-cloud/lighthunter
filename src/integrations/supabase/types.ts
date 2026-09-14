@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           agree_chatham: boolean
           agree_etiquette: boolean
+          agree_house_rules: boolean
           agree_no_selling: boolean
           agree_truthful: boolean
           birth_date: string | null
@@ -44,6 +45,7 @@ export type Database = {
         Insert: {
           agree_chatham?: boolean
           agree_etiquette?: boolean
+          agree_house_rules?: boolean
           agree_no_selling?: boolean
           agree_truthful?: boolean
           birth_date?: string | null
@@ -70,6 +72,7 @@ export type Database = {
         Update: {
           agree_chatham?: boolean
           agree_etiquette?: boolean
+          agree_house_rules?: boolean
           agree_no_selling?: boolean
           agree_truthful?: boolean
           birth_date?: string | null
