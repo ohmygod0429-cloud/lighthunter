@@ -210,6 +210,7 @@ function Apply() {
         licenses: licenses.trim(),
         agree_etiquette: agreeEtiquette,
         agree_truthful: agreeTruthful,
+        agree_house_rules: agreeHouseRules,
         meeting_time_pref: meetingTimePref,
       });
       if (error) throw error;
