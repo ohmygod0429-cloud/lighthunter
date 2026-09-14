@@ -99,6 +99,7 @@ function Apply() {
   const [licenses, setLicenses] = useState("");
   const [agreeEtiquette, setAgreeEtiquette] = useState(false);
   const [agreeTruthful, setAgreeTruthful] = useState(false);
+  const [agreeHouseRules, setAgreeHouseRules] = useState(false);
   const [meetingTimePref, setMeetingTimePref] = useState("");
 
   const togglePillar = (t: string) => {
