@@ -4,6 +4,7 @@ import { z } from "zod";
 const schema = z.object({
   sheet: z.enum(["applications", "reservations"]),
   row: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null()])),
+  photoPaths: z.record(z.string(), z.string().nullable()).optional(),
 });
 
 /** 把一筆表單資料同步到 Google 試算表（透過使用者提供的 Apps Script 網址） */
