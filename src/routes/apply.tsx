@@ -415,9 +415,15 @@ function Apply() {
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   <span className="text-foreground/80">生態活躍共榮機制：</span>本俱樂部為實質資源共享平台，採「活躍會籍維護制」，入會後享有完整專屬體驗期，後續僅需維持基本生態日常互動與支持，即可長期解鎖八大維度所有特權（具體細節將於一對一會晤時為您完整說明）。
                 </p>
-                <p className="text-sm font-medium text-gold-soft">二、專屬面試與權益解鎖預約</p>
+                <p className="text-sm font-medium text-gold-soft">二、會籍審核與專屬交流說明</p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  通過線上初審後，我們的創始理事將於 48 小時內與您進行 15 分鐘的線上／線下專屬深度交流，為您詳細拆解商業媒合對接方式、客製化旅遊優惠及泰國皇室御用品牌專屬禮遇。
+                  <span className="text-foreground/80">依序審核通知：</span>由於申請人數眾多，為確保每位申請夥伴的背景資質與圈子純粹度，委員會將採「人工實名嚴審制」並依填表順序逐一評估。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  <span className="text-foreground/80">通過初審安排：</span>凡通過線上初審者，我們將依序以個別專屬通知，邀約進行約 15 分鐘的線上或線下深度交流會晤。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  <span className="text-foreground/80">未通過不另行通知：</span>若名額額滿或暫未符合現階段入會標準，將不另行發送未通過通知，敬請理解並感謝您的耐心等候。
                 </p>
                 <p className="text-sm font-medium text-gold-soft">三、家規共識</p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
