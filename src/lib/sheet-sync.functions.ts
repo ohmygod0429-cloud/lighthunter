@@ -37,6 +37,7 @@ export const syncRowToSheet = createServerFn({ method: "POST" })
           sheet: data.sheet,
           submitted_at: new Date().toISOString(),
           ...data.row,
+          ...photoUrls,
         }),
         redirect: "follow",
       });
