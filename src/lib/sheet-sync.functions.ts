@@ -14,6 +14,21 @@ export const syncRowToSheet = createServerFn({ method: "POST" })
     const url = process.env["GOOGLE_SHEET_WEBHOOK_URL"];
     if (!url) return { ok: false, error: "missing_webhook_url" };
 
+    // 照片轉成長效期可直接開啟的網址，方便在試算表中點開檢視
+    const photoUrls: Record<string, string | null> = {};
+    if (data.photoPaths && Object.keys(data.photoPaths).length > 0) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const storage = supabaseAdmin.storage.from("application-photos");
+      for (const [key, path] of Object.entries(data.photoPaths)) {
+        if (!path) {
+          photoUrls[key] = null;
+          continue;
+        }
+        const { data: signed } = await storage.createSignedUrl(path, 60 * 60 * 24 * 365 * 5);
+        photoUrls[key] = signed?.signedUrl ?? null;
+      }
+    }
+
     try {
       const res = await fetch(url, {
         method: "POST",
