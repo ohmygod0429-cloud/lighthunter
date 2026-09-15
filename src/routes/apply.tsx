@@ -192,7 +192,7 @@ function Apply() {
     try {
       const lifePath = lifePhoto ? await uploadPhoto(lifePhoto, "life") : null;
       const headshotPath = headshotPhoto ? await uploadPhoto(headshotPhoto, "headshot") : null;
-      const { error } = await supabase.from("membership_applications").insert({
+      const record = {
         full_name: fullName.trim(),
         birth_date: birthDate,
         title_company: titleCompany.trim(),
@@ -212,8 +212,19 @@ function Apply() {
         agree_truthful: agreeTruthful,
         agree_house_rules: agreeHouseRules,
         meeting_time_pref: meetingTimePref,
-      });
+      };
+      const { error } = await supabase.from("membership_applications").insert(record);
       if (error) throw error;
+      void syncRowToSheet({
+        data: {
+          sheet: "applications",
+          row: { ...record, life_photo_path: undefined, headshot_path: undefined } as Record<
+            string,
+            string | number | boolean | null
+          >,
+          photoPaths: { life_photo_url: lifePath, headshot_url: headshotPath },
+        },
+      }).catch(() => undefined);
       setDone(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
