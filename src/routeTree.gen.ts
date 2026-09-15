@@ -17,6 +17,7 @@ import { Route as FoundingRouteImport } from './routes/founding'
 import { Route as NetworkRouteImport } from './routes/network'
 import { Route as QaRouteImport } from './routes/qa'
 import { Route as ReserveRouteImport } from './routes/reserve'
+import { Route as ReviewRouteImport } from './routes/review'
 import { Route as ReserveSuccessRouteImport } from './routes/reserve.success'
 
 const IndexRoute = IndexRouteImport.update({
@@ -59,6 +60,11 @@ const ReserveRoute = ReserveRouteImport.update({
   path: '/reserve',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReviewRoute = ReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReserveSuccessRoute = ReserveSuccessRouteImport.update({
   id: '/success',
   path: '/success',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/network': typeof NetworkRoute
   '/qa': typeof QaRoute
   '/reserve': typeof ReserveRouteWithChildren
+  '/review': typeof ReviewRoute
   '/reserve/success': typeof ReserveSuccessRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/network': typeof NetworkRoute
   '/qa': typeof QaRoute
   '/reserve': typeof ReserveRouteWithChildren
+  '/review': typeof ReviewRoute
   '/reserve/success': typeof ReserveSuccessRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/network': typeof NetworkRoute
   '/qa': typeof QaRoute
   '/reserve': typeof ReserveRouteWithChildren
+  '/review': typeof ReviewRoute
   '/reserve/success': typeof ReserveSuccessRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/network'
     | '/qa'
     | '/reserve'
+    | '/review'
     | '/reserve/success'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/network'
     | '/qa'
     | '/reserve'
+    | '/review'
     | '/reserve/success'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/network'
     | '/qa'
     | '/reserve'
+    | '/review'
     | '/reserve/success'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +156,7 @@ export interface RootRouteChildren {
   NetworkRoute: typeof NetworkRoute
   QaRoute: typeof QaRoute
   ReserveRoute: typeof ReserveRouteWithChildren
+  ReviewRoute: typeof ReviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -204,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReserveRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/review': {
+      id: '/review'
+      path: '/review'
+      fullPath: '/review'
+      preLoaderRoute: typeof ReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reserve/success': {
       id: '/reserve/success'
       path: '/success'
@@ -234,6 +254,7 @@ const rootRouteChildren: RootRouteChildren = {
   NetworkRoute: NetworkRoute,
   QaRoute: QaRoute,
   ReserveRoute: ReserveRouteWithChildren,
+  ReviewRoute: ReviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
