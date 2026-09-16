@@ -16,6 +16,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AdminLock } from "@/components/admin-lock";
 import { MembershipBadge } from "@/components/membership-badge";
+import { ScrollToTop } from "@/components/scroll-to-top";
 
 function NotFoundComponent() {
   return (
