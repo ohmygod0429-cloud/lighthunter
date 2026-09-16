@@ -291,10 +291,19 @@ function Apply() {
             </li>
           ))}
         </ol>
+        <div className="mx-auto mt-6 h-1 w-full max-w-md overflow-hidden rounded-full bg-border">
+          <div
+            className="h-full rounded-full bg-gold-gradient transition-[width] duration-500 ease-out"
+            style={{ width: `${(step / 3) * 100}%` }}
+          />
+        </div>
+        <p className="mt-3 text-[11px] tracking-[0.2em] text-muted-foreground">
+          進度 {step} / 3　約需 3 分鐘完成
+        </p>
       </section>
 
       <section className="mx-auto max-w-3xl px-5 py-16">
-        <div className="glass-card space-y-7 rounded-2xl p-8 shadow-lux">
+        <div key={step} className="glass-card animate-rise space-y-7 rounded-2xl p-8 shadow-lux">
           {step === 1 && (
             <>
               <h2 className="font-display text-xl">第 1 階段｜基本資歷與聯絡管道</h2>
