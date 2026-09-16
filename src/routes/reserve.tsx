@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { syncRowToSheet } from "@/lib/sheet-sync.functions";
 
 
 export const Route = createFileRoute("/reserve")({
