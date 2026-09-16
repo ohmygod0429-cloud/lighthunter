@@ -13,9 +13,33 @@ const links = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    let frame = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        setProgress(max > 0 ? Math.min(1, window.scrollY / max) : 0);
+        setScrolled(window.scrollY > 12);
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+    <header
+      className={`sticky top-0 z-50 border-b border-border backdrop-blur-xl transition-colors duration-300 ${
+        scrolled ? "bg-background/92 shadow-lux" : "bg-background/70"
+      }`}
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
         <Link to="/" className="flex items-center gap-3">
           <span className="grid size-9 place-items-center rounded-full border border-primary/50 text-primary">
