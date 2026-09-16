@@ -300,6 +300,11 @@ function Apply() {
           photoPaths: { life_photo_url: lifePath, headshot_url: headshotPath },
         },
       }).catch(() => undefined);
+      try {
+        window.localStorage.removeItem(DRAFT_KEY);
+      } catch {
+        /* 忽略 */
+      }
       setDone(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
