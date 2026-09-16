@@ -216,13 +216,11 @@ function Apply() {
       };
       const { error } = await supabase.from("membership_applications").insert(record);
       if (error) throw error;
+      const { life_photo_path: _lp, headshot_path: _hp, ...sheetRow } = record;
       void syncRowToSheet({
         data: {
           sheet: "applications",
-          row: { ...record, life_photo_path: undefined, headshot_path: undefined } as Record<
-            string,
-            string | number | boolean | null
-          >,
+          row: sheetRow,
           photoPaths: { life_photo_url: lifePath, headshot_url: headshotPath },
         },
       }).catch(() => undefined);
