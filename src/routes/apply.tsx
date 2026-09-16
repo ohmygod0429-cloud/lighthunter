@@ -103,6 +103,77 @@ function Apply() {
   const [agreeHouseRules, setAgreeHouseRules] = useState(false);
   const [meetingTimePref, setMeetingTimePref] = useState("");
 
+  // 自動保存草稿（照片除外），避免中途離開後資料遺失
+  const DRAFT_KEY = "lh-apply-draft";
+  const [restored, setRestored] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw) as Record<string, unknown>;
+      const s = (v: unknown) => (typeof v === "string" ? v : "");
+      setFullName(s(d.fullName));
+      setBirthDate(s(d.birthDate));
+      setTitleCompany(s(d.titleCompany));
+      setPhone(s(d.phone));
+      setMessenger(s(d.messenger));
+      setEmail(s(d.email));
+      setIndustry(s(d.industry));
+      setCoreValue(s(d.coreValue));
+      setPriorOrgs(s(d.priorOrgs));
+      setLicenses(s(d.licenses));
+      setMeetingTimePref(s(d.meetingTimePref));
+      if (Array.isArray(d.picked)) setPicked(d.picked.filter((x): x is string => typeof x === "string"));
+      if (Object.values(d).some((v) => typeof v === "string" && v.trim())) {
+        toast.success("已為您帶回上次填寫的內容，照片請重新上傳。");
+      }
+    } catch {
+      /* 忽略無效草稿 */
+    } finally {
+      setRestored(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!restored) return;
+    try {
+      window.localStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({
+          fullName,
+          birthDate,
+          titleCompany,
+          phone,
+          messenger,
+          email,
+          industry,
+          picked,
+          coreValue,
+          priorOrgs,
+          licenses,
+          meetingTimePref,
+        }),
+      );
+    } catch {
+      /* 儲存空間不可用時略過 */
+    }
+  }, [
+    restored,
+    fullName,
+    birthDate,
+    titleCompany,
+    phone,
+    messenger,
+    email,
+    industry,
+    picked,
+    coreValue,
+    priorOrgs,
+    licenses,
+    meetingTimePref,
+  ]);
+
   const togglePillar = (t: string) => {
     setPicked((prev) =>
       prev.includes(t) ? prev.filter((p) => p !== t) : prev.length >= 3 ? prev : [...prev, t],
