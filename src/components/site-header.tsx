@@ -77,16 +77,23 @@ export function SiteHeader() {
 
         <button
           type="button"
-          aria-label="開啟選單"
+          aria-label={open ? "關閉選單" : "開啟選單"}
+          aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="grid size-10 place-items-center rounded-full border border-border text-foreground lg:hidden"
+          className="press grid size-11 place-items-center rounded-full border border-border text-foreground lg:hidden"
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
       </div>
 
+      <div
+        aria-hidden
+        className="h-0.5 origin-left bg-gold-gradient transition-transform duration-150 ease-out"
+        style={{ transform: `scaleX(${progress})` }}
+      />
+
       {open && (
-        <nav className="border-t border-border bg-card px-5 pb-5 lg:hidden">
+        <nav className="animate-rise border-t border-border bg-card px-5 pb-5 lg:hidden">
           {links.map((l) => (
             <Link
               key={l.to}
