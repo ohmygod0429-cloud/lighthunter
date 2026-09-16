@@ -22,17 +22,23 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+        <h1 className="font-display text-6xl text-gold-gradient">404</h1>
+        <h2 className="mt-4 font-display text-xl text-foreground">這道門後暫時沒有光</h2>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          您造訪的頁面不存在或已移動。回到首頁，我們陪您重新找到方向。
         </p>
-        <div className="mt-6">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="press inline-flex items-center justify-center rounded-full bg-gold-gradient px-6 py-3 text-sm font-medium text-primary-foreground"
           >
-            Go home
+            回到首頁
+          </Link>
+          <Link
+            to="/apply"
+            className="press inline-flex items-center justify-center rounded-full border border-primary/50 px-6 py-3 text-sm text-primary hover:bg-primary/10"
+          >
+            申請入會席次審核
           </Link>
         </div>
       </div>
