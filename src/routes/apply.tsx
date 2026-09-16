@@ -515,7 +515,7 @@ function Apply() {
           <div className="flex items-center justify-between gap-4 border-t border-border/70 pt-6">
             <button
               type="button"
-              onClick={() => setStep((s) => Math.max(1, s - 1))}
+              onClick={() => goTo(Math.max(1, step - 1))}
               disabled={step === 1}
               className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40"
             >
