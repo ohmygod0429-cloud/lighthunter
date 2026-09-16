@@ -175,8 +175,13 @@ function Apply() {
     return true;
   };
 
+  const goTo = (n: number) => {
+    setStep(n);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const next = () => {
-    if (validateStep()) setStep((s) => Math.min(3, s + 1));
+    if (validateStep()) goTo(Math.min(3, step + 1));
   };
 
   const uploadPhoto = async (file: File, folder: string) => {
