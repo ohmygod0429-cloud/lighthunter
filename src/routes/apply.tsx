@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { syncRowToSheet } from "@/lib/sheet-sync.functions";
 import { pillars, vettingSteps } from "@/data/pillars";
 
 export const Route = createFileRoute("/apply")({
