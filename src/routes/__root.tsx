@@ -142,6 +142,7 @@ function RootComponent() {
         <SiteFooter />
       </div>
       <MembershipBadge />
+      <ScrollToTop />
       <AdminLock />
       <Toaster />
     </QueryClientProvider>
