@@ -113,18 +113,20 @@ function Apply() {
       if (!raw) return;
       const d = JSON.parse(raw) as Record<string, unknown>;
       const s = (v: unknown) => (typeof v === "string" ? v : "");
-      setFullName(s(d.fullName));
-      setBirthDate(s(d.birthDate));
-      setTitleCompany(s(d.titleCompany));
-      setPhone(s(d.phone));
-      setMessenger(s(d.messenger));
-      setEmail(s(d.email));
-      setIndustry(s(d.industry));
-      setCoreValue(s(d.coreValue));
-      setPriorOrgs(s(d.priorOrgs));
-      setLicenses(s(d.licenses));
-      setMeetingTimePref(s(d.meetingTimePref));
-      if (Array.isArray(d.picked)) setPicked(d.picked.filter((x): x is string => typeof x === "string"));
+      setFullName(s(d["fullName"]));
+      setBirthDate(s(d["birthDate"]));
+      setTitleCompany(s(d["titleCompany"]));
+      setPhone(s(d["phone"]));
+      setMessenger(s(d["messenger"]));
+      setEmail(s(d["email"]));
+      setIndustry(s(d["industry"]));
+      setCoreValue(s(d["coreValue"]));
+      setPriorOrgs(s(d["priorOrgs"]));
+      setLicenses(s(d["licenses"]));
+      setMeetingTimePref(s(d["meetingTimePref"]));
+      const savedPicked = d["picked"];
+      if (Array.isArray(savedPicked))
+        setPicked(savedPicked.filter((x): x is string => typeof x === "string"));
       if (Object.values(d).some((v) => typeof v === "string" && v.trim())) {
         toast.success("已為您帶回上次填寫的內容，照片請重新上傳。");
       }
