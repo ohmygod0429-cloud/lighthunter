@@ -96,6 +96,48 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: oklch(0.79 0.126 84 / 0.28);
+  }
+
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  [role="button"] {
+    transition:
+      color 0.25s ease,
+      background-color 0.25s ease,
+      border-color 0.25s ease,
+      box-shadow 0.25s ease,
+      transform 0.25s ease,
+      opacity 0.25s ease;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -154,4 +196,25 @@
 @utility rule-gold {
   height: 1px;
   background: linear-gradient(90deg, transparent, oklch(0.79 0.126 84 / 0.7), transparent);
+}
+
+@utility animate-rise {
+  animation: lh-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes lh-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility press {
+  &:active {
+    transform: scale(0.97);
+  }
 }

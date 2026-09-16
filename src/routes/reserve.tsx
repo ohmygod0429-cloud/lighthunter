@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { syncRowToSheet } from "@/lib/sheet-sync.functions";
 
 
 export const Route = createFileRoute("/reserve")({
@@ -125,6 +126,10 @@ function ReservePage() {
             return;
           }
 
+          void syncRowToSheet({
+            data: { sheet: "reservations", row: { ...payload } },
+          }).catch(() => undefined);
+
           toast.success("已收到你的卡位申請", {
             description: "專屬引路人將於 3天內與你聯繫。",
           });
@@ -170,7 +175,7 @@ function ReservePage() {
             <input
               name="lineId"
               maxLength={50}
-              pattern="^[a-zA-Z0-9_.-]+$"
+              pattern="^[a-zA-Z0-9_.\-]+$"
               className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
               placeholder="例如：light.hunter"
             />

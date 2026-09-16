@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { syncRowToSheet } from "@/lib/sheet-sync.functions";
 import { pillars, vettingSteps } from "@/data/pillars";
 
 export const Route = createFileRoute("/apply")({
@@ -102,6 +103,79 @@ function Apply() {
   const [agreeHouseRules, setAgreeHouseRules] = useState(false);
   const [meetingTimePref, setMeetingTimePref] = useState("");
 
+  // 自動保存草稿（照片除外），避免中途離開後資料遺失
+  const DRAFT_KEY = "lh-apply-draft";
+  const [restored, setRestored] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw) as Record<string, unknown>;
+      const s = (v: unknown) => (typeof v === "string" ? v : "");
+      setFullName(s(d["fullName"]));
+      setBirthDate(s(d["birthDate"]));
+      setTitleCompany(s(d["titleCompany"]));
+      setPhone(s(d["phone"]));
+      setMessenger(s(d["messenger"]));
+      setEmail(s(d["email"]));
+      setIndustry(s(d["industry"]));
+      setCoreValue(s(d["coreValue"]));
+      setPriorOrgs(s(d["priorOrgs"]));
+      setLicenses(s(d["licenses"]));
+      setMeetingTimePref(s(d["meetingTimePref"]));
+      const savedPicked = d["picked"];
+      if (Array.isArray(savedPicked))
+        setPicked(savedPicked.filter((x): x is string => typeof x === "string"));
+      if (Object.values(d).some((v) => typeof v === "string" && v.trim())) {
+        toast.success("已為您帶回上次填寫的內容，照片請重新上傳。");
+      }
+    } catch {
+      /* 忽略無效草稿 */
+    } finally {
+      setRestored(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!restored) return;
+    try {
+      window.localStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({
+          fullName,
+          birthDate,
+          titleCompany,
+          phone,
+          messenger,
+          email,
+          industry,
+          picked,
+          coreValue,
+          priorOrgs,
+          licenses,
+          meetingTimePref,
+        }),
+      );
+    } catch {
+      /* 儲存空間不可用時略過 */
+    }
+  }, [
+    restored,
+    fullName,
+    birthDate,
+    titleCompany,
+    phone,
+    messenger,
+    email,
+    industry,
+    picked,
+    coreValue,
+    priorOrgs,
+    licenses,
+    meetingTimePref,
+  ]);
+
   const togglePillar = (t: string) => {
     setPicked((prev) =>
       prev.includes(t) ? prev.filter((p) => p !== t) : prev.length >= 3 ? prev : [...prev, t],
@@ -174,8 +248,13 @@ function Apply() {
     return true;
   };
 
+  const goTo = (n: number) => {
+    setStep(n);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const next = () => {
-    if (validateStep()) setStep((s) => Math.min(3, s + 1));
+    if (validateStep()) goTo(Math.min(3, step + 1));
   };
 
   const uploadPhoto = async (file: File, folder: string) => {
@@ -215,16 +294,19 @@ function Apply() {
       };
       const { error } = await supabase.from("membership_applications").insert(record);
       if (error) throw error;
+      const { life_photo_path: _lp, headshot_path: _hp, ...sheetRow } = record;
       void syncRowToSheet({
         data: {
           sheet: "applications",
-          row: { ...record, life_photo_path: undefined, headshot_path: undefined } as Record<
-            string,
-            string | number | boolean | null
-          >,
+          row: sheetRow,
           photoPaths: { life_photo_url: lifePath, headshot_url: headshotPath },
         },
       }).catch(() => undefined);
+      try {
+        window.localStorage.removeItem(DRAFT_KEY);
+      } catch {
+        /* 忽略 */
+      }
       setDone(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
@@ -292,10 +374,19 @@ function Apply() {
             </li>
           ))}
         </ol>
+        <div className="mx-auto mt-6 h-1 w-full max-w-md overflow-hidden rounded-full bg-border">
+          <div
+            className="h-full rounded-full bg-gold-gradient transition-[width] duration-500 ease-out"
+            style={{ width: `${(step / 3) * 100}%` }}
+          />
+        </div>
+        <p className="mt-3 text-[11px] tracking-[0.2em] text-muted-foreground">
+          進度 {step} / 3　約需 3 分鐘完成
+        </p>
       </section>
 
       <section className="mx-auto max-w-3xl px-5 py-16">
-        <div className="glass-card space-y-7 rounded-2xl p-8 shadow-lux">
+        <div key={step} className="glass-card animate-rise space-y-7 rounded-2xl p-8 shadow-lux">
           {step === 1 && (
             <>
               <h2 className="font-display text-xl">第 1 階段｜基本資歷與聯絡管道</h2>
@@ -502,7 +593,7 @@ function Apply() {
           <div className="flex items-center justify-between gap-4 border-t border-border/70 pt-6">
             <button
               type="button"
-              onClick={() => setStep((s) => Math.max(1, s - 1))}
+              onClick={() => goTo(Math.max(1, step - 1))}
               disabled={step === 1}
               className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40"
             >

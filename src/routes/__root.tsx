@@ -16,22 +16,29 @@ import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AdminLock } from "@/components/admin-lock";
 import { MembershipBadge } from "@/components/membership-badge";
+import { ScrollToTop } from "@/components/scroll-to-top";
 
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+        <h1 className="font-display text-6xl text-gold-gradient">404</h1>
+        <h2 className="mt-4 font-display text-xl text-foreground">這道門後暫時沒有光</h2>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          您造訪的頁面不存在或已移動。回到首頁，我們陪您重新找到方向。
         </p>
-        <div className="mt-6">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="press inline-flex items-center justify-center rounded-full bg-gold-gradient px-6 py-3 text-sm font-medium text-primary-foreground"
           >
-            Go home
+            回到首頁
+          </Link>
+          <Link
+            to="/apply"
+            className="press inline-flex items-center justify-center rounded-full border border-primary/50 px-6 py-3 text-sm text-primary hover:bg-primary/10"
+          >
+            申請入會席次審核
           </Link>
         </div>
       </div>
@@ -49,27 +56,25 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+        <h1 className="font-display text-xl text-foreground">這個頁面暫時無法載入</h1>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          我們這端出了一點狀況。請再試一次，或先回到首頁。
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="press inline-flex items-center justify-center rounded-full bg-gold-gradient px-6 py-3 text-sm font-medium text-primary-foreground"
           >
-            Try again
+            再試一次
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="press inline-flex items-center justify-center rounded-full border border-primary/50 px-6 py-3 text-sm text-primary hover:bg-primary/10"
           >
-            Go home
+            回到首頁
           </a>
         </div>
       </div>
@@ -115,7 +120,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="zh-Hant">
       <head>
         <HeadContent />
       </head>
@@ -141,6 +146,7 @@ function RootComponent() {
         <SiteFooter />
       </div>
       <MembershipBadge />
+      <ScrollToTop />
       <AdminLock />
       <Toaster />
     </QueryClientProvider>
