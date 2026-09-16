@@ -125,6 +125,10 @@ function ReservePage() {
             return;
           }
 
+          void syncRowToSheet({
+            data: { sheet: "reservations", row: { ...payload } },
+          }).catch(() => undefined);
+
           toast.success("已收到你的卡位申請", {
             description: "專屬引路人將於 3天內與你聯繫。",
           });
