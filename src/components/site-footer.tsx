@@ -3,7 +3,7 @@ import { SocialLinks } from "@/components/social-links";
 import { useAdminMode, useSectionVisible } from "@/lib/admin-mode";
 
 export function SiteFooter() {
-  const { isAdmin } = useAdminMode();
+  const isAdmin = useAdminMode();
   const { visible: showSocial, toggle: toggleSocial } = useSectionVisible("follow-us");
   return (
     <footer className="mt-24 border-t border-border bg-card/40">
