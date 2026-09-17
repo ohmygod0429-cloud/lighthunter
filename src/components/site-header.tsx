@@ -16,6 +16,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const admin = useAdminMode();
 
   useEffect(() => {
     let frame = 0;
