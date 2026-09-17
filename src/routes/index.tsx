@@ -266,7 +266,7 @@ function Index() {
         <div className="glass-card mt-14 flex flex-col items-center gap-6 rounded-2xl p-10 text-center shadow-glow">
           <ShieldCheck className="size-7 text-primary" />
           <h3 className="font-display text-xl leading-snug sm:text-2xl">
-            席次有限，且僅開放給價值對等的遠見者。
+            席次有限，且僅開放給善良有愛的同路人
           </h3>
           <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
             我們不開放線上直接付費入會。完成申請後，秘書處將進行背景與商譽初審，合格者由創始團隊親自安排 1
