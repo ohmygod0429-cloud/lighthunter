@@ -47,9 +47,6 @@ export function SiteFooter() {
             申請入會席次審核
           </Link>
 
-          <div className="pt-6 md:text-right">
-            <p className="text-[11px] text-muted-foreground/80">後台管理請由管理者解鎖後自上方導覽進入</p>
-          </div>
         </div>
       </div>
       <p className="border-t border-border/70 py-6 text-center text-xs tracking-widest text-muted-foreground">
