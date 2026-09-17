@@ -336,7 +336,7 @@ function ReservePage() {
             </button>
 
             <p className="text-center text-xs text-muted-foreground">
-              送出後將由專屬引路人與你確認席位與付款方案，資料僅供本次對接使用。
+              送出後將由專屬引路人與您聯繫，資料僅供本次對接使用。
             </p>
           </>
         )}
