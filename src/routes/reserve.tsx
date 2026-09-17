@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { syncRowToSheet } from "@/lib/sheet-sync.functions";
+import { useAdminMode, useSectionVisible } from "@/lib/admin-mode";
 
 
 export const Route = createFileRoute("/reserve")({
