@@ -297,7 +297,7 @@ function ReservePage() {
         ) : (
           <>
             <fieldset>
-              <legend className="text-sm text-gold-soft">付款方案</legend>
+              <legend className="text-sm text-gold-soft">付款方案說明</legend>
               <div className="mt-3 grid gap-3 sm:grid-cols-3">
                 {plans.map((p) => (
                   <button
