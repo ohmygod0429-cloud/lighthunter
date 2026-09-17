@@ -417,7 +417,7 @@ function Apply() {
           申請入會<span className="text-gold-gradient">席次審核</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl leading-loose text-muted-foreground">
-          獵光者未來俱樂部採推薦與審核入會制，席次稀缺。以下三個階段用於確認價值對等與圈層純度，請據實填寫。
+          獵光者未來俱樂部採推薦與審核入會制，席次稀缺。以下三個階段用於確認身分真實性與圈層純度，請據實填寫。
         </p>
         <ol className="mt-10 flex flex-wrap items-center justify-center gap-3 text-xs">
           {vettingSteps.slice(0, 3).map((s, i) => (
