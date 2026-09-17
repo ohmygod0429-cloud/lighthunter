@@ -11,10 +11,11 @@ import {
   Phone,
   RefreshCw,
   Search,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { fetchReviewData } from "@/lib/review.functions";
+import { deleteReviewRows, fetchReviewData } from "@/lib/review.functions";
 
 export const Route = createFileRoute("/review")({
   head: () => ({
@@ -91,6 +92,45 @@ function Review() {
   const [reservations, setReservations] = useState<Reservations | null>(null);
   const [tab, setTab] = useState<"applications" | "reservations">("applications");
   const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
+
+  const toggleSelect = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const removeRows = async (ids: string[]) => {
+    if (ids.length === 0 || deleting) return;
+    const label = tab === "applications" ? "入會申請" : "預約資料";
+    if (!window.confirm(`確定要刪除 ${ids.length} 筆${label}嗎？刪除後無法復原。`)) return;
+    setDeleting(true);
+    try {
+      const res = await deleteReviewRows({
+        data: { passcode, table: tab === "applications" ? "membership_applications" : "reservations", ids },
+      });
+      if (!res.ok) { toast.error("密碼錯誤"); return; }
+      if (tab === "applications") {
+        setApplications((prev) => prev?.filter((a) => !ids.includes(a.id)) ?? prev);
+      } else {
+        setReservations((prev) => prev?.filter((r) => !ids.includes(r.id)) ?? prev);
+      }
+      setSelected((prev) => {
+        const next = new Set(prev);
+        ids.forEach((id) => next.delete(id));
+        return next;
+      });
+      toast.success(`已刪除 ${res.deleted} 筆資料`);
+    } catch {
+      toast.error("刪除失敗，請稍後再試");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const load = async (code: string) => {
     setLoading(true);
