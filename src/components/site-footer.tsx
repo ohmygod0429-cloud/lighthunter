@@ -32,7 +32,7 @@ export function SiteFooter() {
             申請入會席次審核
           </Link>
           <Link to="/reserve" className="block text-muted-foreground hover:text-foreground">
-            線上預約與加入 LINE
+            線上一對一諮詢預約
           </Link>
         </div>
 
