@@ -16,10 +16,10 @@ export const Route = createFileRoute("/reserve/success")({
       { title: "預約成功｜專屬引路人將與你聯繫" },
       {
         name: "description",
-        content: "你的卡位申請已成功送出，專屬引路人將於 3 天內與你聯繫，完成一對一深度對接。",
+        content: "你的卡位申請已成功送出，專屬引路人將依序與你聯繫，完成一對一深度對接。",
       },
       { property: "og:title", content: "預約成功｜獵光者共生共榮未來生態圈" },
-      { property: "og:description", content: "你的卡位申請已成功送出，專屬引路人將於 3 天內與你聯繫。" },
+      { property: "og:description", content: "你的卡位申請已成功送出，專屬引路人將依序與你聯繫。" },
     ],
   }),
   component: ReserveSuccessPage,
@@ -38,7 +38,7 @@ function ReserveSuccessPage() {
       </h1>
       <p className="mt-4 leading-loose text-muted-foreground">
         {name ? `感謝 ${name} 的卡位申請，` : "感謝你的卡位申請，"}
-        專屬引路人將於 3 天內與你聯繫，完成一對一深度對接。
+        專屬引路人將依序與你聯繫，完成一對一深度對接。
       </p>
 
       <div className="mt-10 rounded-2xl border border-border bg-card/60 p-6 text-left">
