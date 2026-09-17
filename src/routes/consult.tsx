@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Copy, Lock, Mail, MessageCircle, Phone, RefreshCw, Search } from "lucide-react";
+import { Copy, Lock, Mail, MessageCircle, Phone, RefreshCw, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { fetchReviewData } from "@/lib/review.functions";
+import { deleteReviewRows, fetchReviewData } from "@/lib/review.functions";
 
 export const Route = createFileRoute("/consult")({
   head: () => ({
@@ -57,6 +57,38 @@ function Consult() {
   const [loading, setLoading] = useState(false);
   const [reservations, setReservations] = useState<Reservations | null>(null);
   const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
+
+  const toggleSelect = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const removeRows = async (ids: string[]) => {
+    if (ids.length === 0 || deleting) return;
+    if (!window.confirm(`確定要刪除 ${ids.length} 筆預約資料嗎？刪除後無法復原。`)) return;
+    setDeleting(true);
+    try {
+      const res = await deleteReviewRows({ data: { passcode, table: "reservations", ids } });
+      if (!res.ok) { toast.error("密碼錯誤"); return; }
+      setReservations((prev) => prev?.filter((r) => !ids.includes(r.id)) ?? prev);
+      setSelected((prev) => {
+        const next = new Set(prev);
+        ids.forEach((id) => next.delete(id));
+        return next;
+      });
+      toast.success(`已刪除 ${res.deleted} 筆資料`);
+    } catch {
+      toast.error("刪除失敗，請稍後再試");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const load = async (code: string) => {
     setLoading(true);
@@ -87,6 +119,11 @@ function Consult() {
         <>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <span className="rounded-full border border-border/60 px-4 py-2 text-sm text-muted-foreground">預約名單（{reservations?.length ?? 0}）</span>
+            {selected.size > 0 && (
+              <Button type="button" variant="destructive" onClick={() => void removeRows(Array.from(selected))} disabled={deleting}>
+                <Trash2 />刪除所選（{selected.size}）
+              </Button>
+            )}
             <Button type="button" variant="outline" className="sm:ml-auto" onClick={() => void load(passcode)} disabled={loading}><RefreshCw className={loading ? "animate-spin" : ""} />重新整理</Button>
           </div>
           <label className="relative mt-4 block">
@@ -100,8 +137,8 @@ function Consult() {
               const summary = [`預約｜${r.name}`, `送件：${new Date(r.created_at).toLocaleString("zh-TW")}`, `電話：${r.phone}`, `LINE：${r.line_id ?? "—"}`, `Email：${r.email}`, `需求：${r.intent}`, `方案：${r.plan}`].join("\n");
               return <article key={r.id} className={card}>
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div><h2 className="text-lg font-medium text-foreground">{r.name}</h2><p className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString("zh-TW")}</p></div>
-                  <Button type="button" size="sm" variant="outline" onClick={() => void copyText(summary)}><Copy />複製摘要</Button>
+                  <div className="flex items-start gap-2"><input type="checkbox" aria-label={`選取 ${r.name}`} checked={selected.has(r.id)} onChange={() => toggleSelect(r.id)} className="mt-1.5 h-4 w-4 accent-primary" /><div><h2 className="text-lg font-medium text-foreground">{r.name}</h2><p className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString("zh-TW")}</p></div></div>
+                  <div className="flex gap-2"><Button type="button" size="sm" variant="outline" onClick={() => void copyText(summary)}><Copy />複製摘要</Button><Button type="button" size="sm" variant="outline" className="text-destructive hover:text-destructive" onClick={() => void removeRows([r.id])} disabled={deleting}><Trash2 />刪除</Button></div>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <ContactLink icon={Phone} label="撥電話" href={`tel:${r.phone}`} />

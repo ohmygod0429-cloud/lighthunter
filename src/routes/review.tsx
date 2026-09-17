@@ -11,10 +11,11 @@ import {
   Phone,
   RefreshCw,
   Search,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { fetchReviewData } from "@/lib/review.functions";
+import { deleteReviewRows, fetchReviewData } from "@/lib/review.functions";
 
 export const Route = createFileRoute("/review")({
   head: () => ({
@@ -91,6 +92,45 @@ function Review() {
   const [reservations, setReservations] = useState<Reservations | null>(null);
   const [tab, setTab] = useState<"applications" | "reservations">("applications");
   const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
+
+  const toggleSelect = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const removeRows = async (ids: string[]) => {
+    if (ids.length === 0 || deleting) return;
+    const label = tab === "applications" ? "入會申請" : "預約資料";
+    if (!window.confirm(`確定要刪除 ${ids.length} 筆${label}嗎？刪除後無法復原。`)) return;
+    setDeleting(true);
+    try {
+      const res = await deleteReviewRows({
+        data: { passcode, table: tab === "applications" ? "membership_applications" : "reservations", ids },
+      });
+      if (!res.ok) { toast.error("密碼錯誤"); return; }
+      if (tab === "applications") {
+        setApplications((prev) => prev?.filter((a) => !ids.includes(a.id)) ?? prev);
+      } else {
+        setReservations((prev) => prev?.filter((r) => !ids.includes(r.id)) ?? prev);
+      }
+      setSelected((prev) => {
+        const next = new Set(prev);
+        ids.forEach((id) => next.delete(id));
+        return next;
+      });
+      toast.success(`已刪除 ${res.deleted} 筆資料`);
+    } catch {
+      toast.error("刪除失敗，請稍後再試");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const load = async (code: string) => {
     setLoading(true);
@@ -122,8 +162,13 @@ function Review() {
       ) : (
         <>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Button type="button" variant={tab === "applications" ? "default" : "outline"} onClick={() => setTab("applications")}>入會申請（{applications?.length ?? 0}）</Button>
-            <Button type="button" variant={tab === "reservations" ? "default" : "outline"} onClick={() => setTab("reservations")}>預約名單（{reservations?.length ?? 0}）</Button>
+            <Button type="button" variant={tab === "applications" ? "default" : "outline"} onClick={() => { setTab("applications"); setSelected(new Set()); }}>入會申請（{applications?.length ?? 0}）</Button>
+            <Button type="button" variant={tab === "reservations" ? "default" : "outline"} onClick={() => { setTab("reservations"); setSelected(new Set()); }}>預約名單（{reservations?.length ?? 0}）</Button>
+            {selected.size > 0 && (
+              <Button type="button" variant="destructive" onClick={() => void removeRows(Array.from(selected))} disabled={deleting}>
+                <Trash2 />刪除所選（{selected.size}）
+              </Button>
+            )}
             <Button type="button" variant="outline" className="sm:ml-auto" onClick={() => void load(passcode)} disabled={loading}><RefreshCw className={loading ? "animate-spin" : ""} />重新整理</Button>
           </div>
           <label className="relative mt-4 block">
@@ -139,7 +184,7 @@ function Review() {
                 <div className="flex flex-col gap-5 sm:flex-row">
                   <div className="flex gap-3"><Photo label="生活照" url={a.life_photo_url} /><Photo label="大頭照" url={a.headshot_url} /></div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-start justify-between gap-3"><div><h2 className="text-lg font-medium text-foreground">{a.full_name}</h2><p className="text-xs text-muted-foreground">{new Date(a.created_at).toLocaleString("zh-TW")}</p></div><Button type="button" size="sm" variant="outline" onClick={() => void copyText(summary)}><Copy />複製摘要</Button></div>
+                    <div className="flex flex-wrap items-start justify-between gap-3"><div className="flex items-start gap-2"><input type="checkbox" aria-label={`選取 ${a.full_name}`} checked={selected.has(a.id)} onChange={() => toggleSelect(a.id)} className="mt-1.5 h-4 w-4 accent-primary" /><div><h2 className="text-lg font-medium text-foreground">{a.full_name}</h2><p className="text-xs text-muted-foreground">{new Date(a.created_at).toLocaleString("zh-TW")}</p></div></div><div className="flex gap-2"><Button type="button" size="sm" variant="outline" onClick={() => void copyText(summary)}><Copy />複製摘要</Button><Button type="button" size="sm" variant="outline" className="text-destructive hover:text-destructive" onClick={() => void removeRows([a.id])} disabled={deleting}><Trash2 />刪除</Button></div></div>
                     <div className="mt-3 flex flex-wrap gap-2">{a.phone && <ContactLink icon={Phone} label="撥電話" href={`tel:${a.phone}`} />}{a.business_email && <ContactLink icon={Mail} label="寄 Email" href={`mailto:${a.business_email}`} />}{a.messenger && <ContactLink icon={MessageCircle} label="開啟 LINE" href={`https://line.me/ti/p/~${encodeURIComponent(a.messenger)}`} />}</div>
                     <div className="mt-3"><Row label="出生年月日" value={a.birth_date} /><Row label="職稱／企業" value={a.title_company} /><Row label="主要行業" value={a.industry} /><Row label="私人手機" value={a.phone} /><Row label="WeChat / LINE" value={a.messenger} /><Row label="電子郵件" value={a.business_email} /><Row label="持有證照" value={a.licenses} /><Row label="感興趣板塊" value={a.pillars} /><Row label="核心價值" value={a.core_value} /><Row label="過往社群" value={a.prior_orgs} /><Row label="推薦人" value={a.referrer} /><Row label="交流時段" value={a.meeting_time_pref} /><Row label="交流禮儀" value={a.agree_etiquette} /><Row label="資料屬實" value={a.agree_truthful} /><Row label="認同家規" value={a.agree_house_rules} /></div>
                   </div>
@@ -152,7 +197,7 @@ function Review() {
             {visibleReservations.length === 0 && <p className="text-sm text-muted-foreground">找不到符合的預約資料。</p>}
             {visibleReservations.map((r) => {
               const summary = [`預約｜${r.name}`, `送件：${new Date(r.created_at).toLocaleString("zh-TW")}`, `電話：${r.phone}`, `LINE：${r.line_id ?? "—"}`, `Email：${r.email}`, `需求：${r.intent}`, `方案：${r.plan}`].join("\n");
-              return <article key={r.id} className={card}><div className="flex flex-wrap items-start justify-between gap-3"><div><h2 className="text-lg font-medium text-foreground">{r.name}</h2><p className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString("zh-TW")}</p></div><Button type="button" size="sm" variant="outline" onClick={() => void copyText(summary)}><Copy />複製摘要</Button></div><div className="mt-3 flex flex-wrap gap-2"><ContactLink icon={Phone} label="撥電話" href={`tel:${r.phone}`} /><ContactLink icon={Mail} label="寄 Email" href={`mailto:${r.email}`} />{r.line_id && <ContactLink icon={MessageCircle} label="開啟 LINE" href={`https://line.me/ti/p/~${encodeURIComponent(r.line_id)}`} />}</div><div className="mt-3"><Row label="手機" value={r.phone} /><Row label="電子郵件" value={r.email} /><Row label="LINE ID" value={r.line_id} /><Row label="產業／職務" value={r.industry} /><Row label="興趣／專長" value={r.interests} /><Row label="感興趣原因" value={r.reasons} /><Row label="我想要" value={r.intent} /><Row label="方案" value={r.plan} /><Row label="留言" value={r.message} /></div></article>;
+              return <article key={r.id} className={card}><div className="flex flex-wrap items-start justify-between gap-3"><div className="flex items-start gap-2"><input type="checkbox" aria-label={`選取 ${r.name}`} checked={selected.has(r.id)} onChange={() => toggleSelect(r.id)} className="mt-1.5 h-4 w-4 accent-primary" /><div><h2 className="text-lg font-medium text-foreground">{r.name}</h2><p className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString("zh-TW")}</p></div></div><div className="flex gap-2"><Button type="button" size="sm" variant="outline" onClick={() => void copyText(summary)}><Copy />複製摘要</Button><Button type="button" size="sm" variant="outline" className="text-destructive hover:text-destructive" onClick={() => void removeRows([r.id])} disabled={deleting}><Trash2 />刪除</Button></div></div><div className="mt-3 flex flex-wrap gap-2"><ContactLink icon={Phone} label="撥電話" href={`tel:${r.phone}`} /><ContactLink icon={Mail} label="寄 Email" href={`mailto:${r.email}`} />{r.line_id && <ContactLink icon={MessageCircle} label="開啟 LINE" href={`https://line.me/ti/p/~${encodeURIComponent(r.line_id)}`} />}</div><div className="mt-3"><Row label="手機" value={r.phone} /><Row label="電子郵件" value={r.email} /><Row label="LINE ID" value={r.line_id} /><Row label="產業／職務" value={r.industry} /><Row label="興趣／專長" value={r.interests} /><Row label="感興趣原因" value={r.reasons} /><Row label="我想要" value={r.intent} /><Row label="方案" value={r.plan} /><Row label="留言" value={r.message} /></div></article>;
             })}
           </div>}
         </>

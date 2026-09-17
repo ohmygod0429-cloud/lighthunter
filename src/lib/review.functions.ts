@@ -57,3 +57,39 @@ export const fetchReviewData = createServerFn({ method: "POST" })
 
     return { ok: true as const, applications, reservations: reservations.data ?? [] };
   });
+
+const deleteSchema = z.object({
+  passcode: z.string(),
+  table: z.enum(["membership_applications", "reservations"]),
+  ids: z.array(z.string().uuid()).min(1).max(200),
+});
+
+/** 管理者專用：刪除申請或預約資料（申請一併刪除照片） */
+export const deleteReviewRows = createServerFn({ method: "POST" })
+  .inputValidator((data) => deleteSchema.parse(data))
+  .handler(async ({ data }) => {
+    const expected = process.env["ADMIN_REVIEW_PASSCODE"] ?? "0429";
+    if (data.passcode.trim() !== expected) {
+      return { ok: false as const, error: "passcode" };
+    }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    if (data.table === "membership_applications") {
+      const { data: rows } = await supabaseAdmin
+        .from("membership_applications")
+        .select("life_photo_path, headshot_path")
+        .in("id", data.ids);
+      const paths = (rows ?? [])
+        .flatMap((row) => [row.life_photo_path, row.headshot_path])
+        .filter((path): path is string => Boolean(path));
+      if (paths.length > 0) {
+        await supabaseAdmin.storage.from(BUCKET).remove(paths);
+      }
+    }
+
+    const { error } = await supabaseAdmin.from(data.table).delete().in("id", data.ids);
+    if (error) throw error;
+
+    return { ok: true as const, deleted: data.ids.length };
+  });
