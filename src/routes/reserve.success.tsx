@@ -16,10 +16,10 @@ export const Route = createFileRoute("/reserve/success")({
       { title: "預約成功｜專屬引路人將與你聯繫" },
       {
         name: "description",
-        content: "你的卡位申請已成功送出，專屬引路人將於 3 天內與你聯繫，完成一對一深度對接。",
+        content: "你的卡位申請已成功送出，專屬引路人將依序與你聯繫，完成一對一深度對接。",
       },
       { property: "og:title", content: "預約成功｜獵光者共生共榮未來生態圈" },
-      { property: "og:description", content: "你的卡位申請已成功送出，專屬引路人將於 3 天內與你聯繫。" },
+      { property: "og:description", content: "你的卡位申請已成功送出，專屬引路人將依序與你聯繫。" },
     ],
   }),
   component: ReserveSuccessPage,
