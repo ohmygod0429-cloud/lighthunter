@@ -67,6 +67,8 @@ function ReservePage() {
   const [intent, setIntent] = useState(intents[0]);
   const [submitting, setSubmitting] = useState(false);
   const [reasons, setReasons] = useState<string[]>([]);
+  const admin = useAdminMode();
+  const { visible: intentVisible, toggle: toggleIntent } = useSectionVisible("reserve-intent");
   const navigate = useNavigate();
 
   return (
