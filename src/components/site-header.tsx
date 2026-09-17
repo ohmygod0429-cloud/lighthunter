@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X, Sparkles, Lock } from "lucide-react";
+import { useAdminMode } from "@/lib/admin-mode";
 
 const links = [
   { to: "/", label: "首頁" },

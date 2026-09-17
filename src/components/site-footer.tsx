@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import { Lock } from "lucide-react";
 import { SocialLinks } from "@/components/social-links";
 
 export function SiteFooter() {
