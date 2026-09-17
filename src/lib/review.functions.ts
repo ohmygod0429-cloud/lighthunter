@@ -5,15 +5,6 @@ const schema = z.object({ passcode: z.string() });
 
 const BUCKET = "application-photos";
 
-async function signed(
-  storage: { createSignedUrl: (path: string, expiresIn: number) => Promise<{ data: { signedUrl: string } | null }> },
-  path: string | null,
-) {
-  if (!path) return null;
-  const { data } = await storage.createSignedUrl(path, 60 * 60 * 8);
-  return data?.signedUrl ?? null;
-}
-
 /** 管理者專用：讀取申請與預約資料，照片轉成可直接顯示的網址 */
 export const fetchReviewData = createServerFn({ method: "POST" })
   .inputValidator((data) => schema.parse(data))
@@ -37,13 +28,32 @@ export const fetchReviewData = createServerFn({ method: "POST" })
     if (apps.error) throw apps.error;
     if (reservations.error) throw reservations.error;
 
-    const applications = await Promise.all(
-      (apps.data ?? []).map(async (row) => ({
-        ...row,
-        life_photo_url: await signed(storage, row.life_photo_path),
-        headshot_url: await signed(storage, row.headshot_path),
-      })),
+    const paths = Array.from(
+      new Set(
+        (apps.data ?? [])
+          .flatMap((row) => [row.life_photo_path, row.headshot_path])
+          .filter((path): path is string => Boolean(path)),
+      ),
     );
+    const signedUrls = new Map<string, string>();
+
+    if (paths.length > 0) {
+      const { data: signedData, error: signedError } = await storage.createSignedUrls(
+        paths,
+        60 * 60 * 24,
+      );
+      if (signedError) console.error("[review] photo links failed", signedError);
+      (signedData ?? []).forEach((item, index) => {
+        const path = paths[index];
+        if (path && item.signedUrl) signedUrls.set(path, item.signedUrl);
+      });
+    }
+
+    const applications = (apps.data ?? []).map((row) => ({
+      ...row,
+      life_photo_url: row.life_photo_path ? signedUrls.get(row.life_photo_path) ?? null : null,
+      headshot_url: row.headshot_path ? signedUrls.get(row.headshot_path) ?? null : null,
+    }));
 
     return { ok: true as const, applications, reservations: reservations.data ?? [] };
   });
