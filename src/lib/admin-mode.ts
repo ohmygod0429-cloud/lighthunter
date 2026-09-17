@@ -39,6 +39,43 @@ export function useAdminMode() {
   return admin;
 }
 
+const SECTION_PREFIX = "sfe-section:";
+const SECTION_EVENT = "sfe-section-change";
+
+/** 區塊是否對一般訪客開放（預設隱藏） */
+export function isSectionVisible(sectionId: string) {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(SECTION_PREFIX + sectionId) === "1";
+}
+
+export function setSectionVisible(sectionId: string, visible: boolean) {
+  if (visible) window.localStorage.setItem(SECTION_PREFIX + sectionId, "1");
+  else window.localStorage.removeItem(SECTION_PREFIX + sectionId);
+  window.dispatchEvent(new Event(SECTION_EVENT));
+}
+
+export function useSectionVisible(sectionId: string) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const sync = () => setVisible(isSectionVisible(sectionId));
+    sync();
+    window.addEventListener(SECTION_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(SECTION_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, [sectionId]);
+
+  const toggle = useCallback(
+    () => setSectionVisible(sectionId, !isSectionVisible(sectionId)),
+    [sectionId],
+  );
+
+  return { visible, toggle };
+}
+
 const VIDEO_PREFIX = "sfe-video:";
 const VIDEO_EVENT = "sfe-video-change";
 

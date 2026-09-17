@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { syncRowToSheet } from "@/lib/sheet-sync.functions";
+import { useAdminMode, useSectionVisible } from "@/lib/admin-mode";
 
 
 export const Route = createFileRoute("/reserve")({
@@ -67,6 +68,8 @@ function ReservePage() {
   const [intent, setIntent] = useState(intents[0]);
   const [submitting, setSubmitting] = useState(false);
   const [reasons, setReasons] = useState<string[]>([]);
+  const admin = useAdminMode();
+  const { visible: intentVisible, toggle: toggleIntent } = useSectionVisible("reserve-intent");
   const navigate = useNavigate();
 
   return (
@@ -227,30 +230,39 @@ function ReservePage() {
           </div>
         </fieldset>
 
-        <fieldset>
-          <legend className="text-sm text-gold-soft">我想要</legend>
-          <div className="mt-3 grid gap-3">
-            {intents.map((i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => {
-                  setIntent(i);
-                  if (i === intents[1] && typeof window !== "undefined") {
-                    window.open(LINE_OFFICIAL_URL, "_blank", "noopener,noreferrer");
-                  }
-                }}
-                className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
-                  intent === i
-                    ? "border-primary/70 bg-primary/10 text-foreground"
-                    : "border-border text-muted-foreground hover:border-primary/40"
-                }`}
-              >
-                {i}
-              </button>
-            ))}
-          </div>
-        </fieldset>
+        {admin && (
+          <label className="flex items-center gap-2 rounded-xl border border-primary/40 bg-card/60 px-4 py-3 text-xs text-gold-soft">
+            <input type="checkbox" checked={intentVisible} onChange={toggleIntent} />
+            對一般訪客顯示「我想要」選項板塊
+          </label>
+        )}
+
+        {(admin || intentVisible) && (
+          <fieldset>
+            <legend className="text-sm text-gold-soft">我想要</legend>
+            <div className="mt-3 grid gap-3">
+              {intents.map((i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => {
+                    setIntent(i);
+                    if (i === intents[1] && typeof window !== "undefined") {
+                      window.open(LINE_OFFICIAL_URL, "_blank", "noopener,noreferrer");
+                    }
+                  }}
+                  className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
+                    intent === i
+                      ? "border-primary/70 bg-primary/10 text-foreground"
+                      : "border-border text-muted-foreground hover:border-primary/40"
+                  }`}
+                >
+                  {i}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        )}
 
         {intent === intents[2] ? (
           <div className="rounded-2xl border border-primary/40 bg-card/60 p-8 text-center">
