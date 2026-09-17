@@ -78,6 +78,16 @@ export function SiteHeader() {
               <Lock className="size-3.5" /> 後台管理
             </Link>
           )}
+          {admin && (
+            <Link
+              to="/consult"
+              className="flex items-center gap-1.5 rounded-full px-4 py-2 text-sm text-primary transition-colors hover:bg-primary/10"
+              activeProps={{ className: "bg-primary/10" }}
+            >
+              <Lock className="size-3.5" /> 預約諮詢
+            </Link>
+          )}
+
           <Link
             to="/apply"
             className="ml-3 rounded-full bg-gold-gradient px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5"

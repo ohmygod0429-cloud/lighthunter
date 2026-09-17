@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApplyRouteImport } from './routes/apply'
 import { Route as CompareRouteImport } from './routes/compare'
+import { Route as ConsultRouteImport } from './routes/consult'
 import { Route as DimensionsRouteImport } from './routes/dimensions'
 import { Route as FoundingRouteImport } from './routes/founding'
 import { Route as NetworkRouteImport } from './routes/network'
@@ -33,6 +34,11 @@ const ApplyRoute = ApplyRouteImport.update({
 const CompareRoute = CompareRouteImport.update({
   id: '/compare',
   path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConsultRoute = ConsultRouteImport.update({
+  id: '/consult',
+  path: '/consult',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DimensionsRoute = DimensionsRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/apply': typeof ApplyRoute
   '/compare': typeof CompareRoute
+  '/consult': typeof ConsultRoute
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
   '/network': typeof NetworkRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/apply': typeof ApplyRoute
   '/compare': typeof CompareRoute
+  '/consult': typeof ConsultRoute
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
   '/network': typeof NetworkRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/apply': typeof ApplyRoute
   '/compare': typeof CompareRoute
+  '/consult': typeof ConsultRoute
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
   '/network': typeof NetworkRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/'
     | '/apply'
     | '/compare'
+    | '/consult'
     | '/dimensions'
     | '/founding'
     | '/network'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/apply'
     | '/compare'
+    | '/consult'
     | '/dimensions'
     | '/founding'
     | '/network'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/apply'
     | '/compare'
+    | '/consult'
     | '/dimensions'
     | '/founding'
     | '/network'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApplyRoute: typeof ApplyRoute
   CompareRoute: typeof CompareRoute
+  ConsultRoute: typeof ConsultRoute
   DimensionsRoute: typeof DimensionsRoute
   FoundingRoute: typeof FoundingRoute
   NetworkRoute: typeof NetworkRoute
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/compare'
       fullPath: '/compare'
       preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/consult': {
+      id: '/consult'
+      path: '/consult'
+      fullPath: '/consult'
+      preLoaderRoute: typeof ConsultRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dimensions': {
@@ -249,6 +269,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApplyRoute: ApplyRoute,
   CompareRoute: CompareRoute,
+  ConsultRoute: ConsultRoute,
   DimensionsRoute: DimensionsRoute,
   FoundingRoute: FoundingRoute,
   NetworkRoute: NetworkRoute,
