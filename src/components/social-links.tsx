@@ -1,9 +1,9 @@
-import { socialLinks } from "@/data/social";
+import { boundSocialLinks } from "@/data/social";
 
 export function SocialLinks({ className = "" }: { className?: string }) {
   return (
     <div className={`flex flex-wrap items-center gap-3 ${className}`}>
-      {socialLinks.map((s) => (
+      {boundSocialLinks.map((s) => (
         <a
           key={s.label}
           href={s.href}

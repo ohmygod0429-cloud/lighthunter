@@ -1,10 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { SocialLinks } from "@/components/social-links";
-import { useAdminMode, useSectionVisible } from "@/lib/admin-mode";
+import { boundSocialLinks } from "@/data/social";
 
 export function SiteFooter() {
-  const isAdmin = useAdminMode();
-  const { visible: showSocial, toggle: toggleSocial } = useSectionVisible("follow-us");
   return (
     <footer className="mt-24 border-t border-border bg-card/40">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-3">
@@ -13,13 +11,7 @@ export function SiteFooter() {
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
             全球菁英私人俱樂部。一次會籍，終生傳承　代代世襲——會員專屬權益、跨界菁英對接、家族傳承與資源共享。
           </p>
-          {isAdmin && (
-            <label className="mt-6 flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
-              <input type="checkbox" checked={showSocial} onChange={toggleSocial} className="accent-primary" />
-              對一般訪客顯示「追蹤我們」社群連結
-            </label>
-          )}
-          {showSocial && (
+          {boundSocialLinks.length > 0 && (
             <>
               <p className="mt-6 text-xs tracking-[0.28em] text-primary">追蹤我們</p>
               <SocialLinks className="mt-3" />
