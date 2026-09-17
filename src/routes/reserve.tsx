@@ -72,7 +72,7 @@ function ReservePage() {
   return (
     <div className="mx-auto max-w-3xl px-5 py-20">
       <p className="text-xs tracking-[0.3em] text-primary">RESERVE YOUR SEAT</p>
-      <h1 className="mt-4 text-3xl sm:text-5xl">預約諮詢</h1>
+      <h1 className="mt-4 text-3xl sm:text-5xl">線上預約諮詢</h1>
       <p className="mt-6 leading-loose text-muted-foreground">
         創始席位全球限額搶位中。填寫以下資訊，專屬引路人將於 3天內與你聯繫，完成一對一深度對接。
       </p>
