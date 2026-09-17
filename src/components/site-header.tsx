@@ -134,6 +134,16 @@ export function SiteHeader() {
               <Lock className="size-4" /> 後台管理
             </Link>
           )}
+          {admin && (
+            <Link
+              to="/consult"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 border-b border-border/60 py-3 text-sm text-primary"
+            >
+              <Lock className="size-4" /> 預約諮詢
+            </Link>
+          )}
+
           <Link
             to="/apply"
             onClick={() => setOpen(false)}
