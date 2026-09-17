@@ -115,6 +115,15 @@ export function SiteHeader() {
               {l.label}
             </Link>
           ))}
+          {admin && (
+            <Link
+              to="/review"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 border-b border-border/60 py-3 text-sm text-primary"
+            >
+              <Lock className="size-4" /> 後台管理
+            </Link>
+          )}
           <Link
             to="/apply"
             onClick={() => setOpen(false)}
