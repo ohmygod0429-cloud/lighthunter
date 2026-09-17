@@ -162,8 +162,13 @@ function Review() {
       ) : (
         <>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Button type="button" variant={tab === "applications" ? "default" : "outline"} onClick={() => setTab("applications")}>入會申請（{applications?.length ?? 0}）</Button>
-            <Button type="button" variant={tab === "reservations" ? "default" : "outline"} onClick={() => setTab("reservations")}>預約名單（{reservations?.length ?? 0}）</Button>
+            <Button type="button" variant={tab === "applications" ? "default" : "outline"} onClick={() => { setTab("applications"); setSelected(new Set()); }}>入會申請（{applications?.length ?? 0}）</Button>
+            <Button type="button" variant={tab === "reservations" ? "default" : "outline"} onClick={() => { setTab("reservations"); setSelected(new Set()); }}>預約名單（{reservations?.length ?? 0}）</Button>
+            {selected.size > 0 && (
+              <Button type="button" variant="destructive" onClick={() => void removeRows(Array.from(selected))} disabled={deleting}>
+                <Trash2 />刪除所選（{selected.size}）
+              </Button>
+            )}
             <Button type="button" variant="outline" className="sm:ml-auto" onClick={() => void load(passcode)} disabled={loading}><RefreshCw className={loading ? "animate-spin" : ""} />重新整理</Button>
           </div>
           <label className="relative mt-4 block">
@@ -179,7 +184,7 @@ function Review() {
                 <div className="flex flex-col gap-5 sm:flex-row">
                   <div className="flex gap-3"><Photo label="生活照" url={a.life_photo_url} /><Photo label="大頭照" url={a.headshot_url} /></div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-start justify-between gap-3"><div><h2 className="text-lg font-medium text-foreground">{a.full_name}</h2><p className="text-xs text-muted-foreground">{new Date(a.created_at).toLocaleString("zh-TW")}</p></div><Button type="button" size="sm" variant="outline" onClick={() => void copyText(summary)}><Copy />複製摘要</Button></div>
+                    <div className="flex flex-wrap items-start justify-between gap-3"><div className="flex items-start gap-2"><input type="checkbox" aria-label={`選取 ${a.full_name}`} checked={selected.has(a.id)} onChange={() => toggleSelect(a.id)} className="mt-1.5 h-4 w-4 accent-primary" /><div><h2 className="text-lg font-medium text-foreground">{a.full_name}</h2><p className="text-xs text-muted-foreground">{new Date(a.created_at).toLocaleString("zh-TW")}</p></div></div><div className="flex gap-2"><Button type="button" size="sm" variant="outline" onClick={() => void copyText(summary)}><Copy />複製摘要</Button><Button type="button" size="sm" variant="outline" className="text-destructive hover:text-destructive" onClick={() => void removeRows([a.id])} disabled={deleting}><Trash2 />刪除</Button></div></div>
                     <div className="mt-3 flex flex-wrap gap-2">{a.phone && <ContactLink icon={Phone} label="撥電話" href={`tel:${a.phone}`} />}{a.business_email && <ContactLink icon={Mail} label="寄 Email" href={`mailto:${a.business_email}`} />}{a.messenger && <ContactLink icon={MessageCircle} label="開啟 LINE" href={`https://line.me/ti/p/~${encodeURIComponent(a.messenger)}`} />}</div>
                     <div className="mt-3"><Row label="出生年月日" value={a.birth_date} /><Row label="職稱／企業" value={a.title_company} /><Row label="主要行業" value={a.industry} /><Row label="私人手機" value={a.phone} /><Row label="WeChat / LINE" value={a.messenger} /><Row label="電子郵件" value={a.business_email} /><Row label="持有證照" value={a.licenses} /><Row label="感興趣板塊" value={a.pillars} /><Row label="核心價值" value={a.core_value} /><Row label="過往社群" value={a.prior_orgs} /><Row label="推薦人" value={a.referrer} /><Row label="交流時段" value={a.meeting_time_pref} /><Row label="交流禮儀" value={a.agree_etiquette} /><Row label="資料屬實" value={a.agree_truthful} /><Row label="認同家規" value={a.agree_house_rules} /></div>
                   </div>
