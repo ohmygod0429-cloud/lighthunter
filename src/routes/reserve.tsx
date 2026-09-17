@@ -332,7 +332,7 @@ function ReservePage() {
               disabled={submitting}
               className="w-full rounded-full bg-gold-gradient py-4 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
             >
-              {submitting ? "送出中…" : "送出卡位申請"}
+              {submitting ? "送出中…" : "送出預約申請"}
             </button>
 
             <p className="text-center text-xs text-muted-foreground">
