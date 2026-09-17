@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import { Lock } from "lucide-react";
 import { SocialLinks } from "@/components/social-links";
 
 export function SiteFooter() {
@@ -49,13 +48,7 @@ export function SiteFooter() {
           </Link>
 
           <div className="pt-6 md:text-right">
-            <Link
-              to="/review"
-              className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-xs tracking-[0.18em] text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary"
-            >
-              <Lock className="size-3.5" /> 工作人員後台管理
-            </Link>
-            <p className="mt-2 text-[11px] text-muted-foreground/80">需輸入管理者密碼</p>
+            <p className="text-[11px] text-muted-foreground/80">後台管理請由管理者解鎖後自上方導覽進入</p>
           </div>
         </div>
       </div>
