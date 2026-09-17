@@ -200,7 +200,7 @@ function ReservePage() {
         </div>
 
         <fieldset>
-          <legend className="text-sm text-gold-soft">感興趣的原因？（可複選）</legend>
+          <legend className="text-sm text-gold-soft">想了解或詢問的區塊？（可複選）</legend>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             {reasonOptions.map((r) => (
               <label
