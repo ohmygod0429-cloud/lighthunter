@@ -74,7 +74,7 @@ function ReservePage() {
       <p className="text-xs tracking-[0.3em] text-primary">RESERVE YOUR SEAT</p>
       <h1 className="mt-4 text-3xl sm:text-5xl">線上預約諮詢</h1>
       <p className="mt-6 leading-loose text-muted-foreground">
-        創始席位全球限額搶位中。填寫以下資訊，專屬引路人將於與您聯繫，完成一對一深度解答，解決您的疑問。
+         創始席位全球限額搶位中。填寫以下資訊，專屬引路人將依序聯繫，完成一對一深度解答，解決您的疑問。
       </p>
 
       <form
