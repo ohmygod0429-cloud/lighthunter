@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ImagePlus, LoaderCircle, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { syncRowToSheet } from "@/lib/sheet-sync.functions";
@@ -80,10 +80,64 @@ function Chip({
   );
 }
 
+function PhotoPicker({
+  label,
+  file,
+  onChange,
+}: {
+  label: string;
+  file: File | null;
+  onChange: (file: File | null) => void;
+}) {
+  const [preview, setPreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!file) {
+      setPreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  const pick = (next: File | null) => {
+    if (!next) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(next.type)) {
+      toast.error("請上傳 JPG、PNG 或 WebP 圖片。");
+      return;
+    }
+    if (next.size > 10 * 1024 * 1024) {
+      toast.error("單張照片不可超過 10 MB，請縮小後再上傳。");
+      return;
+    }
+    onChange(next);
+  };
+
+  return (
+    <label className="group flex min-h-48 cursor-pointer flex-col items-center justify-center gap-3 overflow-hidden rounded-xl border border-dashed border-input bg-card/40 p-3 text-center text-xs text-muted-foreground transition-colors hover:border-primary/60">
+      {preview ? (
+        <img src={preview} alt={`${label}預覽`} className="h-36 w-full rounded-lg object-cover" />
+      ) : (
+        <ImagePlus className="size-7 text-primary/70" />
+      )}
+      <span className="text-gold-soft">{label}</span>
+      <span className="max-w-full truncate">{file ? file.name : "點選選擇照片"}</span>
+      <input
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        className="hidden"
+        onChange={(event) => pick(event.target.files?.[0] ?? null)}
+      />
+    </label>
+  );
+}
+
 function Apply() {
   const [step, setStep] = useState(1);
   const [done, setDone] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitPhase, setSubmitPhase] = useState("");
 
   const [fullName, setFullName] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -269,8 +323,12 @@ function Apply() {
     if (!validateStep()) return;
     setSubmitting(true);
     try {
-      const lifePath = lifePhoto ? await uploadPhoto(lifePhoto, "life") : null;
-      const headshotPath = headshotPhoto ? await uploadPhoto(headshotPhoto, "headshot") : null;
+      setSubmitPhase("正在安全上傳兩張照片…");
+      const [lifePath, headshotPath] = await Promise.all([
+        lifePhoto ? uploadPhoto(lifePhoto, "life") : Promise.resolve(null),
+        headshotPhoto ? uploadPhoto(headshotPhoto, "headshot") : Promise.resolve(null),
+      ]);
+      setSubmitPhase("正在送出審核資料…");
       const record = {
         full_name: fullName.trim(),
         birth_date: birthDate,
@@ -309,10 +367,14 @@ function Apply() {
       }
       setDone(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch {
-      toast.error("送出失敗，請稍後再試。");
+    } catch (error) {
+      console.error("[apply] submission failed", error);
+      toast.error("送出失敗，已保留填寫內容", {
+        description: "請確認網路後再試一次；照片需重新選擇時會明確提示。",
+      });
     } finally {
       setSubmitting(false);
+      setSubmitPhase("");
     }
   };
 
@@ -448,27 +510,10 @@ function Apply() {
                 hint="請上傳一張真實生活照與一張大頭照，供審查身分與圈層純度。禁止過度美顏濾鏡與 AI 生成圖片，一經查證將駁回申請。"
               >
                 <div className="mt-2 grid gap-4 sm:grid-cols-2">
-                  <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-input bg-card/40 px-4 py-6 text-center text-xs text-muted-foreground transition-colors hover:border-primary/60">
-                    <span className="text-gold-soft">生活照</span>
-                    <span className="truncate">{lifePhoto ? lifePhoto.name : "點選上傳檔案"}</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => setLifePhoto(e.target.files?.[0] ?? null)}
-                    />
-                  </label>
-                  <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-input bg-card/40 px-4 py-6 text-center text-xs text-muted-foreground transition-colors hover:border-primary/60">
-                    <span className="text-gold-soft">大頭照</span>
-                    <span className="truncate">{headshotPhoto ? headshotPhoto.name : "點選上傳檔案"}</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => setHeadshotPhoto(e.target.files?.[0] ?? null)}
-                    />
-                  </label>
+                  <PhotoPicker label="生活照" file={lifePhoto} onChange={setLifePhoto} />
+                  <PhotoPicker label="大頭照" file={headshotPhoto} onChange={setHeadshotPhoto} />
                 </div>
+                <p className="mt-2 text-xs text-muted-foreground">支援 JPG、PNG、WebP，單張上限 10 MB；選取後會先顯示預覽。</p>
               </Field>
             </>
           )}
@@ -614,7 +659,11 @@ function Apply() {
                 disabled={submitting}
                 className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-7 py-3 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5 disabled:opacity-60"
               >
-                {submitting ? "送出中…" : "送出審核資料，預約理事專屬交流會晤"} <ArrowRight className="size-4" />
+                {submitting ? (
+                  <><LoaderCircle className="size-4 animate-spin" /> {submitPhase || "送出中…"}</>
+                ) : (
+                  <>送出審核資料，預約理事專屬交流會晤 <ArrowRight className="size-4" /></>
+                )}
               </button>
             )}
           </div>
