@@ -203,6 +203,15 @@ function ReservePage() {
               placeholder="例如：投資、簡報設計、瑜伽"
             />
           </label>
+          <label className="block text-sm">
+            <span className="text-gold-soft">介紹人（有填寫者第二階段審核通過，獎勵 $1,000）</span>
+            <input
+              name="referrer"
+              maxLength={100}
+              className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+              placeholder="例如：王大明"
+            />
+          </label>
         </div>
 
         <fieldset>
