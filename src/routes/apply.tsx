@@ -152,6 +152,7 @@ function Apply() {
   const [coreValue, setCoreValue] = useState("");
   const [priorOrgs, setPriorOrgs] = useState("");
   const [licenses, setLicenses] = useState("");
+  const [referrer, setReferrer] = useState("");
   const [agreeEtiquette, setAgreeEtiquette] = useState(false);
   const [agreeTruthful, setAgreeTruthful] = useState(false);
   const [agreeHouseRules, setAgreeHouseRules] = useState(false);
