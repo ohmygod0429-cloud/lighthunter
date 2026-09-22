@@ -112,6 +112,7 @@ export type Database = {
           phone: string
           plan: string
           reasons: string | null
+          referrer: string | null
         }
         Insert: {
           created_at?: string
@@ -126,6 +127,7 @@ export type Database = {
           phone: string
           plan: string
           reasons?: string | null
+          referrer?: string | null
         }
         Update: {
           created_at?: string
@@ -140,6 +142,7 @@ export type Database = {
           phone?: string
           plan?: string
           reasons?: string | null
+          referrer?: string | null
         }
         Relationships: []
       }
