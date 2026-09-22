@@ -57,6 +57,7 @@ const reservationSchema = z.object({
     .regex(/^[a-zA-Z0-9_.-]*$/, "LINE ID 格式不正確"),
   industry: z.string().trim().max(100, "產業／職務過長"),
   interests: z.string().trim().max(200, "興趣／專長過長"),
+  referrer: z.string().trim().max(100, "介紹人過長"),
   reasons: z.string().max(500, "感興趣的原因過長"),
   intent: z.string().max(200),
   plan: z.string().max(40),
@@ -93,6 +94,7 @@ function ReservePage() {
             line_id: String(formData.get("lineId") ?? ""),
             industry: String(formData.get("industry") ?? ""),
             interests: String(formData.get("interests") ?? ""),
+            referrer: String(formData.get("referrer") ?? ""),
             reasons: reasons.join("・"),
             intent,
             plan: plans.find((p) => p.id === plan)?.label ?? plan,
@@ -115,6 +117,7 @@ function ReservePage() {
             line_id: payload.line_id || null,
             industry: payload.industry || null,
             interests: payload.interests || null,
+            referrer: payload.referrer || null,
             reasons: payload.reasons || null,
             intent: payload.intent,
             plan: payload.plan,
@@ -198,6 +201,15 @@ function ReservePage() {
               maxLength={200}
               className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
               placeholder="例如：投資、簡報設計、瑜伽"
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="text-gold-soft">介紹人（有填寫者第二階段審核通過，獎勵 $1,000）</span>
+            <input
+              name="referrer"
+              maxLength={100}
+              className="mt-2 w-full rounded-xl border border-input bg-card/60 px-4 py-3 outline-none focus:border-primary/70"
+              placeholder="例如：王大明"
             />
           </label>
         </div>

@@ -15,6 +15,13 @@
       "when": 1789380096762,
       "tag": "0001_add_agree_house_rules",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790079482070,
+      "tag": "0002_add_referrer_to_reservations",
+      "breakpoints": true
     }
   ]
 }
