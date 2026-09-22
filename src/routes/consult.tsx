@@ -134,7 +134,7 @@ function Consult() {
           <div className="mt-6 space-y-5">
             {visibleReservations.length === 0 && <p className="text-sm text-muted-foreground">找不到符合的預約資料。</p>}
             {visibleReservations.map((r) => {
-              const summary = [`預約｜${r.name}`, `送件：${new Date(r.created_at).toLocaleString("zh-TW")}`, `電話：${r.phone}`, `LINE：${r.line_id ?? "—"}`, `Email：${r.email}`, `需求：${r.intent}`, `方案：${r.plan}`].join("\n");
+              const summary = [`預約｜${r.name}`, `送件：${new Date(r.created_at).toLocaleString("zh-TW")}`, `電話：${r.phone}`, `LINE：${r.line_id ?? "—"}`, `Email：${r.email}`, `介紹人：${r.referrer ?? "—"}`, `需求：${r.intent}`, `方案：${r.plan}`].join("\n");
               return <article key={r.id} className={card}>
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="flex items-start gap-2"><input type="checkbox" aria-label={`選取 ${r.name}`} checked={selected.has(r.id)} onChange={() => toggleSelect(r.id)} className="mt-1.5 h-4 w-4 accent-primary" /><div><h2 className="text-lg font-medium text-foreground">{r.name}</h2><p className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString("zh-TW")}</p></div></div>
@@ -151,6 +151,7 @@ function Consult() {
                   <Row label="LINE ID" value={r.line_id} />
                   <Row label="產業／職務" value={r.industry} />
                   <Row label="興趣／專長" value={r.interests} />
+                  <Row label="介紹人" value={r.referrer} />
                   <Row label="感興趣原因" value={r.reasons} />
                   <Row label="我想要" value={r.intent} />
                   <Row label="方案" value={r.plan} />
