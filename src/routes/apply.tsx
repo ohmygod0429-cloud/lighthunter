@@ -349,6 +349,7 @@ function Apply() {
         core_value: coreValue.trim(),
         prior_orgs: priorOrgs.trim() || null,
         licenses: licenses.trim(),
+        referrer: referrer.trim() || null,
         agree_etiquette: agreeEtiquette,
         agree_truthful: agreeTruthful,
         agree_house_rules: agreeHouseRules,
