@@ -178,6 +178,7 @@ function Apply() {
       setCoreValue(s(d["coreValue"]));
       setPriorOrgs(s(d["priorOrgs"]));
       setLicenses(s(d["licenses"]));
+      setReferrer(s(d["referrer"]));
       setMeetingTimePref(s(d["meetingTimePref"]));
       const savedPicked = d["picked"];
       if (Array.isArray(savedPicked))
