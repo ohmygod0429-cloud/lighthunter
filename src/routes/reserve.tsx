@@ -204,7 +204,7 @@ function ReservePage() {
             />
           </label>
           <label className="block text-sm">
-            <span className="text-gold-soft">介紹人（有填寫者第二階段審核通過，獎勵 $1,000）</span>
+            <span className="text-gold-soft">介紹人（有填寫者入會審核通過，獎勵 $1,000）</span>
             <input
               name="referrer"
               maxLength={100}
