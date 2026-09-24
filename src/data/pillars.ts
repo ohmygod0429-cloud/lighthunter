@@ -133,7 +133,7 @@ export const legacyCompare = [
     ],
   },
   {
-    name: "獵光者未來俱樂部",
+    name: "全球真愛(獵光者)未來俱樂部",
     tone: "club" as const,
     points: [
       "生態閉環：省錢＋賦能＋收益同時成立",
