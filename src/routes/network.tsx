@@ -22,7 +22,7 @@ export const Route = createFileRoute("/network")({
 const cards = [
   {
     icon: Award,
-    title: "引薦合格人才 獎勵 $12,000",
+    title: "好康逗相報 獎勵 $14,400",
     text: "每成功引薦一位符合資格的人才加入獵光者未來俱樂部共創未來，發放提成獎勵。",
     points: ["無上限推薦", "終身有效資格"],
   },
