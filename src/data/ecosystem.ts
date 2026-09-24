@@ -40,7 +40,7 @@ export const dimensions: Dimension[] = [
   },
   {
     no: "04",
-    title: "每月 20+ 免費賦能課程",
+    title: "每月 20+ 名師賦能課程只要$1999",
     tagline: "持續迭代升級",
     en: "LIFETIME MASTERCLASS ACCESS",
     detail: "涵蓋 AI 應用、商業模式、自媒體、音樂、各類才藝、身心靈成長等熱門領域，讓會員與團隊持續迭代升級。",
