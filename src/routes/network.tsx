@@ -77,7 +77,7 @@ function NetworkPage() {
           <h2 className="text-2xl sm:text-3xl">你的下一筆合作，就在下一場聚會</h2>
           <p className="mt-6 leading-loose text-muted-foreground">
              從主題旅遊到私人聚會，從賦能課程到公益專案，每一個場景都在建立深層的信任與媒合入口。
-            資源不再靠運氣流動，而是靠系統流動。
+            資源不再靠運氣流動，而是在生活中流動。
           </p>
           <Link
             to="/reserve"
