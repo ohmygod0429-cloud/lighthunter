@@ -49,7 +49,7 @@ export function SiteHeader() {
           </span>
           <span className="leading-tight">
             <span className="block font-display text-base tracking-[0.18em] text-gold-gradient">
-              全球真愛 未來俱樂部
+              全球真愛 ㄌ未來俱樂部
             </span>
             <span className="block text-[10px] tracking-[0.32em] text-muted-foreground">
               THE LIGHTHUNTER PRIVATE CLUB
