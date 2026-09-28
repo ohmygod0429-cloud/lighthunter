@@ -102,7 +102,7 @@ export function RoiCalculator() {
           <p className="text-xs tracking-[0.24em] text-primary">MASTERCLASS VALUE</p>
           <p className="mt-3 font-display text-3xl text-gold-gradient">{fmt(result.courseValue)}</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            賦能課程等值市場價值（每月 20+ 堂 × 12 個月，年均 240+ 堂）
+            賦能課程$1999等值市場價值（每月 20+ 堂 × 12 個月，年均 240+ 堂）
             {training > 0 && `；可直接取代您原本 ${fmt(training)} 的培訓預算`}
           </p>
         </div>
