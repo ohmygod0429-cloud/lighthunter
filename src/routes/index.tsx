@@ -115,7 +115,7 @@ function Index() {
           為什麼傳統商會已經過時？
         </h2>
         <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
-          時間、人情與金錢都在流失，卻換不到可傳承的資產。我們用嚴格篩選機制將同頻人聚集建立深沉信任的生態閉環，取代單向付出社交耗損。
+          時間金錢都在流失，卻換不到可傳承的資產。我們用嚴格篩選機制將同頻人聚集建立深沉信任的生態閉環，取代單向付出社交耗損。
         </p>
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {legacyCompare.map((c) => (
