@@ -9,7 +9,7 @@ export function SiteFooter() {
         <div>
           <h2 className="font-display text-2xl text-gold-gradient">獵光者　未來俱樂部</h2>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            全球菁英私人俱樂部。一次會籍，終生傳承　代代世襲——會員專屬權益、跨界菁英對接、家族傳承與資源共享。
+            全球菁英私人俱樂部。一次會籍，終身傳承　代代世襲——會員專屬權益、跨界菁英對接、家族傳承與資源共享。
           </p>
           {boundSocialLinks.length > 0 && (
             <>
