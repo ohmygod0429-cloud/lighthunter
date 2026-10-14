@@ -67,17 +67,6 @@ export const pillars: Pillar[] = [
   },
   {
     no: "05",
-    title: "慈善公益・世家名望的精神厚度",
-    en: "IMPACT & LEGACY",
-    slogan: "以光照幽，是最高級的財富抵達。",
-    body:
-      "唯有超越自我的利他實踐，才能讓家族精神突破時間的洗禮。俱樂部發起具備實質社會回報的永續公益倡議，從偏鄉賦能到未來青年培育，讓會員以集體光芒推動社會向善，建立受人敬重的無形社會資本與家族美名。",
-    deliverables: ["影響力慈善專案", "家族聲望積累", "ESG 永續實踐"],
-    proof: "公益足跡與社會影響力項目",
-    icon: HandHeart,
-  },
-  {
-    no: "06",
     title: "商業媒合・商業版圖的生態重組",
     en: "ELITE DEAL FLOW",
     slogan: "跳過低效社交，直抵本質。",
@@ -88,7 +77,7 @@ export const pillars: Pillar[] = [
     icon: Briefcase,
   },
   {
-    no: "07",
+    no: "06",
     title: "高質聯誼・純粹溫度的生命同行",
     en: "VETTED FELLOWSHIP",
     slogan: "頂峰之上，亦能遇見純粹的知己。",
@@ -99,7 +88,7 @@ export const pillars: Pillar[] = [
     icon: Wine,
   },
   {
-    no: "08",
+    no: "07",
     title: "主題旅遊・探索極限的隱奢定制",
     en: "BESPOKE GLOBAL RETREATS",
     slogan: "以世界為客廳，重構生命的體驗邊界。",
@@ -108,6 +97,17 @@ export const pillars: Pillar[] = [
     deliverables: ["海外政商考察", "極限隱奢路線", "專屬會員特權折扣"],
     proof: "全球秘境航線與主題考察",
     icon: Plane,
+  },
+  {
+    no: "08",
+    title: "慈善公益・世家名望的精神厚度",
+    en: "IMPACT & LEGACY",
+    slogan: "以光照幽，是最高級的財富抵達。",
+    body:
+      "唯有超越自我的利他實踐，才能讓家族精神突破時間的洗禮。俱樂部發起具備實質社會回報的永續公益倡議，從偏鄉賦能到未來青年培育，讓會員以集體光芒推動社會向善，建立受人敬重的無形社會資本與家族美名。",
+    deliverables: ["影響力慈善專案", "家族聲望積累", "ESG 永續實踐"],
+    proof: "公益足跡與社會影響力項目",
+    icon: HandHeart,
   },
 ];
 
