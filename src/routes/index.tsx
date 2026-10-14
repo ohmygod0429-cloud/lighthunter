@@ -177,7 +177,7 @@ function Index() {
             八大核心賦能維度<span className="text-gold-gradient">・互動權益矩陣</span>
           </h2>
           <p className="mt-6 max-w-3xl leading-loose text-muted-foreground">
-            八大板塊不是八張票券，而是一張會籍卡的完整權益。點選任一板塊展開交付細節與證明元素。
+            八大板塊是一張會籍卡的完整權益。點選任一板塊展開交付細節與證明元素。
           </p>
           <div className="mt-12">
             <PillarMatrix />
