@@ -75,11 +75,9 @@ function ComparePage() {
           當代父母最深的焦慮「工作與生活失衡，付出跟收入不成正比，日復一日看不到未來」。
 攤開現實的帳單，每個家庭在不知不覺中吞下了多麼龐大的財務黑洞。&nbsp;
 一般小家庭 房租12000/月
-&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; 水電1000/月&nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 伙食費300/天 →9000/月
-&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 不包含停車費.尿布.學雜費.管理費.通勤費.稅費.保險費.交際費.
-&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 突如其來的醫療費或其他開銷...就已足夠花掉半個月的薪資，
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 如何破圈脫離現狀？
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;水電1000/月
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;伙食費300/天 →9000/月 &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 不包含停車費.尿布.學雜費.管理費.通勤費.稅費.保險費.交際費.
+ 突如其來的醫療費或其他開銷...就已足夠花掉半個月的薪資， 如何破圈脫離現狀？
         </p>
 
         <p className="mt-10 font-display text-lg text-gold-soft">📊 不可承受的年度財務黑洞</p>
