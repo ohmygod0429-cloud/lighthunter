@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Public read teacher photos" ON storage.objects;

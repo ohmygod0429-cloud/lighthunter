@@ -71,6 +71,20 @@
       "when": 1795419244028,
       "tag": "0009_replace_direct_storage_access_with_capabilities",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795422374037,
+      "tag": "0010_academy_teachers_courses",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795422393981,
+      "tag": "0011_teacher_photos_private",
+      "breakpoints": true
     }
   ]
 }

@@ -14,6 +14,106 @@ export type Database = {
   }
   public: {
     Tables: {
+      course_registrations: {
+        Row: {
+          attended: boolean
+          course_id: string
+          created_at: string
+          email: string
+          id: string
+          messenger: string
+          name: string
+          note: string
+          phone: string
+        }
+        Insert: {
+          attended?: boolean
+          course_id: string
+          created_at?: string
+          email?: string
+          id?: string
+          messenger?: string
+          name: string
+          note?: string
+          phone: string
+        }
+        Update: {
+          attended?: boolean
+          course_id?: string
+          created_at?: string
+          email?: string
+          id?: string
+          messenger?: string
+          name?: string
+          note?: string
+          phone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_registrations_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          capacity: number
+          course_date: string
+          created_at: string
+          description: string
+          end_time: string
+          id: string
+          is_published: boolean
+          location: string
+          map_url: string
+          name: string
+          region: string
+          start_time: string
+          teacher_id: string | null
+        }
+        Insert: {
+          capacity?: number
+          course_date: string
+          created_at?: string
+          description?: string
+          end_time?: string
+          id?: string
+          is_published?: boolean
+          location?: string
+          map_url?: string
+          name: string
+          region: string
+          start_time?: string
+          teacher_id?: string | null
+        }
+        Update: {
+          capacity?: number
+          course_date?: string
+          created_at?: string
+          description?: string
+          end_time?: string
+          id?: string
+          is_published?: boolean
+          location?: string
+          map_url?: string
+          name?: string
+          region?: string
+          start_time?: string
+          teacher_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       membership_applications: {
         Row: {
           agree_chatham: boolean
@@ -200,6 +300,96 @@ export type Database = {
           video_path?: string
           video_title?: string
           video_url?: string
+        }
+        Relationships: []
+      }
+      teacher_reviews: {
+        Row: {
+          content: string
+          course_id: string | null
+          created_at: string
+          id: string
+          is_published: boolean
+          nickname: string
+          teacher_id: string
+        }
+        Insert: {
+          content: string
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          nickname: string
+          teacher_id: string
+        }
+        Update: {
+          content?: string
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          nickname?: string
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_reviews_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_reviews_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teachers: {
+        Row: {
+          category: string
+          contact: string
+          created_at: string
+          experience: string
+          gallery_paths: string[]
+          id: string
+          is_published: boolean
+          name: string
+          photo_path: string
+          regions: string[]
+          summary: string
+          title: string
+        }
+        Insert: {
+          category?: string
+          contact?: string
+          created_at?: string
+          experience?: string
+          gallery_paths?: string[]
+          id?: string
+          is_published?: boolean
+          name: string
+          photo_path?: string
+          regions?: string[]
+          summary?: string
+          title?: string
+        }
+        Update: {
+          category?: string
+          contact?: string
+          created_at?: string
+          experience?: string
+          gallery_paths?: string[]
+          id?: string
+          is_published?: boolean
+          name?: string
+          photo_path?: string
+          regions?: string[]
+          summary?: string
+          title?: string
         }
         Relationships: []
       }
