@@ -11,6 +11,10 @@ export const fileTypes: Record<string, string> = {
   txt: "text/plain", csv: "text/csv", zip: "application/zip",
 };
 export const emptyMedia = { video_title: "", video_url: "", video_path: "", file_title: "", file_path: "", file_name: "" };
+// Keep original VideoSlot settings separate from the added introduction video and attachments.
+export function legacyVideoSlotId(slotId: string) {
+  return `legacy-${slotId}`;
+}
 export const mediaSchema = z.object({
   video_title: z.string().trim().max(200), video_url: z.string().trim().max(4096), video_path: z.string().max(240),
   file_title: z.string().trim().max(200), file_path: z.string().max(240), file_name: z.string().max(200),

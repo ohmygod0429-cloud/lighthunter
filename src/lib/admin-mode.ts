@@ -1,4 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { supabase } from "@/integrations/supabase/client";
+import { emptyMedia, legacyVideoSlotId, videoSource } from "@/lib/section-media";
+import { saveSectionMedia } from "@/lib/section-media.functions";
 
 const ADMIN_KEY = "sfe-admin-unlocked";
 const ADMIN_PASSCODE = "0429";
@@ -102,10 +107,24 @@ export function setVideoUrl(slotId: string, url: string) {
 }
 
 export function useVideoUrl(slotId: string) {
-  const [url, setUrl] = useState("");
+  const admin = useAdminMode();
+  const cache = useQueryClient();
+  const persist = useServerFn(saveSectionMedia);
+  const sharedSlotId = legacyVideoSlotId(slotId);
+  const queryKey = ["section-video", slotId];
+  const query = useQuery({
+    queryKey,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("section_media").select("video_url").eq("slot_id", sharedSlotId).maybeSingle();
+      if (error) throw error;
+      return data?.video_url ?? null;
+    },
+    staleTime: 30_000,
+  });
+  const [localUrl, setLocalUrl] = useState("");
 
   useEffect(() => {
-    const sync = () => setUrl(getVideoUrl(slotId));
+    const sync = () => setLocalUrl(getVideoUrl(slotId));
     sync();
     window.addEventListener(VIDEO_EVENT, sync);
     window.addEventListener("storage", sync);
@@ -115,15 +134,26 @@ export function useVideoUrl(slotId: string) {
     };
   }, [slotId]);
 
-  const save = useCallback((next: string) => setVideoUrl(slotId, next), [slotId]);
+  async function save(next: string, password = "") {
+    const passcode = getEnteredAdminPasscode() || password;
+    if (!passcode) throw new Error("請輸入管理者密碼，將影片儲存至網站");
+    const result = await persist({ data: { slotId: sharedSlotId, passcode, media: { ...emptyMedia, video_url: next.trim() } } });
+    rememberAdminPasscode(passcode);
+    cache.setQueryData(queryKey, result.video_url);
+    setVideoUrl(slotId, "");
+    await cache.invalidateQueries({ queryKey: ["section-media"] });
+  }
 
-  return { url, save };
+  // Existing browser-only settings remain editable, but never masquerade as published data.
+  return { url: query.data ?? (admin ? localUrl : ""), save, pending: query.isPending, error: query.isError };
 }
 
 /** 把常見影片連結轉成可嵌入的網址 */
 export function toEmbedUrl(raw: string): { kind: "iframe" | "file" | "none"; src: string } {
   const url = raw.trim();
   if (!url) return { kind: "none", src: "" };
+  const source = videoSource(url);
+  if (source) return source;
   if (/\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url)) return { kind: "file", src: url };
 
   const yt = url.match(

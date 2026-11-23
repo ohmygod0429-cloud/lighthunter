@@ -13,3 +13,4 @@
 - Reuse the external-links editor for all video slots and individual dimension panels so limits, validation, and empty-state behavior stay consistent.
 - Attach the shared section-media editor to the shared external-links surface; store media settings separately so existing links and video settings remain unchanged.
 - Keep section uploads in private storage with secret-validated signed uploads and public read policies limited to saved section paths; this prevents anonymous writes and exposure of unpublished uploads.
+- Persist original VideoSlot URLs in reserved `legacy-<slotId>` section_media rows through the existing secret-validated writer; this makes videos visible across browsers without replacing introduction videos or attachments.

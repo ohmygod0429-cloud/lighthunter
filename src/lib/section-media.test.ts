@@ -1,9 +1,18 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
-import { emptyMedia, mediaSchema, publishedMedia, uploadType, videoSource } from "./section-media";
+import { emptyMedia, legacyVideoSlotId, mediaSchema, publishedMedia, uploadType, videoSource } from "./section-media";
 
 test("an unset or cleared introduction video is entirely hidden", () => {
   assert.deepEqual(publishedMedia({ ...emptyMedia, video_title: "介紹" }), emptyMedia);
+});
+test("original section videos have a separate shared storage slot", () => {
+  assert.equal(legacyVideoSlotId("dimensions-page"), "legacy-dimensions-page");
+  assert.notEqual(legacyVideoSlotId("dimensions-page"), "dimensions-page");
+});
+test("a saved titleless YouTube video renders with non-leading v parameter", () => {
+  const media = publishedMedia({ ...emptyMedia, video_url: "https://www.youtube.com/watch?feature=shared&v=_SwIq-pwkS4" });
+  assert.equal(videoSource(media.video_url)?.src, "https://www.youtube.com/embed/_SwIq-pwkS4");
+  assert.equal(publishedMedia({ ...media, video_url: "" }).video_url, "");
 });
 test("saved video title and source publish together", () => {
   assert.equal(publishedMedia({ ...emptyMedia, video_title: "介紹", video_url: "https://example.com/intro.mp4" }).video_title, "介紹");

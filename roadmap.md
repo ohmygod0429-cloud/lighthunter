@@ -3,3 +3,4 @@
 - [x] Verify saving, visibility, deletion, limits, external navigation, and mobile layout.
 - [x] Add shared section introduction video and file editors with protected uploads.
 - [x] Verify video playback, file viewing, saving, clearing, and existing links on mobile.
+- [x] Repair original video saving across browsers and verify the current dimensions section for visitors.
