@@ -178,8 +178,10 @@ export type Database = {
       }
       gathering_registrations: {
         Row: {
+          agree_ride_safety: boolean
           attended: boolean
           created_at: string
+          driver_code: string
           email: string
           gathering_id: string
           id: string
@@ -188,10 +190,18 @@ export type Database = {
           note: string
           paid: boolean
           phone: string
+          ride_conditions: string
+          ride_driver_id: string | null
+          ride_meet_location: string
+          ride_meet_time: string
+          ride_role: string
+          seats: number
         }
         Insert: {
+          agree_ride_safety?: boolean
           attended?: boolean
           created_at?: string
+          driver_code?: string
           email?: string
           gathering_id: string
           id?: string
@@ -200,10 +210,18 @@ export type Database = {
           note?: string
           paid?: boolean
           phone: string
+          ride_conditions?: string
+          ride_driver_id?: string | null
+          ride_meet_location?: string
+          ride_meet_time?: string
+          ride_role?: string
+          seats?: number
         }
         Update: {
+          agree_ride_safety?: boolean
           attended?: boolean
           created_at?: string
+          driver_code?: string
           email?: string
           gathering_id?: string
           id?: string
@@ -212,6 +230,12 @@ export type Database = {
           note?: string
           paid?: boolean
           phone?: string
+          ride_conditions?: string
+          ride_driver_id?: string | null
+          ride_meet_location?: string
+          ride_meet_time?: string
+          ride_role?: string
+          seats?: number
         }
         Relationships: [
           {
@@ -219,6 +243,13 @@ export type Database = {
             columns: ["gathering_id"]
             isOneToOne: false
             referencedRelation: "gatherings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gathering_registrations_ride_driver_id_fkey"
+            columns: ["ride_driver_id"]
+            isOneToOne: false
+            referencedRelation: "gathering_registrations"
             referencedColumns: ["id"]
           },
         ]
@@ -254,27 +285,36 @@ export type Database = {
       }
       gathering_wishes: {
         Row: {
+          conditions: string
           contact: string
           content: string
           created_at: string
           id: string
+          meet_location: string
           nickname: string
+          status: string
           theme: string
         }
         Insert: {
+          conditions?: string
           contact?: string
           content: string
           created_at?: string
           id?: string
+          meet_location?: string
           nickname?: string
+          status?: string
           theme: string
         }
         Update: {
+          conditions?: string
           contact?: string
           content?: string
           created_at?: string
           id?: string
+          meet_location?: string
           nickname?: string
+          status?: string
           theme?: string
         }
         Relationships: []
@@ -291,12 +331,14 @@ export type Database = {
           is_published: boolean
           location: string
           map_url: string
+          meet_point: string
           min_people: number
           payment_note: string
           payment_url: string
           performer_ids: string[]
           perks: string
           region: string
+          rideshare_enabled: boolean
           start_time: string
           status: string
           status_note: string
@@ -314,12 +356,14 @@ export type Database = {
           is_published?: boolean
           location?: string
           map_url?: string
+          meet_point?: string
           min_people?: number
           payment_note?: string
           payment_url?: string
           performer_ids?: string[]
           perks?: string
           region: string
+          rideshare_enabled?: boolean
           start_time?: string
           status?: string
           status_note?: string
@@ -337,12 +381,14 @@ export type Database = {
           is_published?: boolean
           location?: string
           map_url?: string
+          meet_point?: string
           min_people?: number
           payment_note?: string
           payment_url?: string
           performer_ids?: string[]
           perks?: string
           region?: string
+          rideshare_enabled?: boolean
           start_time?: string
           status?: string
           status_note?: string

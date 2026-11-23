@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { field, glass, useTeacherUpload } from "@/components/academy-ui";
 import { getGatheringsAdmin, gatheringsAdminAction } from "@/lib/gatherings.functions";
-import { PERFORMER_KINDS, STATUSES, THEMES, gatheringSchema, gatheringState, performerSchema, pollSchema, type GatheringInput, type PerformerInput, type PollInput } from "@/lib/gatherings";
+import { WISH_LABEL, PERFORMER_KINDS, STATUSES, THEMES, gatheringSchema, gatheringState, performerSchema, pollSchema, type GatheringInput, type PerformerInput, type PollInput } from "@/lib/gatherings";
 import { REGIONS, studentKey } from "@/lib/academy";
 import { getEnteredAdminPasscode } from "@/lib/admin-mode";
 
@@ -32,7 +32,7 @@ type Data = Awaited<ReturnType<typeof getGatheringsAdmin>>;
 type Action = Record<string, unknown> & { type: string };
 const TABS = ["活動", "投票", "表演人員", "名單與統計", "許願"] as const;
 const STATUS_LABEL: Record<string, string> = { open: "正常（依人數自動判斷）", failed: "未成團", cancelled: "取消", rescheduled: "改期" };
-const emptyG: GatheringInput = { theme: "聯誼", title: "", description: "", region: "北部", event_date: "", start_time: "", end_time: "", location: "", map_url: "", min_people: 0, capacity: 0, fee: 0, payment_note: "", payment_url: "", perks: "", performer_ids: [], status: "open", status_note: "", is_published: true };
+const emptyG: GatheringInput = { theme: "聯誼", title: "", description: "", region: "北部", event_date: "", start_time: "", end_time: "", location: "", map_url: "", min_people: 0, capacity: 0, fee: 0, payment_note: "", payment_url: "", perks: "", performer_ids: [], status: "open", status_note: "", is_published: true, rideshare_enabled: false, meet_point: "" };
 const emptyP: PerformerInput = { name: "", kind: "DJ", summary: "", photo_path: "", is_published: true };
 const emptyPoll: PollInput = { theme: "聯誼", title: "", description: "", region: "", is_open: true, options: [] };
 const chip = (on: boolean) => `rounded-full border px-3 py-1 text-sm ${on ? "border-primary bg-primary/15 text-primary" : "border-border/70 text-muted-foreground"}`;
@@ -183,8 +183,10 @@ function AdminPage() {
             <h2 className="text-lg">報名名單（{regs.length}）</h2>
             {regs.map((r) => (
               <div key={r.id} className={`${glass} flex flex-wrap items-center gap-3 p-3 text-sm`}>
-                <div className="min-w-0 flex-1"><p className="text-gold-soft">{r.name}・{r.phone}{r.messenger && `・${r.messenger}`}{r.email && `・${r.email}`}</p>
-                  <p className="text-xs text-muted-foreground">{gMap.get(r.gathering_id)?.title}{r.note && `｜${r.note}`}</p></div>
+                <div className="min-w-0 flex-1"><p className="text-gold-soft">{r.ride_role === "driver" && <span className="mr-1 rounded-full border border-primary/50 px-2 text-xs text-primary">車主 {r.seats} 座</span>}{r.ride_role === "passenger" && <span className="mr-1 rounded-full border border-primary/50 px-2 text-xs text-primary">乘客</span>}{r.name}・{r.phone}{r.messenger && `・${r.messenger}`}{r.email && `・${r.email}`}</p>
+                  <p className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString("zh-TW")}・{gMap.get(r.gathering_id)?.title}{r.note && `｜${r.note}`}</p>
+                  {r.ride_role === "driver" && <p className="text-xs text-muted-foreground">集合 {r.ride_meet_location}{r.ride_meet_time && ` ${r.ride_meet_time}`}{r.ride_conditions && `｜${r.ride_conditions}`}・查詢碼 {r.driver_code}・已載 {data.registrations.filter((x) => x.ride_driver_id === r.id).length} 人{r.agree_ride_safety && "・已同意安全提醒"}</p>}
+                  {r.ride_role === "passenger" && <p className="text-xs text-muted-foreground">搭乘 {data.registrations.find((x) => x.id === r.ride_driver_id)?.name ?? "（車主紀錄已刪除）"}{r.agree_ride_safety && "・已同意安全提醒"}</p>}</div>
                 <label className="flex items-center gap-1"><input type="checkbox" checked={r.paid} onChange={(e) => run({ type: "setRegFlag", id: r.id, field: "paid", value: e.target.checked })} />已付款</label>
                 <label className="flex items-center gap-1"><input type="checkbox" checked={r.attended} onChange={(e) => run({ type: "setRegFlag", id: r.id, field: "attended", value: e.target.checked })} />已出席</label>
                 <Button size="sm" variant="destructive" onClick={() => del({ type: "deleteRegistration", id: r.id })}>刪除</Button>
@@ -199,7 +201,15 @@ function AdminPage() {
           {data.wishes.length === 0 && <p className="text-muted-foreground">尚無許願</p>}
           {data.wishes.map((w) => (
             <div key={w.id} className={`${glass} flex flex-wrap items-center gap-3 p-3 text-sm`}>
-              <div className="min-w-0 flex-1"><p className="text-gold-soft">{w.theme}{w.nickname && `・${w.nickname}`}{w.contact && `・${w.contact}`}</p><p className="whitespace-pre-line text-muted-foreground">{w.content}</p></div>
+              <div className="min-w-0 flex-1"><p className="text-gold-soft"><span className="mr-2 rounded-full border border-primary/50 px-2 text-xs text-primary">{WISH_LABEL[w.status] ?? w.status}</span>{w.theme}{w.nickname && `・${w.nickname}`}{w.contact && `・${w.contact}`}</p>
+                <p className="whitespace-pre-line text-muted-foreground">{w.content}</p>
+                {w.meet_location && <p className="text-xs text-muted-foreground">建議集合地點：{w.meet_location}</p>}
+                {w.conditions && <p className="text-xs text-muted-foreground">參與條件／限制：{w.conditions}</p>}
+                <p className="text-xs text-muted-foreground">{new Date(w.created_at).toLocaleString("zh-TW")}</p></div>
+              {w.status !== "approved" && <Button size="sm" variant="outline" onClick={() => run({ type: "setWishStatus", id: w.id, status: "approved" }, "已核准公開")}>核准公開</Button>}
+              {w.status === "approved" && <Button size="sm" variant="outline" onClick={() => setEditPoll({ id: null, v: { ...emptyPoll, theme: w.theme as PollInput["theme"], title: w.content.slice(0, 60), description: [w.content, w.meet_location && `建議集合地點：${w.meet_location}`, w.conditions && `參與條件／限制：${w.conditions}`].filter(Boolean).join("\n") } })}>轉入投票</Button>}
+              {w.status === "approved" && <Button size="sm" className="rounded-full bg-gold-gradient text-primary-foreground" onClick={() => setEditG({ id: null, closePollId: null, v: { ...emptyG, theme: w.theme as GatheringInput["theme"], title: w.content.slice(0, 60), description: [w.content, w.conditions && `參與條件／限制：${w.conditions}`].filter(Boolean).join("\n"), meet_point: w.meet_location } })}>一鍵轉為正式活動</Button>}
+              {w.status !== "rejected" && <Button size="sm" variant="outline" onClick={() => run({ type: "setWishStatus", id: w.id, status: "rejected" }, "已駁回並隱藏")}>駁回／隱藏</Button>}
               <Button size="sm" variant="destructive" onClick={() => del({ type: "deleteWish", id: w.id })}>刪除</Button>
             </div>
           ))}
@@ -228,6 +238,8 @@ function AdminPage() {
             {data.performers.length > 0 && <div><L>表演人員</L><div className="flex flex-wrap gap-1.5">{data.performers.map((p) => { const on = editG.v.performer_ids.includes(p.id); return <button key={p.id} type="button" className={chip(on)} onClick={() => setG("performer_ids", on ? editG.v.performer_ids.filter((x) => x !== p.id) : [...editG.v.performer_ids, p.id])}>{p.name}</button>; })}</div></div>}
             <div><L>成團狀態</L><select className={field} value={editG.v.status} onChange={(e) => setG("status", e.target.value as GatheringInput["status"])}>{STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}</select></div>
             <Input className={field} placeholder="狀態說明（例：改期至 12/20，選填）" value={editG.v.status_note} onChange={(e) => setG("status_note", e.target.value)} />
+            <Input className={field} placeholder="集合地點（選填）" value={editG.v.meet_point} onChange={(e) => setG("meet_point", e.target.value)} />
+            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={editG.v.rideshare_enabled} onChange={(e) => setG("rideshare_enabled", e.target.checked)} />開放順道搭乘／載人</label>
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={editG.v.is_published} onChange={(e) => setG("is_published", e.target.checked)} />公開於行事曆</label>
             <Button onClick={saveG} className="w-full rounded-full bg-gold-gradient text-primary-foreground">儲存活動</Button>
           </div>}

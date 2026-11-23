@@ -31,6 +31,7 @@ export const gatheringSchema = z.object({
   performer_ids: z.array(z.string().uuid()).max(50),
   status: z.enum(STATUSES), status_note: t(500),
   is_published: z.boolean(),
+  rideshare_enabled: z.boolean(), meet_point: t(300),
 });
 export type GatheringInput = z.infer<typeof gatheringSchema>;
 
@@ -40,6 +41,19 @@ export const gatheringRegistrationSchema = z.object({
   phone: z.string().trim().regex(/^[0-9+\-\s]{8,20}$/, "請填寫正確電話"),
   email: z.string().trim().max(255).refine((e) => e === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e), "Email 格式不正確"),
   messenger: t(100), note: t(1000),
+  ride_role: z.enum(["none", "driver", "passenger"]).default("none"),
+  seats: z.number().int().min(0).max(8).default(0),
+  ride_meet_location: t(300).default(""), ride_meet_time: time.default(""), ride_conditions: t(500).default(""),
+  ride_driver_id: z.string().uuid().nullable().default(null),
+  agree_ride_safety: z.boolean().default(false),
+}).superRefine((v, ctx) => {
+  const bad = (message: string) => ctx.addIssue({ code: "custom", message });
+  if (v.ride_role !== "none" && !v.agree_ride_safety) bad("請勾選同意順道搭乘安全提醒");
+  if (v.ride_role === "driver") {
+    if (v.seats < 1) bad("請填寫可提供座位數");
+    if (!v.ride_meet_location) bad("請填寫集合地點");
+  }
+  if (v.ride_role === "passenger" && !v.ride_driver_id) bad("請選擇要搭乘的車主");
 });
 
 export const pollSchema = z.object({
@@ -57,7 +71,15 @@ export const wishSchema = z.object({
   theme: z.enum(THEMES),
   content: z.string().trim().min(2, "請填寫想參加的活動").max(1000),
   nickname: t(50), contact: t(200),
+  meet_location: t(300).default(""), conditions: t(500).default(""),
 });
+export const WISH_STATUSES = ["pending", "approved", "rejected"] as const;
+export const WISH_LABEL: Record<string, string> = { pending: "待審核", approved: "已核准公開", rejected: "已駁回／隱藏" };
+
+/** 順道搭乘剩餘座位（不會小於 0） */
+export function seatsLeft(seats: number, taken: number) {
+  return Math.max(0, seats - taken);
+}
 
 /** 成團狀態：管理者標記優先；否則未達最低人數為集氣中（0 代表不限） */
 export function gatheringState(status: string, minPeople: number, count: number) {
