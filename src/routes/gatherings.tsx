@@ -8,8 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { field, glass } from "@/components/academy-ui";
-import { castVote, getGatheringsPublic, getMyPassengers, registerGathering, submitWish } from "@/lib/gatherings.functions";
-import { THEMES, canRegister, gatheringState } from "@/lib/gatherings";
+import { castVote, getGatheringsPublic, getMyPassengers, joinWish, registerGathering, submitWish } from "@/lib/gatherings.functions";
+import { THEMES, canRegister, formedCount, gatheringState, stillNeeded } from "@/lib/gatherings";
 import { REGIONS, mapLink } from "@/lib/academy";
 
 export const Route = createFileRoute("/gatherings")({
@@ -81,11 +81,12 @@ function GatheringsPage() {
         <section className="mt-16">
           <h2 className="text-2xl">會員許願牆</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">{data.wishes.map((w) => (
-            <article key={w.id} className={`${glass} p-5 text-sm`}>
+            <article key={w.id} className={`${glass} flex flex-col p-5 text-sm`}>
               <div className="flex gap-2 text-xs text-primary"><span className="rounded-full border border-primary/40 px-2">{w.theme}</span>{w.nickname && <span className="text-muted-foreground">{w.nickname}</span>}</div>
               <p className="mt-2 whitespace-pre-line text-gold-soft">{w.content}</p>
               {w.meet_location && <p className="mt-2 text-muted-foreground">建議集合地點：{w.meet_location}</p>}
               {w.conditions && <p className="mt-1 text-muted-foreground">參與條件／限制：{w.conditions}</p>}
+              <WishRally w={w} onDone={refresh} />
             </article>))}</div>
         </section>
       )}
@@ -98,41 +99,50 @@ function GatheringsPage() {
 function EventCard({ g, performers, onDone }: { g: G; performers: P[]; onDone: () => void }) {
   const [open, setOpen] = useState(false);
   const [reg, setReg] = useState(false);
-  const state = gatheringState(g.status, g.min_people, g.registered);
+  const formed = formedCount(g.fee, g.registered, g.paid);
+  const state = gatheringState(g.status, g.min_people, formed);
   const can = canRegister(g.status, g.capacity, g.registered);
+  const full = g.capacity > 0 && g.registered >= g.capacity;
+  const need = stillNeeded(g.min_people, formed);
+  const btn = can ? "我要報名" : full ? "已額滿" : "暫停報名";
   const map = mapLink(g.location, g.map_url);
   const time = fmtTime(g.start_time, g.end_time);
-  const progress = [`已報名 ${g.registered} 人`, g.min_people > 0 && `最低成團 ${g.min_people} 人`, g.capacity > 0 && `上限 ${g.capacity} 人`].filter(Boolean).join("・");
+  const progress = [`已報名 ${g.registered} 人`, g.fee > 0 && g.min_people > 0 && `已付款 ${g.paid} 人`, g.min_people > 0 && `最低成團 ${g.min_people} 人`, g.capacity > 0 && `上限 ${g.capacity} 人`].filter(Boolean).join("・");
+  const needText = state === "集氣中" && need > 0 ? (g.fee > 0 ? `還差 ${need} 位完成付款即可成團` : `還差 ${need} 位即可成團`) : "";
   return (
     <article className={`${glass} p-5`}>
       <div className="flex flex-wrap items-center gap-2 text-xs text-primary">
         <span>{g.event_date.replaceAll("-", "/")}</span>{time && <span>{time}</span>}
         <span className="rounded-full border border-primary/40 px-2">{g.theme}</span><span className="rounded-full border border-primary/40 px-2">{g.region}</span>
         <span className={`rounded-full px-2 ${state === "已成團" ? "bg-gold-gradient text-primary-foreground" : "border border-border/70 text-muted-foreground"}`}>{state === "集氣中" ? "集氣中・尚未成團" : state}</span>
+        {full && <span className="rounded-full border border-border/70 px-2 text-muted-foreground">已額滿</span>}
       </div>
       <h3 className="mt-2 text-lg">{g.title}</h3>
       {g.status_note && <p className="mt-1 text-sm text-gold-soft">{g.status_note}</p>}
       {g.location && (map ? <a href={map} target="_blank" rel="noreferrer" className="mt-3 flex items-center gap-1.5 text-sm text-gold-soft hover:text-primary"><MapPin className="size-4" />{g.location}</a>
         : <p className="mt-3 flex items-center gap-1.5 text-sm text-gold-soft"><MapPin className="size-4" />{g.location}</p>)}
       <p className="mt-3 text-xs text-muted-foreground">{progress}</p>
+      {needText && <p className="mt-1 text-xs text-gold-soft">{needText}</p>}
       {g.capacity > 0 && <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full bg-gold-gradient" style={{ width: `${Math.min(100, (g.registered / g.capacity) * 100)}%` }} /></div>}
       {g.fee > 0 && <p className="mt-3 text-sm text-gold-soft">費用 NT$ {g.fee.toLocaleString()}</p>}
       <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
         <Button variant="outline" onClick={() => setOpen(true)} className="rounded-full border-primary/50 text-primary">活動詳情</Button>
-        <Button disabled={!can} onClick={() => setReg(true)} className="rounded-full bg-gold-gradient text-primary-foreground">{can ? "我要報名" : "暫停報名"}</Button>
+        <Button disabled={!can} onClick={() => setReg(true)} className="rounded-full bg-gold-gradient text-primary-foreground">{btn}</Button>
       </div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto border-border/60 bg-background">
           <DialogHeader><DialogTitle>{g.title}</DialogTitle></DialogHeader>
           {g.description && <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{g.description}</p>}
+          {g.location && <MeetLine label="活動地址" place={g.location} url={g.map_url} />}
+          {g.location_photo_url && <img src={g.location_photo_url} alt="地點參考照片" className="w-full rounded-xl object-cover" />}
           {g.perks && <div className="rounded-xl border border-primary/40 p-3"><p className="text-sm text-primary">抽獎／優惠</p><p className="mt-1 whitespace-pre-line text-sm text-gold-soft">{g.perks}</p></div>}
           {performers.length > 0 && <div className="space-y-3"><p className="text-sm text-primary">表演人員</p>
             {performers.map((p) => <div key={p.id} className="flex gap-3">{p.photo_url && <img src={p.photo_url} alt={p.name} className="size-14 rounded-full object-cover" />}
               <div><p className="text-gold-soft">{p.name}{p.kind && <span className="ml-2 text-xs text-muted-foreground">{p.kind}</span>}</p>{p.summary && <p className="whitespace-pre-line text-xs text-muted-foreground">{p.summary}</p>}</div></div>)}</div>}
-          {g.fee > 0 && g.payment_note && <p className="whitespace-pre-line text-sm text-muted-foreground">{g.payment_note}</p>}
+          {g.pay_open && <PayBlock url={g.payment_url} note={g.payment_note} qr={g.payment_qr_url} />}
           {g.meet_point && <MeetLine label="集合地點" place={g.meet_point} />}
           {g.rideshare_enabled && g.rides.length > 0 && <RideSection g={g} />}
-          <Button disabled={!can} onClick={() => { setOpen(false); setReg(true); }} className="w-full rounded-full bg-gold-gradient text-primary-foreground">{can ? "我要報名" : "暫停報名"}</Button>
+          <Button disabled={!can} onClick={() => { setOpen(false); setReg(true); }} className="w-full rounded-full bg-gold-gradient text-primary-foreground">{btn}</Button>
         </DialogContent>
       </Dialog>
       <RegisterDialog open={reg} onOpenChange={setReg} g={g} onDone={onDone} />
@@ -142,8 +152,37 @@ function EventCard({ g, performers, onDone }: { g: G; performers: P[]; onDone: (
 
 const SAFETY = "本功能僅供聚會參與者自發性順道同行資訊交流，非官方接駁服務；建議約在安全、明亮的公共集合點，並請自行評估與留意自身及財物安全。";
 
-function MeetLine({ label, place }: { label: string; place: string }) {
-  const map = mapLink(place, "");
+function PayBlock({ url, note, qr }: { url: string; note: string; qr: string }) {
+  if (!url && !note && !qr) return null;
+  return (
+    <div className="space-y-2 rounded-xl border border-primary/40 p-3 text-sm">
+      {note && <p className="whitespace-pre-line text-muted-foreground">{note}</p>}
+      {qr && <img src={qr} alt="付款 QR" className="mx-auto max-h-64 rounded-lg" />}
+      {url && <a href={url} target="_blank" rel="noreferrer" className="block rounded-full bg-gold-gradient px-4 py-2.5 text-center text-primary-foreground">前往付款</a>}
+    </div>
+  );
+}
+
+function WishRally({ w, onDone }: { w: Data["wishes"][number]; onDone: () => void }) {
+  const join = useServerFn(joinWish);
+  const [busy, setBusy] = useState(false);
+  const need = stillNeeded(w.min_people, w.joined);
+  const go = async () => {
+    setBusy(true);
+    try { await join({ data: { wish_id: w.id, voter_key: voterKey(), name: "", contact: "" } }); toast.success("已加入集氣"); onDone(); }
+    catch (e) { toast.error(errMsg(e, "集氣失敗")); }
+    finally { setBusy(false); }
+  };
+  return (
+    <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
+      <p className="text-xs text-muted-foreground">已集氣 {w.joined} 人{w.min_people > 0 && `・最低成團 ${w.min_people} 人`}{w.min_people > 0 && (need > 0 ? `・還差 ${need} 人` : "・已達成團門檻")}</p>
+      <Button size="sm" disabled={busy} onClick={go} className="rounded-full bg-gold-gradient text-primary-foreground">我要集氣</Button>
+    </div>
+  );
+}
+
+function MeetLine({ label, place, url = "" }: { label: string; place: string; url?: string }) {
+  const map = mapLink(place, url);
   return <p className="flex items-center gap-1.5 text-sm text-gold-soft"><MapPin className="size-4" />{label}：{map ? <a href={map} target="_blank" rel="noreferrer" className="underline-offset-4 hover:text-primary hover:underline">{place}</a> : place}</p>;
 }
 
@@ -187,10 +226,11 @@ function RegisterDialog({ open, onOpenChange, g, onDone }: { open: boolean; onOp
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [code, setCode] = useState("");
+  const [pay, setPay] = useState<{ payment_url: string; payment_note: string; payment_qr_url: string } | null>(null);
   const openRides = g.rides.filter((r) => r.left > 0);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true);
-    try { const r = await send({ data: { gathering_id: g.id, ...f } }); setCode(r.driver_code); setF(empty); setDone(true); onDone(); }
+    try { const r = await send({ data: { gathering_id: g.id, ...f } }); setCode(r.driver_code); setPay(r.pay_open ? r : null); setF(empty); setDone(true); onDone(); }
     catch (err) { toast.error(errMsg(err, "報名失敗")); }
     finally { setBusy(false); }
   };
@@ -203,12 +243,12 @@ function RegisterDialog({ open, onOpenChange, g, onDone }: { open: boolean; onOp
             <p className="text-gold-soft">報名成功，我們會與您聯繫確認。</p>
             {code && <p className="rounded-xl border border-primary/40 p-3">您的車主專屬查詢碼：<span className="text-lg text-primary">{code}</span><br /><span className="text-xs text-muted-foreground">請截圖保存，可在活動詳情「車主查看我的乘客名單」輸入查詢（也可用登記的電話或 LINE ID）。</span></p>}
             {g.fee > 0 && <p>費用 NT$ {g.fee.toLocaleString()}</p>}
-            {g.fee > 0 && g.payment_note && <p className="whitespace-pre-line text-muted-foreground">{g.payment_note}</p>}
-            {g.fee > 0 && g.payment_url && <a href={g.payment_url} target="_blank" rel="noreferrer" className="block rounded-full bg-gold-gradient px-4 py-2.5 text-center text-primary-foreground">前往線上付款</a>}
+            {g.fee > 0 && !pay && <p className="text-muted-foreground">尚未成團，報名人數達門檻後會開放付款，請先不用付款。</p>}
+            {pay && <PayBlock url={pay.payment_url} note={pay.payment_note} qr={pay.payment_qr_url} />}
           </div>
         ) : (
           <form onSubmit={submit} className="space-y-3">
-            {g.fee > 0 && <p className="text-sm text-gold-soft">費用 NT$ {g.fee.toLocaleString()}（送出後顯示付款方式）</p>}
+            {g.fee > 0 && <p className="text-sm text-gold-soft">費用 NT$ {g.fee.toLocaleString()}{g.pay_open ? "（送出後顯示付款方式）" : "（報名達門檻後才開放付款）"}</p>}
             <Input required className={field} placeholder="姓名 *" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
             <Input required className={field} placeholder="手機 *" inputMode="tel" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} />
             <Input className={field} placeholder="電子郵件" type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
@@ -283,7 +323,7 @@ function WishForm() {
       <Textarea required className={field} rows={3} placeholder="想參加什麼樣的聚會？時間、地點都可以寫" value={f.content} onChange={(e) => setF({ ...f, content: e.target.value })} />
       <div className="grid gap-3 sm:grid-cols-2">
         <Input className={field} placeholder="建議集合地點（選填）" value={f.meet_location} onChange={(e) => setF({ ...f, meet_location: e.target.value })} />
-        <Input className={field} placeholder="參與條件／限制（選填，例：需會開車、自備牽繩）" value={f.conditions} onChange={(e) => setF({ ...f, conditions: e.target.value })} />
+        <Input className={field} placeholder="參與條件／限制（選填）" value={f.conditions} onChange={(e) => setF({ ...f, conditions: e.target.value })} />
         <Input className={field} placeholder="暱稱（選填）" value={f.nickname} onChange={(e) => setF({ ...f, nickname: e.target.value })} />
         <Input className={field} placeholder="聯絡方式（選填，僅後台可見）" value={f.contact} onChange={(e) => setF({ ...f, contact: e.target.value })} />
       </div>

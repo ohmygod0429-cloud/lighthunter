@@ -1,6 +1,6 @@
 import { describe, test } from "node:test";
 import { strict as assert } from "node:assert";
-import { canRegister, gatheringRegistrationSchema, gatheringState, seatsLeft } from "./gatherings";
+import { canRegister, formedCount, paymentOpen, stillNeeded, gatheringRegistrationSchema, gatheringState, seatsLeft } from "./gatherings";
 
 describe("gathering rules", () => {
   test("below minimum is 集氣中, reaching it is 已成團, 0 means no minimum", () => {
@@ -18,6 +18,17 @@ describe("gathering rules", () => {
     assert.equal(canRegister("open", 20, 19), true);
     assert.equal(canRegister("open", 0, 999), true);
     assert.equal(canRegister("cancelled", 0, 0), false);
+  });
+  test("paid events form only by paid count", () => {
+    assert.equal(gatheringState("open", 10, formedCount(500, 30, 9)), "集氣中");
+    assert.equal(stillNeeded(10, formedCount(500, 30, 9)), 1);
+    assert.equal(gatheringState("open", 10, formedCount(500, 30, 10)), "已成團");
+    assert.equal(gatheringState("open", 10, formedCount(0, 10, 0)), "已成團");
+  });
+  test("payment hidden until sign-ups reach minimum; never for free", () => {
+    assert.equal(paymentOpen("open", 500, 10, 9), false);
+    assert.equal(paymentOpen("open", 500, 10, 10), true);
+    assert.equal(paymentOpen("open", 0, 0, 5), false);
   });
   test("ride seats: full car has 0 left", () => {
     assert.equal(seatsLeft(2, 1), 1);

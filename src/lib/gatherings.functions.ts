@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { TEACHER_PHOTO_BUCKET } from "./academy";
-import { canRegister, seatsLeft, gatheringRegistrationSchema, gatheringSchema, performerSchema, pollSchema, voteSchema, wishSchema, WISH_STATUSES } from "./gatherings";
+import { canRegister, paymentOpen, seatsLeft, wishJoinSchema, gatheringRegistrationSchema, gatheringSchema, performerSchema, pollSchema, voteSchema, wishSchema, WISH_STATUSES } from "./gatherings";
 
 async function admin() {
   return (await import("@/integrations/supabase/client.server")).supabaseAdmin;
@@ -30,7 +30,7 @@ async function countBy(sb: Sb, table: "gathering_registrations" | "gathering_vot
 export const getGatheringsPublic = createServerFn({ method: "GET" }).handler(async () => {
   const sb = await admin();
   const [g, p, o, f] = await Promise.all([
-    sb.from("gatherings").select("id,theme,title,description,region,event_date,start_time,end_time,location,map_url,min_people,capacity,fee,payment_note,payment_url,perks,performer_ids,status,status_note,rideshare_enabled,meet_point").eq("is_published", true).order("event_date").order("start_time"),
+    sb.from("gatherings").select("id,theme,title,description,region,event_date,start_time,end_time,location,map_url,min_people,capacity,fee,payment_note,payment_url,perks,performer_ids,status,status_note,rideshare_enabled,meet_point,location_photo_path,payment_qr_path").eq("is_published", true).order("event_date").order("start_time"),
     sb.from("gathering_polls").select("id,theme,title,description,region").eq("is_open", true).order("created_at", { ascending: false }),
     sb.from("gathering_poll_options").select("id,poll_id,option_date,start_time,end_time").order("option_date"),
     sb.from("performers").select("id,name,kind,summary,photo_path").eq("is_published", true).order("created_at"),
@@ -40,7 +40,7 @@ export const getGatheringsPublic = createServerFn({ method: "GET" }).handler(asy
   const [drv, pas, wsh] = await Promise.all([
     rideIds.length ? sb.from("gathering_registrations").select("id,gathering_id,name,seats,ride_meet_location,ride_meet_time,ride_conditions").eq("ride_role", "driver").in("gathering_id", rideIds).order("created_at") : Promise.resolve({ data: [] as never[] }),
     rideIds.length ? sb.from("gathering_registrations").select("ride_driver_id").not("ride_driver_id", "is", null).in("gathering_id", rideIds) : Promise.resolve({ data: [] as never[] }),
-    sb.from("gathering_wishes").select("id,theme,content,nickname,meet_location,conditions").eq("status", "approved").order("created_at", { ascending: false }),
+    sb.from("gathering_wishes").select("id,theme,content,nickname,meet_location,conditions,min_people").eq("status", "approved").order("created_at", { ascending: false }),
   ]);
   const taken: Record<string, number> = {};
   ((pas.data ?? []) as { ride_driver_id: string | null }[]).forEach((r) => { if (r.ride_driver_id) taken[r.ride_driver_id] = (taken[r.ride_driver_id] ?? 0) + 1; });
@@ -49,14 +49,29 @@ export const getGatheringsPublic = createServerFn({ method: "GET" }).handler(asy
     .map((d) => ({ ...d, left: seatsLeft(d.seats, taken[d.id] ?? 0) }));
   const pollIds = new Set((p.data ?? []).map((x) => x.id));
   const options = (o.data ?? []).filter((x) => pollIds.has(x.poll_id));
-  const [regs, votes, urls] = await Promise.all([
-    countBy(sb, "gathering_registrations", "gathering_id", (g.data ?? []).map((x) => x.id)),
+  const gIds = (g.data ?? []).map((x) => x.id);
+  const wishIds = ((wsh.data ?? []) as { id: string }[]).map((x) => x.id);
+  const [regs, votes, urls, paidRows, joinRows] = await Promise.all([
+    countBy(sb, "gathering_registrations", "gathering_id", gIds),
     countBy(sb, "gathering_votes", "option_id", options.map((x) => x.id)),
-    sign(sb, (f.data ?? []).map((x) => x.photo_path)),
+    sign(sb, [...(f.data ?? []).map((x) => x.photo_path), ...(g.data ?? []).flatMap((x) => [x.location_photo_path, x.payment_qr_path])]),
+    gIds.length ? sb.from("gathering_registrations").select("gathering_id").eq("paid", true).in("gathering_id", gIds) : Promise.resolve({ data: [] as { gathering_id: string }[] }),
+    wishIds.length ? sb.from("gathering_wish_joins").select("wish_id").in("wish_id", wishIds) : Promise.resolve({ data: [] as { wish_id: string }[] }),
   ]);
+  const paid: Record<string, number> = {};
+  (paidRows.data ?? []).forEach((r) => { paid[r.gathering_id] = (paid[r.gathering_id] ?? 0) + 1; });
+  const joins: Record<string, number> = {};
+  (joinRows.data ?? []).forEach((r) => { joins[r.wish_id] = (joins[r.wish_id] ?? 0) + 1; });
   return {
-    gatherings: (g.data ?? []).map((x) => ({ ...x, registered: regs[x.id] ?? 0, rides: rides.filter((r) => r.gathering_id === x.id) })),
-    wishes: wsh.data ?? [],
+    gatherings: (g.data ?? []).map(({ location_photo_path, payment_qr_path, payment_url, payment_note, ...x }) => {
+      const registered = regs[x.id] ?? 0;
+      const pay = paymentOpen(x.status, x.fee, x.min_people, registered);
+      // 未開放付款前，付款連結／QR／說明一律不送到前台
+      return { ...x, registered, paid: paid[x.id] ?? 0, pay_open: pay,
+        payment_url: pay ? payment_url : "", payment_note: pay ? payment_note : "", payment_qr_url: pay ? urls.get(payment_qr_path) ?? "" : "",
+        location_photo_url: urls.get(location_photo_path) ?? "", rides: rides.filter((r) => r.gathering_id === x.id) };
+    }),
+    wishes: ((wsh.data ?? []) as { id: string; theme: string; content: string; nickname: string; meet_location: string; conditions: string; min_people: number }[]).map((w) => ({ ...w, joined: joins[w.id] ?? 0 })),
     polls: (p.data ?? []).map((x) => ({ ...x, options: options.filter((y) => y.poll_id === x.id).map((y) => ({ ...y, votes: votes[y.id] ?? 0 })) })),
     performers: (f.data ?? []).map(({ photo_path, ...x }) => ({ ...x, photo_url: urls.get(photo_path) ?? "" })),
   };
@@ -66,7 +81,7 @@ export const registerGathering = createServerFn({ method: "POST" })
   .inputValidator((i) => gatheringRegistrationSchema.parse(i))
   .handler(async ({ data }) => {
     const sb = await admin();
-    const { data: g } = await sb.from("gatherings").select("capacity,status,is_published,fee,payment_url,rideshare_enabled").eq("id", data.gathering_id).maybeSingle();
+    const { data: g } = await sb.from("gatherings").select("capacity,status,is_published,fee,payment_url,payment_note,payment_qr_path,min_people,rideshare_enabled").eq("id", data.gathering_id).maybeSingle();
     if (!g?.is_published) throw new Error("此活動目前無法報名");
     const { count } = await sb.from("gathering_registrations").select("id", { count: "exact", head: true }).eq("gathering_id", data.gathering_id);
     if (!canRegister(g.status, g.capacity, count ?? 0)) throw new Error("此活動已額滿或暫停報名");
@@ -77,7 +92,9 @@ export const registerGathering = createServerFn({ method: "POST" })
       : { ...data, seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "", ride_driver_id: null, agree_ride_safety: false };
     const { error } = await sb.from("gathering_registrations").insert(row);
     if (error) throw new Error(error.message.includes("seats full") ? "這台車已滿座，請選擇其他車主" : "報名失敗，請稍後再試");
-    return { ok: true, fee: g.fee, payment_url: g.payment_url, driver_code };
+    const pay = paymentOpen(g.status, g.fee, g.min_people, (count ?? 0) + 1);
+    const qr = pay && g.payment_qr_path ? (await sign(sb, [g.payment_qr_path])).get(g.payment_qr_path) ?? "" : "";
+    return { ok: true, fee: g.fee, pay_open: pay, payment_url: pay ? g.payment_url : "", payment_note: pay ? g.payment_note : "", payment_qr_url: qr, driver_code };
   });
 
 /** 車主自助查詢：以登記時的電話、LINE ID 或專屬查詢碼核對，只回傳自己車上的乘客 */
@@ -116,26 +133,41 @@ export const submitWish = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+/** 訪客替已核准的許願集氣；同一瀏覽器每則限一次 */
+export const joinWish = createServerFn({ method: "POST" })
+  .inputValidator((i) => wishJoinSchema.parse(i))
+  .handler(async ({ data }) => {
+    const sb = await admin();
+    const { data: w } = await sb.from("gathering_wishes").select("status").eq("id", data.wish_id).maybeSingle();
+    if (w?.status !== "approved") throw new Error("此許願目前無法集氣");
+    const { error } = await sb.from("gathering_wish_joins").insert(data);
+    if (error) throw new Error(error.code === "23505" ? "您已集氣過這則許願" : "集氣失敗");
+    return { ok: true };
+  });
+
 export const getGatheringsAdmin = createServerFn({ method: "POST" })
   .inputValidator((i) => z.object({ passcode: z.string() }).parse(i))
   .handler(async ({ data }) => {
     checkPass(data.passcode);
     const sb = await admin();
-    const [g, r, p, o, f, w] = await Promise.all([
+    const [g, r, p, o, f, w, j] = await Promise.all([
       sb.from("gatherings").select("*").order("event_date", { ascending: false }),
       sb.from("gathering_registrations").select("*").order("created_at", { ascending: false }),
       sb.from("gathering_polls").select("*").order("created_at", { ascending: false }),
       sb.from("gathering_poll_options").select("*").order("option_date"),
       sb.from("performers").select("*").order("created_at", { ascending: false }),
       sb.from("gathering_wishes").select("*").order("created_at", { ascending: false }),
+      sb.from("gathering_wish_joins").select("wish_id,name,contact,created_at").order("created_at"),
     ]);
-    if (g.error || r.error || p.error || o.error || f.error || w.error) throw new Error("資料載入失敗");
+    if (g.error || r.error || p.error || o.error || f.error || w.error || j.error) throw new Error("資料載入失敗");
     const [votes, urls] = await Promise.all([
       countBy(sb, "gathering_votes", "option_id", (o.data ?? []).map((x) => x.id)),
-      sign(sb, (f.data ?? []).map((x) => x.photo_path)),
+      sign(sb, [...(f.data ?? []).map((x) => x.photo_path), ...(g.data ?? []).flatMap((x) => [x.location_photo_path, x.payment_qr_path])]),
     ]);
     return {
-      gatherings: g.data ?? [], registrations: r.data ?? [], wishes: w.data ?? [],
+      gatherings: (g.data ?? []).map((x) => ({ ...x, location_photo_url: urls.get(x.location_photo_path) ?? "", payment_qr_url: urls.get(x.payment_qr_path) ?? "" })),
+      registrations: r.data ?? [],
+      wishes: (w.data ?? []).map((x) => ({ ...x, joins: (j.data ?? []).filter((y) => y.wish_id === x.id) })),
       polls: (p.data ?? []).map((x) => ({ ...x, options: (o.data ?? []).filter((y) => y.poll_id === x.id).map((y) => ({ ...y, votes: votes[y.id] ?? 0 })) })),
       performers: (f.data ?? []).map((x) => ({ ...x, photo_url: urls.get(x.photo_path) ?? "" })),
     };
@@ -152,6 +184,7 @@ const actionSchema = z.object({ passcode: z.string() }).and(z.discriminatedUnion
   z.object({ type: z.literal("deleteRegistration"), id: z.string().uuid() }),
   z.object({ type: z.literal("deleteWish"), id: z.string().uuid() }),
   z.object({ type: z.literal("setWishStatus"), id: z.string().uuid(), status: z.enum(WISH_STATUSES) }),
+  z.object({ type: z.literal("setWishMin"), id: z.string().uuid(), min_people: z.number().int().min(0).max(100000) }),
 ]));
 
 export const gatheringsAdminAction = createServerFn({ method: "POST" })
@@ -162,7 +195,12 @@ export const gatheringsAdminAction = createServerFn({ method: "POST" })
     const run = async (p: PromiseLike<{ error: unknown }>) => { const { error } = await p; if (error) throw new Error("操作失敗"); };
     switch (data.type) {
       case "saveGathering":
-        await run(data.id ? sb.from("gatherings").update(data.gathering).eq("id", data.id) : sb.from("gatherings").insert(data.gathering));
+        if (data.id) {
+          const { data: old } = await sb.from("gatherings").select("location_photo_path,payment_qr_path").eq("id", data.id).maybeSingle();
+          await run(sb.from("gatherings").update(data.gathering).eq("id", data.id));
+          const gone = [old?.location_photo_path, old?.payment_qr_path].filter((p): p is string => !!p && p !== data.gathering.location_photo_path && p !== data.gathering.payment_qr_path);
+          if (gone.length) await sb.storage.from(TEACHER_PHOTO_BUCKET).remove(gone);
+        } else await run(sb.from("gatherings").insert(data.gathering));
         if (data.closePollId) await run(sb.from("gathering_polls").update({ is_open: false }).eq("id", data.closePollId));
         break;
       case "deleteGathering": await run(sb.from("gatherings").delete().eq("id", data.id)); break;
@@ -203,6 +241,7 @@ export const gatheringsAdminAction = createServerFn({ method: "POST" })
       case "setRegFlag": await run(sb.from("gathering_registrations").update(data.field === "paid" ? { paid: data.value } : { attended: data.value }).eq("id", data.id)); break;
       case "deleteRegistration": await run(sb.from("gathering_registrations").delete().eq("id", data.id)); break;
       case "setWishStatus": await run(sb.from("gathering_wishes").update({ status: data.status }).eq("id", data.id)); break;
+      case "setWishMin": await run(sb.from("gathering_wishes").update({ min_people: data.min_people }).eq("id", data.id)); break;
       case "deleteWish": await run(sb.from("gathering_wishes").delete().eq("id", data.id)); break;
     }
     return { ok: true };

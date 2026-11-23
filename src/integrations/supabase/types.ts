@@ -283,6 +283,41 @@ export type Database = {
           },
         ]
       }
+      gathering_wish_joins: {
+        Row: {
+          contact: string
+          created_at: string
+          id: string
+          name: string
+          voter_key: string
+          wish_id: string
+        }
+        Insert: {
+          contact?: string
+          created_at?: string
+          id?: string
+          name?: string
+          voter_key: string
+          wish_id: string
+        }
+        Update: {
+          contact?: string
+          created_at?: string
+          id?: string
+          name?: string
+          voter_key?: string
+          wish_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gathering_wish_joins_wish_id_fkey"
+            columns: ["wish_id"]
+            isOneToOne: false
+            referencedRelation: "gathering_wishes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gathering_wishes: {
         Row: {
           conditions: string
@@ -291,6 +326,7 @@ export type Database = {
           created_at: string
           id: string
           meet_location: string
+          min_people: number
           nickname: string
           status: string
           theme: string
@@ -302,6 +338,7 @@ export type Database = {
           created_at?: string
           id?: string
           meet_location?: string
+          min_people?: number
           nickname?: string
           status?: string
           theme: string
@@ -313,6 +350,7 @@ export type Database = {
           created_at?: string
           id?: string
           meet_location?: string
+          min_people?: number
           nickname?: string
           status?: string
           theme?: string
@@ -330,10 +368,12 @@ export type Database = {
           id: string
           is_published: boolean
           location: string
+          location_photo_path: string
           map_url: string
           meet_point: string
           min_people: number
           payment_note: string
+          payment_qr_path: string
           payment_url: string
           performer_ids: string[]
           perks: string
@@ -355,10 +395,12 @@ export type Database = {
           id?: string
           is_published?: boolean
           location?: string
+          location_photo_path?: string
           map_url?: string
           meet_point?: string
           min_people?: number
           payment_note?: string
+          payment_qr_path?: string
           payment_url?: string
           performer_ids?: string[]
           perks?: string
@@ -380,10 +422,12 @@ export type Database = {
           id?: string
           is_published?: boolean
           location?: string
+          location_photo_path?: string
           map_url?: string
           meet_point?: string
           min_people?: number
           payment_note?: string
+          payment_qr_path?: string
           payment_url?: string
           performer_ids?: string[]
           perks?: string

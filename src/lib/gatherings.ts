@@ -32,6 +32,8 @@ export const gatheringSchema = z.object({
   status: z.enum(STATUSES), status_note: t(500),
   is_published: z.boolean(),
   rideshare_enabled: z.boolean(), meet_point: t(300),
+  location_photo_path: z.string().refine((p) => p === "" || photoPathRe.test(p)),
+  payment_qr_path: z.string().refine((p) => p === "" || photoPathRe.test(p)),
 });
 export type GatheringInput = z.infer<typeof gatheringSchema>;
 
@@ -73,6 +75,7 @@ export const wishSchema = z.object({
   nickname: t(50), contact: t(200),
   meet_location: t(300).default(""), conditions: t(500).default(""),
 });
+export const wishJoinSchema = z.object({ wish_id: z.string().uuid(), voter_key: z.string().regex(/^[a-zA-Z0-9-]{8,64}$/), name: t(50), contact: t(200) });
 export const WISH_STATUSES = ["pending", "approved", "rejected"] as const;
 export const WISH_LABEL: Record<string, string> = { pending: "待審核", approved: "已核准公開", rejected: "已駁回／隱藏" };
 
@@ -81,12 +84,28 @@ export function seatsLeft(seats: number, taken: number) {
   return Math.max(0, seats - taken);
 }
 
-/** 成團狀態：管理者標記優先；否則未達最低人數為集氣中（0 代表不限） */
+/** 成團計算人數：付費活動只算已付款，免費活動算報名數 */
+export function formedCount(fee: number, registered: number, paid: number) {
+  return fee > 0 ? paid : registered;
+}
+
+/** 成團狀態：管理者標記優先；否則未達最低人數為集氣中（0 代表不限）。count 請傳 formedCount */
 export function gatheringState(status: string, minPeople: number, count: number) {
   if (status === "cancelled") return "已取消";
   if (status === "rescheduled") return "改期";
   if (status === "failed") return "未成團";
   return minPeople > 0 && count < minPeople ? "集氣中" : "已成團";
+}
+
+/** 還差幾位成團（不小於 0） */
+export function stillNeeded(minPeople: number, count: number) {
+  return Math.max(0, minPeople - count);
+}
+
+/** 付費活動何時顯示付款：報名人數達最低成團人數（0 不限）即開放；免費活動不顯示 */
+export function paymentOpen(status: string, fee: number, minPeople: number, registered: number) {
+  if (fee <= 0 || status === "cancelled" || status === "failed") return false;
+  return registered >= minPeople;
 }
 
 /** 是否還能報名：取消／未成團不可；上限 0 代表不限 */

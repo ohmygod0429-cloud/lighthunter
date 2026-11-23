@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { field, glass, useTeacherUpload } from "@/components/academy-ui";
 import { getGatheringsAdmin, gatheringsAdminAction } from "@/lib/gatherings.functions";
-import { WISH_LABEL, PERFORMER_KINDS, STATUSES, THEMES, gatheringSchema, gatheringState, performerSchema, pollSchema, type GatheringInput, type PerformerInput, type PollInput } from "@/lib/gatherings";
+import { formedCount, WISH_LABEL, PERFORMER_KINDS, STATUSES, THEMES, gatheringSchema, gatheringState, performerSchema, pollSchema, type GatheringInput, type PerformerInput, type PollInput } from "@/lib/gatherings";
 import { REGIONS, studentKey } from "@/lib/academy";
 import { getEnteredAdminPasscode } from "@/lib/admin-mode";
 
@@ -32,7 +32,7 @@ type Data = Awaited<ReturnType<typeof getGatheringsAdmin>>;
 type Action = Record<string, unknown> & { type: string };
 const TABS = ["活動", "投票", "表演人員", "名單與統計", "許願"] as const;
 const STATUS_LABEL: Record<string, string> = { open: "正常（依人數自動判斷）", failed: "未成團", cancelled: "取消", rescheduled: "改期" };
-const emptyG: GatheringInput = { theme: "聯誼", title: "", description: "", region: "北部", event_date: "", start_time: "", end_time: "", location: "", map_url: "", min_people: 0, capacity: 0, fee: 0, payment_note: "", payment_url: "", perks: "", performer_ids: [], status: "open", status_note: "", is_published: true, rideshare_enabled: false, meet_point: "" };
+const emptyG: GatheringInput = { theme: "聯誼", title: "", description: "", region: "北部", event_date: "", start_time: "", end_time: "", location: "", map_url: "", min_people: 0, capacity: 0, fee: 0, payment_note: "", payment_url: "", perks: "", performer_ids: [], status: "open", status_note: "", is_published: true, rideshare_enabled: false, meet_point: "", location_photo_path: "", payment_qr_path: "" };
 const emptyP: PerformerInput = { name: "", kind: "DJ", summary: "", photo_path: "", is_published: true };
 const emptyPoll: PollInput = { theme: "聯誼", title: "", description: "", region: "", is_open: true, options: [] };
 const chip = (on: boolean) => `rounded-full border px-3 py-1 text-sm ${on ? "border-primary bg-primary/15 text-primary" : "border-border/70 text-muted-foreground"}`;
@@ -47,6 +47,7 @@ function AdminPage() {
   const [data, setData] = useState<Data | null>(null);
   const [tab, setTab] = useState<(typeof TABS)[number]>("活動");
   const [editG, setEditG] = useState<{ id: string | null; v: GatheringInput; closePollId: string | null } | null>(null);
+  const [pv, setPv] = useState<{ loc: string; qr: string }>({ loc: "", qr: "" });
   const [editP, setEditP] = useState<{ id: string | null; v: PerformerInput; preview: string } | null>(null);
   const [editPoll, setEditPoll] = useState<{ id: string | null; v: PollInput } | null>(null);
   const [fG, setFG] = useState("全部"); const [fT, setFT] = useState("全部"); const [fM, setFM] = useState("");
@@ -69,7 +70,8 @@ function AdminPage() {
   );
 
   const counts: Record<string, number> = {};
-  data.registrations.forEach((r) => { counts[r.gathering_id] = (counts[r.gathering_id] ?? 0) + 1; });
+  const paidC: Record<string, number> = {};
+  data.registrations.forEach((r) => { counts[r.gathering_id] = (counts[r.gathering_id] ?? 0) + 1; if (r.paid) paidC[r.gathering_id] = (paidC[r.gathering_id] ?? 0) + 1; });
   const gMap = new Map(data.gatherings.map((g) => [g.id, g]));
   const regs = data.registrations.filter((r) => {
     const g = gMap.get(r.gathering_id);
@@ -108,15 +110,15 @@ function AdminPage() {
 
       {tab === "活動" && (
         <div className="mt-6 space-y-3">
-          <Button onClick={() => setEditG({ id: null, v: emptyG, closePollId: null })} className="rounded-full bg-gold-gradient text-primary-foreground">新增活動</Button>
+          <Button onClick={() => { setPv({ loc: "", qr: "" }); setEditG({ id: null, v: emptyG, closePollId: null }); }} className="rounded-full bg-gold-gradient text-primary-foreground">新增活動</Button>
           {data.gatherings.length === 0 && <p className="text-muted-foreground">尚無活動</p>}
           {data.gatherings.map((g) => (
             <div key={g.id} className={`${glass} flex flex-wrap items-center gap-3 p-4`}>
               <div className="min-w-0 flex-1">
                 <p className="text-gold-soft">{g.title} <span className="text-xs text-muted-foreground">{g.event_date} {g.theme}・{g.region}</span></p>
-                <p className="text-xs text-muted-foreground">報名 {counts[g.id] ?? 0}{g.min_people > 0 && ` / 成團 ${g.min_people}`}{g.capacity > 0 && ` / 上限 ${g.capacity}`}・{gatheringState(g.status, g.min_people, counts[g.id] ?? 0)}{!g.is_published && "・未公開"}</p>
+                <p className="text-xs text-muted-foreground">報名 {counts[g.id] ?? 0}{g.fee > 0 && `・已付款 ${paidC[g.id] ?? 0}`}{g.min_people > 0 && ` / 成團 ${g.min_people}`}{g.capacity > 0 && ` / 上限 ${g.capacity}`}・{gatheringState(g.status, g.min_people, formedCount(g.fee, counts[g.id] ?? 0, paidC[g.id] ?? 0))}{!g.is_published && "・未公開"}</p>
               </div>
-              <Button size="sm" variant="outline" onClick={() => { const { id, created_at, ...v } = g; void created_at; setEditG({ id, v: v as GatheringInput, closePollId: null }); }}>編輯</Button>
+              <Button size="sm" variant="outline" onClick={() => { const { id, created_at, location_photo_url, payment_qr_url, ...v } = g; void created_at; setPv({ loc: location_photo_url, qr: payment_qr_url }); setEditG({ id, v: v as GatheringInput, closePollId: null }); }}>編輯</Button>
               <Button size="sm" variant="destructive" onClick={() => del({ type: "deleteGathering", id: g.id })}>刪除</Button>
             </div>
           ))}
@@ -175,7 +177,7 @@ function AdminPage() {
             <h2 className="text-lg">各場次統計</h2>
             <table className="mt-3 w-full text-sm"><thead className="text-left text-xs text-muted-foreground"><tr><th>活動</th><th>報名</th><th>已付款</th><th>已出席</th><th>成團狀態</th></tr></thead>
               <tbody>{shownG.map((g) => { const rs = data.registrations.filter((r) => r.gathering_id === g.id); return (
-                <tr key={g.id} className="border-t border-border/40"><td className="py-1.5">{g.event_date} {g.title}</td><td>{rs.length}</td><td>{rs.filter((r) => r.paid).length}</td><td>{rs.filter((r) => r.attended).length}</td><td>{gatheringState(g.status, g.min_people, rs.length)}</td></tr>); })}</tbody></table>
+                <tr key={g.id} className="border-t border-border/40"><td className="py-1.5">{g.event_date} {g.title}</td><td>{rs.length}</td><td>{rs.filter((r) => r.paid).length}</td><td>{rs.filter((r) => r.attended).length}</td><td>{gatheringState(g.status, g.min_people, formedCount(g.fee, rs.length, rs.filter((r) => r.paid).length))}</td></tr>); })}</tbody></table>
           </div>
           {regulars.length > 0 && <div className={`${glass} p-4`}><h2 className="text-lg">常客紀錄</h2>
             <div className="mt-3 space-y-1 text-sm">{regulars.slice(0, 30).map((s) => <p key={s.phone}>{s.name}・{s.phone}　<span className="text-primary">報名 {s.n} 次・出席 {s.att} 次</span></p>)}</div></div>}
@@ -205,10 +207,12 @@ function AdminPage() {
                 <p className="whitespace-pre-line text-muted-foreground">{w.content}</p>
                 {w.meet_location && <p className="text-xs text-muted-foreground">建議集合地點：{w.meet_location}</p>}
                 {w.conditions && <p className="text-xs text-muted-foreground">參與條件／限制：{w.conditions}</p>}
+                <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">已集氣 {w.joins.length} 人・最低成團
+                  <input type="number" min={0} defaultValue={w.min_people} className="w-16 rounded border border-border bg-background px-1" onBlur={(e) => { const n = Number(e.target.value) || 0; if (n !== w.min_people) void run({ type: "setWishMin", id: w.id, min_people: n }, "已更新成團人數"); }} /> 人（0 不限）</div>
                 <p className="text-xs text-muted-foreground">{new Date(w.created_at).toLocaleString("zh-TW")}</p></div>
               {w.status !== "approved" && <Button size="sm" variant="outline" onClick={() => run({ type: "setWishStatus", id: w.id, status: "approved" }, "已核准公開")}>核准公開</Button>}
               {w.status === "approved" && <Button size="sm" variant="outline" onClick={() => setEditPoll({ id: null, v: { ...emptyPoll, theme: w.theme as PollInput["theme"], title: w.content.slice(0, 60), description: [w.content, w.meet_location && `建議集合地點：${w.meet_location}`, w.conditions && `參與條件／限制：${w.conditions}`].filter(Boolean).join("\n") } })}>轉入投票</Button>}
-              {w.status === "approved" && <Button size="sm" className="rounded-full bg-gold-gradient text-primary-foreground" onClick={() => setEditG({ id: null, closePollId: null, v: { ...emptyG, theme: w.theme as GatheringInput["theme"], title: w.content.slice(0, 60), description: [w.content, w.conditions && `參與條件／限制：${w.conditions}`].filter(Boolean).join("\n"), meet_point: w.meet_location } })}>一鍵轉為正式活動</Button>}
+              {w.status === "approved" && <Button size="sm" className="rounded-full bg-gold-gradient text-primary-foreground" onClick={() => { setPv({ loc: "", qr: "" }); setEditG({ id: null, closePollId: null, v: { ...emptyG, theme: w.theme as GatheringInput["theme"], title: w.content.slice(0, 60), description: [w.content, w.conditions && `參與條件／限制：${w.conditions}`].filter(Boolean).join("\n"), meet_point: w.meet_location, min_people: w.min_people } }); }}>一鍵轉為正式活動</Button>}
               {w.status !== "rejected" && <Button size="sm" variant="outline" onClick={() => run({ type: "setWishStatus", id: w.id, status: "rejected" }, "已駁回並隱藏")}>駁回／隱藏</Button>}
               <Button size="sm" variant="destructive" onClick={() => del({ type: "deleteWish", id: w.id })}>刪除</Button>
             </div>
@@ -225,8 +229,9 @@ function AdminPage() {
             <Textarea className={field} rows={4} placeholder="活動介紹" value={editG.v.description} onChange={(e) => setG("description", e.target.value)} />
             <div className="flex flex-wrap gap-1.5">{REGIONS.map((r) => <button key={r} type="button" className={chip(editG.v.region === r)} onClick={() => setG("region", r)}>{r}</button>)}</div>
             <div className="grid grid-cols-3 gap-2"><Input type="date" className={field} value={editG.v.event_date} onChange={(e) => setG("event_date", e.target.value)} /><Input type="time" className={field} value={editG.v.start_time} onChange={(e) => setG("start_time", e.target.value)} /><Input type="time" className={field} value={editG.v.end_time} onChange={(e) => setG("end_time", e.target.value)} /></div>
-            <Input className={field} placeholder="地點" value={editG.v.location} onChange={(e) => setG("location", e.target.value)} />
+            <Input className={field} placeholder="活動地址（海邊、公園可填大概位置）" value={editG.v.location} onChange={(e) => setG("location", e.target.value)} />
             <Input className={field} placeholder="Google 地圖連結（選填，不填會用地點自動搜尋）" value={editG.v.map_url} onChange={(e) => setG("map_url", e.target.value)} />
+            <PhotoPick label="地點參考照片（選填）" path={editG.v.location_photo_path} preview={pv.loc} upload={upload} onChange={(path, url) => { setG("location_photo_path", path); setPv({ ...pv, loc: url }); }} />
             <div className="grid grid-cols-3 gap-2">
               <div><L>最低成團人數（0 不限）</L><Input type="number" min={0} className={field} value={editG.v.min_people} onChange={(e) => setG("min_people", Number(e.target.value) || 0)} /></div>
               <div><L>人數上限（0 不限）</L><Input type="number" min={0} className={field} value={editG.v.capacity} onChange={(e) => setG("capacity", Number(e.target.value) || 0)} /></div>
@@ -234,6 +239,8 @@ function AdminPage() {
             </div>
             <Textarea className={field} rows={2} placeholder="付款說明（例：轉帳帳號、現場付款）" value={editG.v.payment_note} onChange={(e) => setG("payment_note", e.target.value)} />
             <Input className={field} placeholder="線上付款連結（https，選填）" value={editG.v.payment_url} onChange={(e) => setG("payment_url", e.target.value)} />
+            <PhotoPick label="付款 QR／條碼圖片（選填，成團後才對訪客顯示）" path={editG.v.payment_qr_path} preview={pv.qr} upload={upload} onChange={(path, url) => { setG("payment_qr_path", path); setPv({ ...pv, qr: url }); }} />
+            {editG.v.fee > 0 && <p className="text-xs text-muted-foreground">付費活動：報名達最低成團人數才顯示付款；在名單勾選「已付款」達門檻才算成團。</p>}
             <Textarea className={field} rows={2} placeholder="抽獎／優惠資訊（選填）" value={editG.v.perks} onChange={(e) => setG("perks", e.target.value)} />
             {data.performers.length > 0 && <div><L>表演人員</L><div className="flex flex-wrap gap-1.5">{data.performers.map((p) => { const on = editG.v.performer_ids.includes(p.id); return <button key={p.id} type="button" className={chip(on)} onClick={() => setG("performer_ids", on ? editG.v.performer_ids.filter((x) => x !== p.id) : [...editG.v.performer_ids, p.id])}>{p.name}</button>; })}</div></div>}
             <div><L>成團狀態</L><select className={field} value={editG.v.status} onChange={(e) => setG("status", e.target.value as GatheringInput["status"])}>{STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}</select></div>
@@ -283,6 +290,16 @@ function AdminPage() {
           </div>}
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function PhotoPick({ label, path, preview, upload, onChange }: { label: string; path: string; preview: string; upload: (f: File) => Promise<string>; onChange: (path: string, url: string) => void }) {
+  return (
+    <div><L>{label}</L>
+      {path ? <div className="relative w-fit"><img src={preview} alt="" className="h-24 rounded-xl object-cover" /><button type="button" aria-label="移除" onClick={() => onChange("", "")} className="absolute -right-2 -top-2 rounded-full bg-background p-1"><X className="size-3" /></button></div>
+        : <label className="flex size-24 cursor-pointer items-center justify-center rounded-xl border border-dashed border-primary/50 text-primary"><ImagePlus className="size-6" />
+          <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={async (e) => { const f = e.target.files?.[0]; if (!f) return; try { onChange(await upload(f), URL.createObjectURL(f)); } catch (err) { toast.error(err instanceof Error ? err.message : "上傳失敗"); } }} /></label>}
     </div>
   );
 }
