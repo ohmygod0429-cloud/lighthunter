@@ -1,0 +1,1 @@
+CREATE POLICY "Visitors read published section files" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'section-media' AND EXISTS (SELECT 1 FROM public.section_media m WHERE m.video_path = name OR m.file_path = name));

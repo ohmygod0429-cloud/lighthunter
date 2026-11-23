@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getEnteredAdminPasscode, rememberAdminPasscode, useAdminMode } from "@/lib/admin-mode";
 import { MAX_SECTION_LINKS, sectionLinksSchema, visibleLinks, type ExternalLink } from "@/lib/section-links";
 import { saveSectionLinks } from "@/lib/section-links.functions";
+import { SectionMediaEditor } from "@/components/section-media";
 
 const queryKey = ["section-external-links"];
 const inputClass = "w-full min-w-0 rounded-md border border-input bg-background/70 px-3 py-2 text-sm text-foreground outline-none focus:border-primary";
@@ -70,7 +71,7 @@ export function SectionExternalLinks({ slotId }: { slotId: string }) {
   }
 
   const links = saved ?? [];
-  if (!admin && links.length === 0) return null;
+  if (!admin && links.length === 0) return <SectionMediaEditor slotId={slotId} />;
 
   return (
     <div className="mt-5 min-w-0" data-section-links={slotId}>
@@ -108,6 +109,7 @@ export function SectionExternalLinks({ slotId }: { slotId: string }) {
           </div>
         </fieldset>
       )}
+      <SectionMediaEditor slotId={slotId} />
     </div>
   );
 }

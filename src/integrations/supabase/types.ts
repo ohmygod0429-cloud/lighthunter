@@ -164,6 +164,39 @@ export type Database = {
         }
         Relationships: []
       }
+      section_media: {
+        Row: {
+          file_name: string
+          file_path: string
+          file_title: string
+          slot_id: string
+          updated_at: string
+          video_path: string
+          video_title: string
+          video_url: string
+        }
+        Insert: {
+          file_name?: string
+          file_path?: string
+          file_title?: string
+          slot_id: string
+          updated_at?: string
+          video_path?: string
+          video_title?: string
+          video_url?: string
+        }
+        Update: {
+          file_name?: string
+          file_path?: string
+          file_title?: string
+          slot_id?: string
+          updated_at?: string
+          video_path?: string
+          video_title?: string
+          video_url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
