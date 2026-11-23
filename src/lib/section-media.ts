@@ -15,6 +15,13 @@ export const emptyMedia = { video_title: "", video_url: "", video_path: "", file
 export function legacyVideoSlotId(slotId: string) {
   return `legacy-${slotId}`;
 }
+export function publishedSectionPaths(rows: { slot_id: string; video_path: string; file_path: string }[]) {
+  return [...new Set(rows.flatMap((row) => (["video", "file"] as const).flatMap((kind) => {
+    const path = kind === "video" ? row.video_path : row.file_path;
+    const prefix = `${row.slot_id}/${kind}/`;
+    return path.startsWith(prefix) && /^[a-f0-9-]{36}\.[a-z0-9]+$/.test(path.slice(prefix.length)) ? [path] : [];
+  })))];
+}
 export const mediaSchema = z.object({
   video_title: z.string().trim().max(200), video_url: z.string().trim().max(4096), video_path: z.string().max(240),
   file_title: z.string().trim().max(200), file_path: z.string().max(240), file_name: z.string().max(200),

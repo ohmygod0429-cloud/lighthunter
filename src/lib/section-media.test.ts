@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
-import { emptyMedia, legacyVideoSlotId, mediaSchema, publishedMedia, uploadType, videoSource } from "./section-media";
+import { emptyMedia, legacyVideoSlotId, mediaSchema, publishedMedia, publishedSectionPaths, uploadType, videoSource } from "./section-media";
 
 test("an unset or cleared introduction video is entirely hidden", () => {
   assert.deepEqual(publishedMedia({ ...emptyMedia, video_title: "介紹" }), emptyMedia);
@@ -8,6 +8,13 @@ test("an unset or cleared introduction video is entirely hidden", () => {
 test("original section videos have a separate shared storage slot", () => {
   assert.equal(legacyVideoSlotId("dimensions-page"), "legacy-dimensions-page");
   assert.notEqual(legacyVideoSlotId("dimensions-page"), "dimensions-page");
+});
+test("public download links cover only saved files within their own section", () => {
+  const path = "pillar-01/file/12345678-1234-4234-8234-123456789abc.pdf";
+  assert.deepEqual(publishedSectionPaths([{ slot_id: "pillar-01", video_path: "", file_path: path }]), [path]);
+  assert.deepEqual(publishedSectionPaths([{ slot_id: "pillar-02", video_path: "", file_path: path }]), []);
+  assert.deepEqual(publishedSectionPaths([{ slot_id: "pillar-01", video_path: "", file_path: "pillar-01/file/../../private.pdf" }]), []);
+  assert.deepEqual(publishedSectionPaths([]), []);
 });
 test("a saved titleless YouTube video renders with non-leading v parameter", () => {
   const media = publishedMedia({ ...emptyMedia, video_url: "https://www.youtube.com/watch?feature=shared&v=_SwIq-pwkS4" });

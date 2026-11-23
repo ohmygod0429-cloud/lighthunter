@@ -50,6 +50,13 @@
       "when": 1795415913147,
       "tag": "0006_section_media_read_policy",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1795419008822,
+      "tag": "0007_validate_public_membership_applications",
+      "breakpoints": true
     }
   ]
 }

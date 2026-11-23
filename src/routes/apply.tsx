@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, ArrowRight, Check, ImagePlus, LoaderCircle, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { syncRowToSheet } from "@/lib/sheet-sync.functions";
 import { pillars, vettingSteps } from "@/data/pillars";
+import { prepareApplicationPhoto } from "@/lib/application-photos.functions";
+import { APPLICATION_PHOTO_BUCKET, applicationRecordSchema } from "@/lib/application-security";
 
 export const Route = createFileRoute("/apply")({
   head: () => ({
@@ -136,6 +139,7 @@ function PhotoPicker({
 }
 
 function Apply() {
+  const preparePhoto = useServerFn(prepareApplicationPhoto);
   const [step, setStep] = useState(1);
   const [done, setDone] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -317,12 +321,12 @@ function Apply() {
     if (validateStep()) goTo(Math.min(3, step + 1));
   };
 
-  const uploadPhoto = async (file: File, folder: string) => {
-    const ext = file.name.split(".").pop() || "jpg";
-    const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await supabase.storage.from("application-photos").upload(path, file);
+  const uploadPhoto = async (file: File, folder: "life" | "headshot") => {
+    const prepared = await preparePhoto({ data: { folder, mime: file.type, size: file.size } });
+    const { error } = await supabase.storage.from(APPLICATION_PHOTO_BUCKET)
+      .uploadToSignedUrl(prepared.path, prepared.token, file, { contentType: prepared.mime });
     if (error) throw error;
-    return path;
+    return prepared.path;
   };
 
   const submit = async () => {
@@ -335,7 +339,7 @@ function Apply() {
         headshotPhoto ? uploadPhoto(headshotPhoto, "headshot") : Promise.resolve(null),
       ]);
       setSubmitPhase("正在送出審核資料…");
-      const record = {
+      const record = applicationRecordSchema.parse({
         full_name: fullName.trim(),
         birth_date: birthDate,
         title_company: titleCompany.trim(),
@@ -356,7 +360,7 @@ function Apply() {
         agree_truthful: agreeTruthful,
         agree_house_rules: agreeHouseRules,
         meeting_time_pref: meetingTimePref,
-      };
+      });
       const { error } = await supabase.from("membership_applications").insert(record);
       if (error) throw error;
       const { life_photo_path: _lp, headshot_path: _hp, ...sheetRow } = record;

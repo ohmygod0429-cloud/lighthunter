@@ -1,8 +1,36 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { MAX_MEDIA_BYTES, MEDIA_BUCKET, mediaSchema, publishedMedia, uploadType } from "./section-media";
+import { createClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
+import { MAX_MEDIA_BYTES, MEDIA_BUCKET, mediaSchema, publishedMedia, publishedSectionPaths, uploadType } from "./section-media";
 
 const identity = z.object({ slotId: z.string().regex(/^[a-z0-9-]{1,80}$/), passcode: z.string().min(1).max(128) });
+
+// Never accept caller-selected object paths. Only public, saved section references may be signed.
+export const getPublishedSectionFileUrls = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const url = process.env["SUPABASE_URL"];
+    const key = process.env["SUPABASE_PUBLISHABLE_KEY"] || process.env["SUPABASE_ANON_KEY"];
+    if (!url || !key) throw new Error("無法讀取已發布檔案");
+    const publicClient = createClient<Database>(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false },
+      global: { fetch: (input, init) => {
+        const headers = new Headers(init?.headers);
+        if (key.startsWith("sb_") && headers.get("Authorization") === `Bearer ${key}`) headers.delete("Authorization");
+        headers.set("apikey", key);
+        return fetch(input, { ...init, headers });
+      } },
+    });
+    const { data, error } = await publicClient.from("section_media").select("slot_id,video_path,file_path");
+    if (error) throw new Error("無法讀取已發布檔案");
+    const paths = publishedSectionPaths(data ?? []);
+    if (paths.length === 0) return {} as Record<string, string>;
+    // The publishable client above authorizes the exact allowlist before privileged signing.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const signed = await supabaseAdmin.storage.from(MEDIA_BUCKET).createSignedUrls(paths, 3600);
+    if (signed.error) throw new Error("無法開啟已發布檔案");
+    return Object.fromEntries((signed.data ?? []).flatMap((item) => item.path && item.signedUrl ? [[item.path, item.signedUrl]] : [])) as Record<string, string>;
+  });
 
 export const prepareSectionUpload = createServerFn({ method: "POST" })
   .inputValidator((input) => identity.extend({ name: z.string().min(1).max(200), size: z.number().int().positive().max(MAX_MEDIA_BYTES), kind: z.enum(["video", "file"]) }).parse(input))

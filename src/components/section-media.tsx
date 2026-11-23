@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { getEnteredAdminPasscode, rememberAdminPasscode, useAdminMode } from "@/lib/admin-mode";
 import { emptyMedia, MAX_MEDIA_BYTES, MEDIA_BUCKET, mediaSchema, uploadType, videoSource, type SectionMedia } from "@/lib/section-media";
-import { discardSectionUploads, prepareSectionUpload, saveSectionMedia } from "@/lib/section-media.functions";
+import { discardSectionUploads, getPublishedSectionFileUrls, prepareSectionUpload, saveSectionMedia } from "@/lib/section-media.functions";
 
 const queryKey = ["section-media"];
 const inputClass = "mt-1 w-full min-w-0 rounded-md border border-input bg-background/70 px-3 py-2 text-sm text-foreground outline-none focus:border-primary";
@@ -20,20 +20,15 @@ export function SectionMediaEditor({ slotId }: { slotId: string }) {
   const prepare = useServerFn(prepareSectionUpload);
   const persist = useServerFn(saveSectionMedia);
   const discard = useServerFn(discardSectionUploads);
+  const publishedUrls = useServerFn(getPublishedSectionFileUrls);
   const query = useQuery({
     queryKey,
     queryFn: async (): Promise<Record<string, Published>> => {
       const { data, error } = await supabase.from("section_media").select("slot_id,video_title,video_url,video_path,file_title,file_path,file_name");
       if (error) throw error;
       const rows = data ?? [];
-      const paths = rows.flatMap((row) => [row.video_path, row.file_path]).filter(Boolean);
-      const urls = new Map<string, string>();
-      if (paths.length) {
-        const signed = await supabase.storage.from(MEDIA_BUCKET).createSignedUrls(paths, 86400);
-        if (signed.error) throw signed.error;
-        for (const item of signed.data ?? []) if (item.path && item.signedUrl) urls.set(item.path, item.signedUrl);
-      }
-      return Object.fromEntries(rows.map((row) => [row.slot_id, { ...row, videoSrc: urls.get(row.video_path) ?? row.video_url, fileSrc: urls.get(row.file_path) ?? "" }]));
+      const urls = rows.some((row) => row.video_path || row.file_path) ? await publishedUrls() : {};
+      return Object.fromEntries(rows.map((row) => [row.slot_id, { ...row, videoSrc: urls[row.video_path] ?? row.video_url, fileSrc: urls[row.file_path] ?? "" }]));
     },
     staleTime: 600_000,
   });

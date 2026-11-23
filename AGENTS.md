@@ -12,5 +12,7 @@
 - Store section external links in the shared Cloud table, with public read-only access and server-side secret validation for writes; browser admin mode only controls editor visibility.
 - Reuse the external-links editor for all video slots and individual dimension panels so limits, validation, and empty-state behavior stay consistent.
 - Attach the shared section-media editor to the shared external-links surface; store media settings separately so existing links and video settings remain unchanged.
-- Keep section uploads in private storage with secret-validated signed uploads and public read policies limited to saved section paths; this prevents anonymous writes and exposure of unpublished uploads.
+- Keep section uploads private with secret-validated signed uploads; issue public download capabilities server-side only for paths authorized by publicly readable saved section settings, never caller-selected paths.
+- Prepare application photos server-side using validated image type/size and generated paths with non-overwriting signed upload capabilities; this preserves public applications without granting anonymous bucket writes.
+- Validate application submissions against existing required fields, formats and commitments both in the shared schema and insert policy; this rejects malformed direct writes without restricting legitimate public applicants.
 - Persist original VideoSlot URLs in reserved `legacy-<slotId>` section_media rows through the existing secret-validated writer; this makes videos visible across browsers without replacing introduction videos or attachments.
