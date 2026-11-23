@@ -150,7 +150,7 @@ function EventCard({ g, performers, onDone }: { g: G; performers: P[]; onDone: (
   );
 }
 
-const SAFETY = "本功能僅供聚會參與者自發性順道同行資訊交流，非官方接駁服務；建議約在安全、明亮的公共集合點，並請自行評估與留意自身及財物安全。";
+const SAFETY = "僅供聚會成員自發性順道同行資訊交流，非官方接駁服務；建議約在安全明亮的公共集合點，請自行留意人身與財物安全。";
 
 function PayBlock({ url, note, qr }: { url: string; note: string; qr: string }) {
   if (!url && !note && !qr) return null;
@@ -208,7 +208,7 @@ function RideSection({ g }: { g: G }) {
         </div>
       ))}
       {open.length > 0 && <p className="text-xs leading-relaxed text-muted-foreground">{SAFETY}</p>}
-      <button type="button" className="text-xs text-primary underline-offset-4 hover:underline" onClick={() => setShow((v) => !v)}>車主查看我的乘客名單</button>
+      <button type="button" className="text-xs text-primary underline-offset-4 hover:underline" onClick={() => setShow((v) => !v)}>車主查看乘客名單</button>
       {show && <form onSubmit={check} className="space-y-2">
         <Input required className={field} placeholder="登記時的電話、LINE ID 或專屬查詢碼" value={cred} onChange={(e) => { setCred(e.target.value); setRes(null); }} />
         <Button type="submit" size="sm" variant="outline" className="rounded-full border-primary/50 text-primary">核對</Button>
@@ -258,7 +258,7 @@ function RegisterDialog({ open, onOpenChange, g, onDone }: { open: boolean; onOp
               <label className="flex items-center gap-2"><input type="checkbox" checked={f.ride_role === "driver"} onChange={(e) => setF({ ...f, ride_role: e.target.checked ? "driver" : "none", ride_driver_id: null, seats: e.target.checked ? 1 : 0 })} />我有車，願意順道載人</label>
               {f.ride_role === "driver" && <>
                 <div><p className="mb-1 text-xs text-gold-soft">可提供座位數上限 *</p><select className={field} value={f.seats} onChange={(e) => setF({ ...f, seats: Number(e.target.value) })}>{[1, 2, 3, 4, 5, 6].map((n) => <option key={n} value={n}>{n} 人</option>)}</select></div>
-                <Input required className={field} placeholder="集合地點 *（會附 Google 地圖連結）" value={f.ride_meet_location} onChange={(e) => setF({ ...f, ride_meet_location: e.target.value })} />
+                <Input required className={field} placeholder="順道集合地點 *（會附 Google 地圖連結）" value={f.ride_meet_location} onChange={(e) => setF({ ...f, ride_meet_location: e.target.value })} />
                 <div><p className="mb-1 text-xs text-gold-soft">集合時間</p><Input type="time" className={field} value={f.ride_meet_time} onChange={(e) => setF({ ...f, ride_meet_time: e.target.value })} /></div>
                 <Input className={field} placeholder="搭乘條件／限制（例：不抽菸、可載小型犬、分攤油資）" value={f.ride_conditions} onChange={(e) => setF({ ...f, ride_conditions: e.target.value })} />
               </>}

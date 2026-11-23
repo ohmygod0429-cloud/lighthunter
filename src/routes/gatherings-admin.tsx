@@ -32,7 +32,7 @@ type Data = Awaited<ReturnType<typeof getGatheringsAdmin>>;
 type Action = Record<string, unknown> & { type: string };
 const TABS = ["活動", "投票", "表演人員", "名單與統計", "許願"] as const;
 const STATUS_LABEL: Record<string, string> = { open: "正常（依人數自動判斷）", failed: "未成團", cancelled: "取消", rescheduled: "改期" };
-const emptyG: GatheringInput = { theme: "聯誼", title: "", description: "", region: "北部", event_date: "", start_time: "", end_time: "", location: "", map_url: "", min_people: 0, capacity: 0, fee: 0, payment_note: "", payment_url: "", perks: "", performer_ids: [], status: "open", status_note: "", is_published: true, rideshare_enabled: false, meet_point: "", location_photo_path: "", payment_qr_path: "" };
+const emptyG: GatheringInput = { theme: "聯誼", title: "", description: "", region: "北部", event_date: "", start_time: "", end_time: "", location: "", map_url: "", min_people: 0, capacity: 0, fee: 0, payment_note: "", payment_url: "", perks: "", performer_ids: [], status: "open", status_note: "", is_published: true, rideshare_enabled: true, meet_point: "", location_photo_path: "", payment_qr_path: "" };
 const emptyP: PerformerInput = { name: "", kind: "DJ", summary: "", photo_path: "", is_published: true };
 const emptyPoll: PollInput = { theme: "聯誼", title: "", description: "", region: "", is_open: true, options: [] };
 const chip = (on: boolean) => `rounded-full border px-3 py-1 text-sm ${on ? "border-primary bg-primary/15 text-primary" : "border-border/70 text-muted-foreground"}`;
