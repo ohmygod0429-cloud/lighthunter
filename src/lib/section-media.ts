@@ -33,8 +33,8 @@ export function videoSource(raw: string): { kind: "file" | "iframe"; src: string
   return null;
 }
 export function publishedMedia(m: SectionMedia): SectionMedia {
-  const video = Boolean(m.video_title && (m.video_path || m.video_url));
-  const file = Boolean(m.file_title && m.file_path);
+  const video = Boolean(m.video_path || m.video_url);
+  const file = Boolean(m.file_path);
   return { video_title: video ? m.video_title : "", video_url: video && !m.video_path ? m.video_url : "", video_path: video ? m.video_path : "", file_title: file ? m.file_title : "", file_path: file ? m.file_path : "", file_name: file ? m.file_name : "" };
 }
 export function uploadType(name: string, kind: "video" | "file") {

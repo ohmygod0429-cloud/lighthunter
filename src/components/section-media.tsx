@@ -66,8 +66,6 @@ export function SectionMediaEditor({ slotId }: { slotId: string }) {
   async function save() {
     const parsed = mediaSchema.safeParse(draft);
     if (!parsed.success) { toast.error(parsed.error.issues[0]?.message ?? "請檢查內容"); return; }
-    if ((videoFile || draft.video_path || draft.video_url) && !draft.video_title.trim()) { toast.error("請填寫影片標題"); return; }
-    if ((attachment || draft.file_path) && !draft.file_title.trim()) { toast.error("請填寫檔案標題"); return; }
     const passcode = getEnteredAdminPasscode() || password;
     if (!passcode) { setNeedsPassword(true); return; }
     setBusy(true);
@@ -97,22 +95,22 @@ export function SectionMediaEditor({ slotId }: { slotId: string }) {
     } finally { setBusy(false); setStatus(""); }
   }
 
-  const video = saved?.video_title && saved.videoSrc ? (saved.video_path ? { kind: "file" as const, src: saved.videoSrc } : videoSource(saved.videoSrc)) : null;
-  const showFile = Boolean(saved?.file_title && saved.fileSrc);
+  const video = saved?.videoSrc ? (saved.video_path ? { kind: "file" as const, src: saved.videoSrc } : videoSource(saved.videoSrc)) : null;
+  const showFile = Boolean(saved?.fileSrc);
   if (!admin && !video && !showFile) return null;
 
   return <div className="mt-5 min-w-0" data-section-media={slotId}>
     {video && <div className="min-w-0">
-      <p className="mb-3 break-words text-sm text-primary">{saved?.video_title}</p>
+      {saved?.video_title && <p className="mb-3 break-words text-sm text-primary">{saved.video_title}</p>}
       <div className="aspect-video w-full overflow-hidden rounded-md border border-border bg-background">
-        {video.kind === "file" ? <video key={video.src} src={video.src} controls playsInline preload="metadata" aria-label={saved?.video_title} className="size-full" /> : <iframe src={video.src} title={saved?.video_title} loading="lazy" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowFullScreen className="size-full" />}
+        {video.kind === "file" ? <video key={video.src} src={video.src} controls playsInline preload="metadata" aria-label={saved?.video_title || "介紹影片"} className="size-full" /> : <iframe src={video.src} title={saved?.video_title || "介紹影片"} loading="lazy" allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen className="size-full" />}
       </div>
     </div>}
-    {showFile && <Button asChild variant="outline" className="mt-3 h-auto max-w-full whitespace-normal border-primary/40 py-2 text-left text-primary"><a href={saved?.fileSrc} target="_blank" rel="noopener noreferrer"><span className="min-w-0 break-words [overflow-wrap:anywhere]">{saved?.file_title}</span></a></Button>}
+    {showFile && <Button asChild variant="outline" className="mt-3 h-auto max-w-full whitespace-normal border-primary/40 py-2 text-left text-primary"><a href={saved?.fileSrc} target="_blank" rel="noopener noreferrer"><span className="min-w-0 break-words [overflow-wrap:anywhere]">{saved?.file_title || saved?.file_name || "下載檔案"}</span></a></Button>}
     {admin && <fieldset className="mt-5 min-w-0 space-y-4 border-t border-border pt-4" disabled={busy || query.isPending || query.isError}>
       <legend className="text-sm text-primary">站內介紹影片與夾帶檔案</legend>
       {query.isError && <p role="alert" className="text-sm text-destructive">資料載入失敗，請重新整理後再編輯。</p>}
-      <label className="block text-xs text-muted-foreground" htmlFor={`${id}-video-title`}>影片標題<input id={`${id}-video-title`} className={inputClass} value={draft.video_title} maxLength={200} onChange={(e) => update("video_title", e.target.value)} /></label>
+      <label className="block text-xs text-muted-foreground" htmlFor={`${id}-video-title`}>影片標題（選填）<input id={`${id}-video-title`} className={inputClass} value={draft.video_title} maxLength={200} onChange={(e) => update("video_title", e.target.value)} /></label>
       <label className="block text-xs text-muted-foreground" htmlFor={`${id}-video-url`}>影片連結<input id={`${id}-video-url`} type="url" className={inputClass} value={draft.video_url} placeholder="YouTube / Vimeo / MP4 / WebM / Ogg" onChange={(e) => update("video_url", e.target.value)} /></label>
       <div className="flex min-w-0 flex-wrap items-center gap-2">
         <Button asChild variant="outline"><label htmlFor={`${id}-video-upload`} className="cursor-pointer"><Upload />選擇本機影片</label></Button>
@@ -121,7 +119,7 @@ export function SectionMediaEditor({ slotId }: { slotId: string }) {
         {(videoFile || draft.video_path) && <span className="min-w-0 break-all text-xs text-muted-foreground">{videoFile?.name ?? "已儲存影片"}</span>}
       </div>
       <div className="border-t border-border pt-4">
-        <label className="block text-xs text-muted-foreground" htmlFor={`${id}-file-title`}>檔案標題<input id={`${id}-file-title`} className={inputClass} value={draft.file_title} maxLength={200} onChange={(e) => update("file_title", e.target.value)} /></label>
+        <label className="block text-xs text-muted-foreground" htmlFor={`${id}-file-title`}>檔案標題（選填）<input id={`${id}-file-title`} className={inputClass} value={draft.file_title} maxLength={200} onChange={(e) => update("file_title", e.target.value)} /></label>
         <div className="mt-3 flex min-w-0 flex-wrap items-center gap-2">
           <Button asChild variant="outline"><label htmlFor={`${id}-file-upload`} className="cursor-pointer"><Upload />選擇夾帶檔案</label></Button>
           <input id={`${id}-file-upload`} type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip" className="sr-only" onChange={(e) => { choose(e.target.files?.[0], "file"); e.target.value = ""; }} />

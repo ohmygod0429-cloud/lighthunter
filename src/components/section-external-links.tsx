@@ -75,8 +75,9 @@ export function SectionExternalLinks({ slotId }: { slotId: string }) {
 
   return (
     <div className="mt-5 min-w-0" data-section-links={slotId}>
+      <SectionMediaEditor slotId={slotId} />
       {links.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-2">
           {links.map((link, index) => (
             <Button key={`${index}-${link.url}`} asChild variant="outline" className="h-auto max-w-full justify-start whitespace-normal border-primary/40 py-2 text-left text-primary">
               <a href={link.url} target="_blank" rel="noopener noreferrer"><span className="min-w-0 break-words [overflow-wrap:anywhere]">{link.title}</span></a>
@@ -109,7 +110,6 @@ export function SectionExternalLinks({ slotId }: { slotId: string }) {
           </div>
         </fieldset>
       )}
-      <SectionMediaEditor slotId={slotId} />
     </div>
   );
 }
