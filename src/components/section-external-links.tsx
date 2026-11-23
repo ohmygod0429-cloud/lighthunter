@@ -1,7 +1,7 @@
 import { useEffect, useId, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ExternalLink as ExternalLinkIcon, Plus, Save, Trash2 } from "lucide-react";
+import { Plus, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -78,7 +78,7 @@ export function SectionExternalLinks({ slotId }: { slotId: string }) {
         <div className="flex flex-wrap gap-2">
           {links.map((link, index) => (
             <Button key={`${index}-${link.url}`} asChild variant="outline" className="h-auto max-w-full justify-start whitespace-normal border-primary/40 py-2 text-left text-primary">
-              <a href={link.url} target="_blank" rel="noopener noreferrer"><ExternalLinkIcon className="shrink-0" /><span className="min-w-0 break-words [overflow-wrap:anywhere]">{link.title}</span></a>
+              <a href={link.url} target="_blank" rel="noopener noreferrer"><span className="min-w-0 break-words [overflow-wrap:anywhere]">{link.title}</span></a>
             </Button>
           ))}
         </div>
