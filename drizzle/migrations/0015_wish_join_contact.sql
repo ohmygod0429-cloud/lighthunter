@@ -1,0 +1,1 @@
+ALTER TABLE public.gathering_wish_joins ADD COLUMN phone text NOT NULL DEFAULT '', ADD COLUMN messenger text NOT NULL DEFAULT '';

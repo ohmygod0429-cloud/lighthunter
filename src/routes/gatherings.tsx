@@ -104,7 +104,7 @@ function EventCard({ g, performers, onDone }: { g: G; performers: P[]; onDone: (
   const can = canRegister(g.status, g.capacity, g.registered);
   const full = g.capacity > 0 && g.registered >= g.capacity;
   const need = stillNeeded(g.min_people, formed);
-  const btn = can ? "我要報名" : full ? "已額滿" : "暫停報名";
+  const btn = can ? (state === "集氣中" ? "我要集氣" : "我要報名") : full ? "已額滿" : "暫停報名";
   const map = mapLink(g.location, g.map_url);
   const time = fmtTime(g.start_time, g.end_time);
   const progress = [`已報名 ${g.registered} 人`, g.fee > 0 && g.min_people > 0 && `已付款 ${g.paid} 人`, g.min_people > 0 && `最低成團 ${g.min_people} 人`, g.capacity > 0 && `上限 ${g.capacity} 人`].filter(Boolean).join("・");
@@ -114,7 +114,7 @@ function EventCard({ g, performers, onDone }: { g: G; performers: P[]; onDone: (
       <div className="flex flex-wrap items-center gap-2 text-xs text-primary">
         <span>{g.event_date.replaceAll("-", "/")}</span>{time && <span>{time}</span>}
         <span className="rounded-full border border-primary/40 px-2">{g.theme}</span><span className="rounded-full border border-primary/40 px-2">{g.region}</span>
-        <span className={`rounded-full px-2 ${state === "已成團" ? "bg-gold-gradient text-primary-foreground" : "border border-border/70 text-muted-foreground"}`}>{state === "集氣中" ? "集氣中・尚未成團" : state}</span>
+        <span className={`rounded-full px-2 ${state === "已成團" ? "bg-gold-gradient text-primary-foreground" : "border border-border/70 text-muted-foreground"}`}>{state === "集氣中" ? "集氣中／待成團" : state}</span>
         {full && <span className="rounded-full border border-border/70 px-2 text-muted-foreground">已額滿</span>}
       </div>
       <h3 className="mt-2 text-lg">{g.title}</h3>
@@ -166,17 +166,36 @@ function PayBlock({ url, note, qr }: { url: string; note: string; qr: string }) 
 function WishRally({ w, onDone }: { w: Data["wishes"][number]; onDone: () => void }) {
   const join = useServerFn(joinWish);
   const [busy, setBusy] = useState(false);
+  const [open, setOpen] = useState(false);
+  const empty = { name: "", phone: "", messenger: "" };
+  const [f, setF] = useState(empty);
   const need = stillNeeded(w.min_people, w.joined);
-  const go = async () => {
-    setBusy(true);
-    try { await join({ data: { wish_id: w.id, voter_key: voterKey(), name: "", contact: "" } }); toast.success("已加入集氣"); onDone(); }
-    catch (e) { toast.error(errMsg(e, "集氣失敗")); }
+  const formed = w.min_people > 0 && need === 0;
+  const go = async (e: React.FormEvent) => {
+    e.preventDefault(); setBusy(true);
+    try { await join({ data: { wish_id: w.id, voter_key: voterKey(), ...f } }); toast.success("已完成集氣報名"); setF(empty); setOpen(false); onDone(); }
+    catch (err) { toast.error(errMsg(err, "集氣失敗")); }
     finally { setBusy(false); }
   };
   return (
     <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
-      <p className="text-xs text-muted-foreground">已集氣 {w.joined} 人{w.min_people > 0 && `・最低成團 ${w.min_people} 人`}{w.min_people > 0 && (need > 0 ? `・還差 ${need} 人` : "・已達成團門檻")}</p>
-      <Button size="sm" disabled={busy} onClick={go} className="rounded-full bg-gold-gradient text-primary-foreground">我要集氣</Button>
+      <div className="text-xs text-muted-foreground">
+        {w.min_people > 0 && <span className={`mr-2 rounded-full px-2 ${formed ? "bg-gold-gradient text-primary-foreground" : "border border-border/70"}`}>{formed ? "已成團" : "集氣中／待成團"}</span>}
+        已集氣 {w.joined} 人{w.min_people > 0 && `・最低成團 ${w.min_people} 人`}{w.min_people > 0 && need > 0 && `・還差 ${need} 人`}
+      </div>
+      <Button size="sm" onClick={() => setOpen(true)} className="rounded-full bg-gold-gradient text-primary-foreground">我要集氣</Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="border-border/60 bg-background">
+          <DialogHeader><DialogTitle>集氣報名</DialogTitle></DialogHeader>
+          <form onSubmit={go} className="space-y-3">
+            <p className="whitespace-pre-line text-sm text-muted-foreground">{w.content}</p>
+            <Input required className={field} placeholder="暱稱／姓名 *" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
+            <Input required className={field} placeholder="手機 *" inputMode="tel" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} />
+            <Input className={field} placeholder="LINE ID" value={f.messenger} onChange={(e) => setF({ ...f, messenger: e.target.value })} />
+            <Button type="submit" disabled={busy} className="w-full rounded-full bg-gold-gradient text-primary-foreground">{busy ? "送出中…" : "送出集氣"}</Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

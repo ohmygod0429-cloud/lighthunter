@@ -75,7 +75,14 @@ export const wishSchema = z.object({
   nickname: t(50), contact: t(200),
   meet_location: t(300).default(""), conditions: t(500).default(""),
 });
-export const wishJoinSchema = z.object({ wish_id: z.string().uuid(), voter_key: z.string().regex(/^[a-zA-Z0-9-]{8,64}$/), name: t(50), contact: t(200) });
+export const wishJoinSchema = z.object({
+  wish_id: z.string().uuid(), voter_key: z.string().regex(/^[a-zA-Z0-9-]{8,64}$/),
+  name: z.string().trim().min(1, "請填寫暱稱／姓名").max(50),
+  phone: z.string().trim().regex(/^[0-9+\-\s]{8,20}$/, "請填寫正確電話"),
+  messenger: t(100),
+});
+/** 同一人判斷用：去除空白與連字號 */
+export const normPhone = (v: string) => v.replace(/[\s-]/g, "");
 export const WISH_STATUSES = ["pending", "approved", "rejected"] as const;
 export const WISH_LABEL: Record<string, string> = { pending: "待審核", approved: "已核准公開", rejected: "已駁回／隱藏" };
 

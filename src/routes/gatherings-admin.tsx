@@ -181,6 +181,14 @@ function AdminPage() {
           </div>
           {regulars.length > 0 && <div className={`${glass} p-4`}><h2 className="text-lg">常客紀錄</h2>
             <div className="mt-3 space-y-1 text-sm">{regulars.slice(0, 30).map((s) => <p key={s.phone}>{s.name}・{s.phone}　<span className="text-primary">報名 {s.n} 次・出席 {s.att} 次</span></p>)}</div></div>}
+          {data.wishes.some((w) => w.joins.length > 0) && <div className={`${glass} space-y-3 p-4`}>
+            <h2 className="text-lg">許願集氣名單</h2>
+            {data.wishes.filter((w) => w.joins.length > 0).map((w) => (
+              <div key={w.id} className="space-y-1 border-t border-border/40 pt-2 text-sm first:border-0 first:pt-0">
+                <p className="text-gold-soft">{w.content.slice(0, 40)}<span className="ml-2 text-xs text-primary">已集氣 {w.joins.length}{w.min_people > 0 && ` / 成團 ${w.min_people}`}・{w.min_people > 0 && w.joins.length < w.min_people ? "集氣中" : "已成團"}</span></p>
+                {w.joins.map((j) => <div key={j.id} className="flex items-center gap-2 text-xs"><span className="flex-1">{j.name}・{j.phone}{j.messenger && `・LINE ${j.messenger}`}・{new Date(j.created_at).toLocaleString("zh-TW")}</span><Button size="sm" variant="destructive" onClick={() => del({ type: "deleteWishJoin", id: j.id })}>刪除</Button></div>)}
+              </div>))}
+          </div>}
           <div className="space-y-2">
             <h2 className="text-lg">報名名單（{regs.length}）</h2>
             {regs.map((r) => (

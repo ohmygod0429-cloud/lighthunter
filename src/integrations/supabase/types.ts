@@ -288,7 +288,9 @@ export type Database = {
           contact: string
           created_at: string
           id: string
+          messenger: string
           name: string
+          phone: string
           voter_key: string
           wish_id: string
         }
@@ -296,7 +298,9 @@ export type Database = {
           contact?: string
           created_at?: string
           id?: string
+          messenger?: string
           name?: string
+          phone?: string
           voter_key: string
           wish_id: string
         }
@@ -304,7 +308,9 @@ export type Database = {
           contact?: string
           created_at?: string
           id?: string
+          messenger?: string
           name?: string
+          phone?: string
           voter_key?: string
           wish_id?: string
         }

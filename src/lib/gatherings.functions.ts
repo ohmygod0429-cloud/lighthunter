@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { TEACHER_PHOTO_BUCKET } from "./academy";
-import { canRegister, paymentOpen, seatsLeft, wishJoinSchema, gatheringRegistrationSchema, gatheringSchema, performerSchema, pollSchema, voteSchema, wishSchema, WISH_STATUSES } from "./gatherings";
+import { canRegister, normPhone, paymentOpen, seatsLeft, wishJoinSchema, gatheringRegistrationSchema, gatheringSchema, performerSchema, pollSchema, voteSchema, wishSchema, WISH_STATUSES } from "./gatherings";
 
 async function admin() {
   return (await import("@/integrations/supabase/client.server")).supabaseAdmin;
@@ -85,6 +85,8 @@ export const registerGathering = createServerFn({ method: "POST" })
     if (!g?.is_published) throw new Error("此活動目前無法報名");
     const { count } = await sb.from("gathering_registrations").select("id", { count: "exact", head: true }).eq("gathering_id", data.gathering_id);
     if (!canRegister(g.status, g.capacity, count ?? 0)) throw new Error("此活動已額滿或暫停報名");
+    const { data: same } = await sb.from("gathering_registrations").select("phone").eq("gathering_id", data.gathering_id);
+    if ((same ?? []).some((r) => normPhone(r.phone) === normPhone(data.phone))) throw new Error("此電話已報名過這場活動");
     if (data.ride_role !== "none" && !g.rideshare_enabled) throw new Error("此活動未開放順道搭乘");
     const driver_code = data.ride_role === "driver" ? String(crypto.getRandomValues(new Uint32Array(1))[0]! % 900000 + 100000) : "";
     const row = data.ride_role === "driver" ? { ...data, ride_driver_id: null, driver_code }
@@ -140,6 +142,8 @@ export const joinWish = createServerFn({ method: "POST" })
     const sb = await admin();
     const { data: w } = await sb.from("gathering_wishes").select("status").eq("id", data.wish_id).maybeSingle();
     if (w?.status !== "approved") throw new Error("此許願目前無法集氣");
+    const { data: same } = await sb.from("gathering_wish_joins").select("phone").eq("wish_id", data.wish_id);
+    if ((same ?? []).some((r) => r.phone && normPhone(r.phone) === normPhone(data.phone))) throw new Error("您已集氣過這則許願");
     const { error } = await sb.from("gathering_wish_joins").insert(data);
     if (error) throw new Error(error.code === "23505" ? "您已集氣過這則許願" : "集氣失敗");
     return { ok: true };
@@ -157,7 +161,7 @@ export const getGatheringsAdmin = createServerFn({ method: "POST" })
       sb.from("gathering_poll_options").select("*").order("option_date"),
       sb.from("performers").select("*").order("created_at", { ascending: false }),
       sb.from("gathering_wishes").select("*").order("created_at", { ascending: false }),
-      sb.from("gathering_wish_joins").select("wish_id,name,contact,created_at").order("created_at"),
+      sb.from("gathering_wish_joins").select("id,wish_id,name,phone,messenger,created_at").order("created_at"),
     ]);
     if (g.error || r.error || p.error || o.error || f.error || w.error || j.error) throw new Error("資料載入失敗");
     const [votes, urls] = await Promise.all([
@@ -183,6 +187,7 @@ const actionSchema = z.object({ passcode: z.string() }).and(z.discriminatedUnion
   z.object({ type: z.literal("setRegFlag"), id: z.string().uuid(), field: z.enum(["paid", "attended"]), value: z.boolean() }),
   z.object({ type: z.literal("deleteRegistration"), id: z.string().uuid() }),
   z.object({ type: z.literal("deleteWish"), id: z.string().uuid() }),
+  z.object({ type: z.literal("deleteWishJoin"), id: z.string().uuid() }),
   z.object({ type: z.literal("setWishStatus"), id: z.string().uuid(), status: z.enum(WISH_STATUSES) }),
   z.object({ type: z.literal("setWishMin"), id: z.string().uuid(), min_people: z.number().int().min(0).max(100000) }),
 ]));
@@ -242,6 +247,7 @@ export const gatheringsAdminAction = createServerFn({ method: "POST" })
       case "deleteRegistration": await run(sb.from("gathering_registrations").delete().eq("id", data.id)); break;
       case "setWishStatus": await run(sb.from("gathering_wishes").update({ status: data.status }).eq("id", data.id)); break;
       case "setWishMin": await run(sb.from("gathering_wishes").update({ min_people: data.min_people }).eq("id", data.id)); break;
+      case "deleteWishJoin": await run(sb.from("gathering_wish_joins").delete().eq("id", data.id)); break;
       case "deleteWish": await run(sb.from("gathering_wishes").delete().eq("id", data.id)); break;
     }
     return { ok: true };
