@@ -127,6 +127,13 @@
       "when": 1795438938933,
       "tag": "0017_wish_proposer_identity",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1795439525532,
+      "tag": "0018_wish_join_rideshare",
+      "breakpoints": true
     }
   ]
 }

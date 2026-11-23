@@ -5,6 +5,7 @@ export const THEMES = ["逛夜市", "踏青", "遛狗", "海邊烤肉", "桌遊"
 export const PERFORMER_KINDS = ["DJ", "樂手", "其他"] as const;
 export const STATUSES = ["open", "failed", "cancelled", "rescheduled"] as const;
 const t = (max: number) => z.string().trim().max(max);
+function normPlate(v: string) { return v.replace(/[\s\-_.]/g, "").toUpperCase(); }
 const time = z.string().regex(/^(\d{2}:\d{2})?$/);
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "請選擇日期");
 const https = z.string().trim().max(1000).refine((u) => u === "" || /^https:\/\//.test(u), "連結需為 https 網址");
@@ -37,19 +38,16 @@ export const gatheringSchema = z.object({
 });
 export type GatheringInput = z.infer<typeof gatheringSchema>;
 
-export const gatheringRegistrationSchema = z.object({
-  gathering_id: z.string().uuid(),
-  name: z.string().trim().min(1, "請填寫姓名").max(100),
-  phone: z.string().trim().regex(/^[0-9+\-\s]{8,20}$/, "請填寫正確電話"),
-  email: z.string().trim().max(255).refine((e) => e === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e), "Email 格式不正確"),
-  messenger: t(100), note: t(1000),
+const rideFields = {
   ride_role: z.enum(["none", "driver", "passenger"]).default("none"),
   seats: z.number().int().min(0).max(8).default(0),
   ride_meet_location: t(300).default(""), ride_meet_time: time.default(""), ride_conditions: t(500).default(""),
   ride_driver_id: z.string().uuid().nullable().default(null),
   agree_ride_safety: z.boolean().default(false),
   license_plate: t(20).default(""),
-}).superRefine((v, ctx) => {
+};
+type RideV = { ride_role: string; seats: number; ride_meet_location: string; ride_driver_id: string | null; agree_ride_safety: boolean; license_plate: string };
+function rideRefine(v: RideV, ctx: z.RefinementCtx) {
   const bad = (message: string) => ctx.addIssue({ code: "custom", message });
   if (v.ride_role !== "none" && !v.agree_ride_safety) bad("請勾選同意順道搭乘安全提醒");
   if (v.ride_role === "driver") {
@@ -58,7 +56,16 @@ export const gatheringRegistrationSchema = z.object({
     if (normPlate(v.license_plate).length < 4) bad("請填寫車牌號碼");
   }
   if (v.ride_role === "passenger" && !v.ride_driver_id) bad("請選擇要搭乘的車主");
-});
+}
+
+export const gatheringRegistrationSchema = z.object({
+  gathering_id: z.string().uuid(),
+  name: z.string().trim().min(1, "請填寫姓名").max(100),
+  phone: z.string().trim().regex(/^[0-9+\-\s]{8,20}$/, "請填寫正確電話"),
+  email: z.string().trim().max(255).refine((e) => e === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e), "Email 格式不正確"),
+  messenger: t(100), note: t(1000),
+  ...rideFields,
+}).superRefine(rideRefine);
 
 export const pollSchema = z.object({
   theme: z.enum(THEMES),
@@ -85,14 +92,15 @@ export const wishJoinSchema = z.object({
   name: z.string().trim().min(1, "請填寫暱稱／姓名").max(50),
   phone: z.string().trim().regex(/^[0-9+\-\s]{8,20}$/, "請填寫正確電話"),
   messenger: t(100),
-});
+  ...rideFields,
+}).superRefine(rideRefine);
 /** 同一人判斷用：去除空白與連字號 */
 export const normPhone = (v: string) => v.replace(/[\s-]/g, "");
 export const WISH_STATUSES = ["pending", "approved", "rejected"] as const;
 export const WISH_LABEL: Record<string, string> = { pending: "待審核", approved: "已核准公開", rejected: "已駁回／隱藏" };
 
 /** 車牌比對：忽略大小寫、空白、連字號 */
-export const normPlate = (v: string) => v.replace(/[\s\-_.]/g, "").toUpperCase();
+export { normPlate };
 
 /** 順道搭乘剩餘座位（不會小於 0） */
 export function seatsLeft(seats: number, taken: number) {

@@ -288,36 +288,67 @@ export type Database = {
       }
       gathering_wish_joins: {
         Row: {
+          agree_ride_safety: boolean
           contact: string
           created_at: string
           id: string
+          license_plate: string
           messenger: string
           name: string
           phone: string
+          ride_conditions: string
+          ride_driver_id: string | null
+          ride_meet_location: string
+          ride_meet_time: string
+          ride_role: string
+          seats: number
           voter_key: string
           wish_id: string
         }
         Insert: {
+          agree_ride_safety?: boolean
           contact?: string
           created_at?: string
           id?: string
+          license_plate?: string
           messenger?: string
           name?: string
           phone?: string
+          ride_conditions?: string
+          ride_driver_id?: string | null
+          ride_meet_location?: string
+          ride_meet_time?: string
+          ride_role?: string
+          seats?: number
           voter_key: string
           wish_id: string
         }
         Update: {
+          agree_ride_safety?: boolean
           contact?: string
           created_at?: string
           id?: string
+          license_plate?: string
           messenger?: string
           name?: string
           phone?: string
+          ride_conditions?: string
+          ride_driver_id?: string | null
+          ride_meet_location?: string
+          ride_meet_time?: string
+          ride_role?: string
+          seats?: number
           voter_key?: string
           wish_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "gathering_wish_joins_ride_driver_id_fkey"
+            columns: ["ride_driver_id"]
+            isOneToOne: false
+            referencedRelation: "gathering_wish_joins"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "gathering_wish_joins_wish_id_fkey"
             columns: ["wish_id"]

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { field, glass } from "@/components/academy-ui";
-import { castVote, getGatheringsPublic, getMyPassengers, joinWish, registerGathering, submitWish } from "@/lib/gatherings.functions";
+import { castVote, getGatheringsPublic, getMyPassengers, getMyWishPassengers, joinWish, registerGathering, submitWish } from "@/lib/gatherings.functions";
 import { THEMES, canRegister, formedCount, gatheringState, stillNeeded } from "@/lib/gatherings";
 import { REGIONS, mapLink } from "@/lib/academy";
 
@@ -141,7 +141,7 @@ function EventCard({ g, performers, onDone }: { g: G; performers: P[]; onDone: (
               <div><p className="text-gold-soft">{p.name}{p.kind && <span className="ml-2 text-xs text-muted-foreground">{p.kind}</span>}</p>{p.summary && <p className="whitespace-pre-line text-xs text-muted-foreground">{p.summary}</p>}</div></div>)}</div>}
           {g.pay_open && <PayBlock url={g.payment_url} note={g.payment_note} qr={g.payment_qr_url} />}
           {g.meet_point && <MeetLine label="集合地點" place={g.meet_point} />}
-          {g.rideshare_enabled && g.rides.length > 0 && <RideSection g={g} />}
+          {g.rideshare_enabled && g.rides.length > 0 && <EventRides g={g} />}
           <Button disabled={!can} onClick={() => { setOpen(false); setReg(true); }} className="w-full rounded-full bg-gold-gradient text-primary-foreground">{btn}</Button>
         </DialogContent>
       </Dialog>
@@ -165,34 +165,40 @@ function PayBlock({ url, note, qr }: { url: string; note: string; qr: string }) 
 
 function WishRally({ w, onDone }: { w: Data["wishes"][number]; onDone: () => void }) {
   const join = useServerFn(joinWish);
+  const look = useServerFn(getMyWishPassengers);
   const [busy, setBusy] = useState(false);
   const [open, setOpen] = useState(false);
-  const empty = { name: "", phone: "", messenger: "" };
+  const empty = { name: "", phone: "", messenger: "", ...emptyRide };
   const [f, setF] = useState(empty);
   const need = stillNeeded(w.min_people, w.joined);
   const formed = w.min_people > 0 && need === 0;
   const go = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true);
-    try { await join({ data: { wish_id: w.id, voter_key: voterKey(), ...f } }); toast.success("已完成集氣報名"); setF(empty); setOpen(false); onDone(); }
+    try { await join({ data: { wish_id: w.id, voter_key: voterKey(), ...f } }); toast.success(f.ride_role === "driver" ? "已完成集氣報名，之後可用車牌查看乘客名單" : "已完成集氣報名"); setF(empty); setOpen(false); onDone(); }
     catch (err) { toast.error(errMsg(err, "集氣失敗")); }
     finally { setBusy(false); }
   };
   return (
-    <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
+    <div className="mt-auto space-y-3 pt-4">
+      {w.rides.length > 0 && <RideSection rides={w.rides} lookup={(credential) => look({ data: { wish_id: w.id, credential } })} />}
+      <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="text-xs text-muted-foreground">
         {w.min_people > 0 && <span className={`mr-2 rounded-full px-2 ${formed ? "bg-gold-gradient text-primary-foreground" : "border border-border/70"}`}>{formed ? "已成團" : "集氣中／待成團"}</span>}
         已集氣 {w.joined} 人{w.min_people > 0 && `・最低成團 ${w.min_people} 人`}{w.min_people > 0 && need > 0 && `・還差 ${need} 人`}
       </div>
       <Button size="sm" onClick={() => setOpen(true)} className="rounded-full bg-gold-gradient text-primary-foreground">我要集氣</Button>
+      </div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="border-border/60 bg-background">
+        <DialogContent className="max-h-[90vh] overflow-y-auto border-border/60 bg-background">
           <DialogHeader><DialogTitle>集氣報名</DialogTitle></DialogHeader>
           <form onSubmit={go} className="space-y-3">
             <p className="whitespace-pre-line text-sm text-muted-foreground">{w.content}</p>
             <Input required className={field} placeholder="暱稱／姓名 *" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
             <Input required className={field} placeholder="手機 *" inputMode="tel" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} />
             <Input className={field} placeholder="LINE ID" value={f.messenger} onChange={(e) => setF({ ...f, messenger: e.target.value })} />
-            <Button type="submit" disabled={busy} className="w-full rounded-full bg-gold-gradient text-primary-foreground">{busy ? "送出中…" : "送出集氣"}</Button>
+            <div className="space-y-3 rounded-xl border border-primary/40 p-3 text-sm"><RideFields f={f} setF={setF} rides={w.rides} /></div>
+            <p className="text-xs text-muted-foreground">順道搭乘僅為交通資訊，是否成團仍以集氣人數達最低成團人數為準。</p>
+            <Button type="submit" disabled={busy || (f.ride_role !== "none" && !f.agree_ride_safety)} className="w-full rounded-full bg-gold-gradient text-primary-foreground">{busy ? "送出中…" : "送出集氣"}</Button>
           </form>
         </DialogContent>
       </Dialog>
@@ -205,15 +211,19 @@ function MeetLine({ label, place, url = "" }: { label: string; place: string; ur
   return <p className="flex items-center gap-1.5 text-sm text-gold-soft"><MapPin className="size-4" />{label}：{map ? <a href={map} target="_blank" rel="noreferrer" className="underline-offset-4 hover:text-primary hover:underline">{place}</a> : place}</p>;
 }
 
-function RideSection({ g }: { g: G }) {
-  const lookup = useServerFn(getMyPassengers);
+function EventRides({ g }: { g: G }) {
+  const fn = useServerFn(getMyPassengers);
+  return <RideSection rides={g.rides} lookup={(credential) => fn({ data: { gathering_id: g.id, credential } })} />;
+}
+
+function RideSection({ rides, lookup }: { rides: Ride[]; lookup: (credential: string) => Promise<{ found: boolean; passengers: { name: string; phone: string; messenger: string }[] }> }) {
   const [cred, setCred] = useState("");
-  const [res, setRes] = useState<Awaited<ReturnType<typeof getMyPassengers>> | null>(null);
+  const [res, setRes] = useState<{ found: boolean; passengers: { name: string; phone: string; messenger: string }[] } | null>(null);
   const [show, setShow] = useState(false);
-  const open = g.rides.filter((r) => r.left > 0);
+  const open = rides.filter((r) => r.left > 0);
   const check = async (e: React.FormEvent) => {
     e.preventDefault();
-    try { setRes(await lookup({ data: { gathering_id: g.id, credential: cred } })); } catch { setRes({ found: false, passengers: [] }); }
+    try { setRes(await lookup(cred)); } catch { setRes({ found: false, passengers: [] }); }
   };
   return (
     <div className="space-y-3 rounded-xl border border-primary/40 p-3">
@@ -238,6 +248,33 @@ function RideSection({ g }: { g: G }) {
   );
 }
 
+type RideF = { ride_role: "none" | "driver" | "passenger"; seats: number; ride_meet_location: string; ride_meet_time: string; ride_conditions: string; ride_driver_id: string | null; agree_ride_safety: boolean; license_plate: string };
+type Ride = { id: string; name: string; seats: number; left: number; ride_meet_location: string; ride_meet_time: string; ride_conditions: string };
+const emptyRide: RideF = { ride_role: "none", seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "", ride_driver_id: null, agree_ride_safety: false, license_plate: "" };
+
+function RideFields<T extends RideF>({ f, setF, rides }: { f: T; setF: (v: T) => void; rides: Ride[] }) {
+  return (<>
+              <label className="flex items-center gap-2"><input type="checkbox" checked={f.ride_role === "driver"} onChange={(e) => setF({ ...f, ride_role: e.target.checked ? "driver" : "none", ride_driver_id: null, seats: e.target.checked ? 1 : 0 })} />我有車，願意順道載人</label>
+              {f.ride_role === "driver" && <>
+                <div><p className="mb-1 text-xs text-gold-soft">可提供座位數上限 *</p><select className={field} value={f.seats} onChange={(e) => setF({ ...f, seats: Number(e.target.value) })}>{[1, 2, 3, 4, 5, 6].map((n) => <option key={n} value={n}>{n} 人</option>)}</select></div>
+                <Input required className={field} placeholder="車牌號碼 *（用於查看您的乘客名單）" value={f.license_plate} onChange={(e) => setF({ ...f, license_plate: e.target.value })} />
+                <Input required className={field} placeholder="順道集合地點 *（會附 Google 地圖連結）" value={f.ride_meet_location} onChange={(e) => setF({ ...f, ride_meet_location: e.target.value })} />
+                <div><p className="mb-1 text-xs text-gold-soft">集合時間</p><Input type="time" className={field} value={f.ride_meet_time} onChange={(e) => setF({ ...f, ride_meet_time: e.target.value })} /></div>
+                <Input className={field} placeholder="搭乘條件／限制（例：不抽菸、可載小型犬、分攤油資）" value={f.ride_conditions} onChange={(e) => setF({ ...f, ride_conditions: e.target.value })} />
+              </>}
+              {f.ride_role !== "driver" && rides.some((r) => r.left > 0) && <div className="space-y-1.5">
+                <p className="text-xs text-gold-soft">報名方式</p>
+                <label className="flex items-center gap-2"><input type="radio" checked={f.ride_role === "none"} onChange={() => setF({ ...f, ride_role: "none", ride_driver_id: null })} />一般報名</label>
+                {rides.map((r) => <label key={r.id} className={`flex items-center gap-2 ${r.left ? "" : "opacity-50"}`}><input type="radio" disabled={!r.left} checked={f.ride_driver_id === r.id} onChange={() => setF({ ...f, ride_role: "passenger", ride_driver_id: r.id })} />報名並申請搭乘 {r.name}（{r.left ? `剩 ${r.left} 位` : "已滿座"}）</label>)}
+                {f.ride_role === "passenger" && <p className="text-xs text-muted-foreground">請務必填寫手機與 LINE ID，方便車主聯繫。</p>}
+              </div>}
+              {f.ride_role !== "none" && <>
+                <p className="text-xs leading-relaxed text-muted-foreground">{SAFETY}</p>
+                <label className="flex items-start gap-2"><input type="checkbox" className="mt-1" checked={f.agree_ride_safety} onChange={(e) => setF({ ...f, agree_ride_safety: e.target.checked })} />我已閱讀並同意以上安全提醒</label>
+              </>}
+  </>);
+}
+
 function RegisterDialog({ open, onOpenChange, g, onDone }: { open: boolean; onOpenChange: (o: boolean) => void; g: G; onDone: () => void }) {
   const send = useServerFn(registerGathering);
   const empty = { name: "", phone: "", email: "", messenger: "", note: "", ride_role: "none" as "none" | "driver" | "passenger", seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "", ride_driver_id: null as string | null, agree_ride_safety: false, license_plate: "" };
@@ -246,7 +283,6 @@ function RegisterDialog({ open, onOpenChange, g, onDone }: { open: boolean; onOp
   const [done, setDone] = useState(false);
   const [code, setCode] = useState("");
   const [pay, setPay] = useState<{ payment_url: string; payment_note: string; payment_qr_url: string } | null>(null);
-  const openRides = g.rides.filter((r) => r.left > 0);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true);
     try { const r = await send({ data: { gathering_id: g.id, ...f } }); setCode(r.driver_code); setPay(r.pay_open ? r : null); setF(empty); setDone(true); onDone(); }
@@ -274,24 +310,7 @@ function RegisterDialog({ open, onOpenChange, g, onDone }: { open: boolean; onOp
             <Input className={field} placeholder="LINE／WeChat ID" value={f.messenger} onChange={(e) => setF({ ...f, messenger: e.target.value })} />
             <Textarea className={field} rows={2} placeholder="備註" value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} />
             {g.rideshare_enabled && <div className="space-y-3 rounded-xl border border-primary/40 p-3 text-sm">
-              <label className="flex items-center gap-2"><input type="checkbox" checked={f.ride_role === "driver"} onChange={(e) => setF({ ...f, ride_role: e.target.checked ? "driver" : "none", ride_driver_id: null, seats: e.target.checked ? 1 : 0 })} />我有車，願意順道載人</label>
-              {f.ride_role === "driver" && <>
-                <div><p className="mb-1 text-xs text-gold-soft">可提供座位數上限 *</p><select className={field} value={f.seats} onChange={(e) => setF({ ...f, seats: Number(e.target.value) })}>{[1, 2, 3, 4, 5, 6].map((n) => <option key={n} value={n}>{n} 人</option>)}</select></div>
-                <Input required className={field} placeholder="車牌號碼 *（用於查看您的乘客名單）" value={f.license_plate} onChange={(e) => setF({ ...f, license_plate: e.target.value })} />
-                <Input required className={field} placeholder="順道集合地點 *（會附 Google 地圖連結）" value={f.ride_meet_location} onChange={(e) => setF({ ...f, ride_meet_location: e.target.value })} />
-                <div><p className="mb-1 text-xs text-gold-soft">集合時間</p><Input type="time" className={field} value={f.ride_meet_time} onChange={(e) => setF({ ...f, ride_meet_time: e.target.value })} /></div>
-                <Input className={field} placeholder="搭乘條件／限制（例：不抽菸、可載小型犬、分攤油資）" value={f.ride_conditions} onChange={(e) => setF({ ...f, ride_conditions: e.target.value })} />
-              </>}
-              {f.ride_role !== "driver" && openRides.length > 0 && <div className="space-y-1.5">
-                <p className="text-xs text-gold-soft">報名方式</p>
-                <label className="flex items-center gap-2"><input type="radio" checked={f.ride_role === "none"} onChange={() => setF({ ...f, ride_role: "none", ride_driver_id: null })} />一般報名</label>
-                {g.rides.map((r) => <label key={r.id} className={`flex items-center gap-2 ${r.left ? "" : "opacity-50"}`}><input type="radio" disabled={!r.left} checked={f.ride_driver_id === r.id} onChange={() => setF({ ...f, ride_role: "passenger", ride_driver_id: r.id })} />報名並申請搭乘 {r.name}（{r.left ? `剩 ${r.left} 位` : "已滿座"}）</label>)}
-                {f.ride_role === "passenger" && <p className="text-xs text-muted-foreground">請務必填寫手機與 LINE ID，方便車主聯繫。</p>}
-              </div>}
-              {f.ride_role !== "none" && <>
-                <p className="text-xs leading-relaxed text-muted-foreground">{SAFETY}</p>
-                <label className="flex items-start gap-2"><input type="checkbox" className="mt-1" checked={f.agree_ride_safety} onChange={(e) => setF({ ...f, agree_ride_safety: e.target.checked })} />我已閱讀並同意以上安全提醒</label>
-              </>}
+              <RideFields f={f} setF={setF} rides={g.rides} />
             </div>}
             <Button type="submit" disabled={busy || (f.ride_role !== "none" && !f.agree_ride_safety)} className="w-full rounded-full bg-gold-gradient text-primary-foreground">{busy ? "送出中…" : "送出報名"}</Button>
           </form>

@@ -56,12 +56,16 @@ export const getGatheringsPublic = createServerFn({ method: "GET" }).handler(asy
     countBy(sb, "gathering_votes", "option_id", options.map((x) => x.id)),
     sign(sb, [...(f.data ?? []).map((x) => x.photo_path), ...(g.data ?? []).flatMap((x) => [x.location_photo_path, x.payment_qr_path])]),
     gIds.length ? sb.from("gathering_registrations").select("gathering_id").eq("paid", true).in("gathering_id", gIds) : Promise.resolve({ data: [] as { gathering_id: string }[] }),
-    wishIds.length ? sb.from("gathering_wish_joins").select("wish_id").in("wish_id", wishIds) : Promise.resolve({ data: [] as { wish_id: string }[] }),
+    wishIds.length ? sb.from("gathering_wish_joins").select("id,wish_id,name,ride_role,seats,ride_meet_location,ride_meet_time,ride_conditions,ride_driver_id").in("wish_id", wishIds).order("created_at") : Promise.resolve({ data: [] as { id: string; wish_id: string; name: string; ride_role: string; seats: number; ride_meet_location: string; ride_meet_time: string; ride_conditions: string; ride_driver_id: string | null }[] }),
   ]);
   const paid: Record<string, number> = {};
   (paidRows.data ?? []).forEach((r) => { paid[r.gathering_id] = (paid[r.gathering_id] ?? 0) + 1; });
   const joins: Record<string, number> = {};
-  (joinRows.data ?? []).forEach((r) => { joins[r.wish_id] = (joins[r.wish_id] ?? 0) + 1; });
+  const wTaken: Record<string, number> = {};
+  (joinRows.data ?? []).forEach((r) => { joins[r.wish_id] = (joins[r.wish_id] ?? 0) + 1; if (r.ride_driver_id) wTaken[r.ride_driver_id] = (wTaken[r.ride_driver_id] ?? 0) + 1; });
+  // 集氣階段的車主：只公開稱呼與集合資訊
+  const wRides = (joinRows.data ?? []).filter((r) => r.ride_role === "driver")
+    .map(({ id, wish_id, name, seats, ride_meet_location, ride_meet_time, ride_conditions }) => ({ id, wish_id, name, seats, ride_meet_location, ride_meet_time, ride_conditions, left: seatsLeft(seats, wTaken[id] ?? 0) }));
   return {
     gatherings: (g.data ?? []).map(({ location_photo_path, payment_qr_path, payment_url, payment_note, ...x }) => {
       const registered = regs[x.id] ?? 0;
@@ -71,7 +75,7 @@ export const getGatheringsPublic = createServerFn({ method: "GET" }).handler(asy
         payment_url: pay ? payment_url : "", payment_note: pay ? payment_note : "", payment_qr_url: pay ? urls.get(payment_qr_path) ?? "" : "",
         location_photo_url: urls.get(location_photo_path) ?? "", rides: rides.filter((r) => r.gathering_id === x.id) };
     }),
-    wishes: ((wsh.data ?? []) as { id: string; theme: string; content: string; nickname: string; meet_location: string; conditions: string; min_people: number }[]).map((w) => ({ ...w, joined: joins[w.id] ?? 0 })),
+    wishes: ((wsh.data ?? []) as { id: string; theme: string; content: string; nickname: string; meet_location: string; conditions: string; min_people: number }[]).map((w) => ({ ...w, joined: joins[w.id] ?? 0, rides: wRides.filter((r) => r.wish_id === w.id) })),
     polls: (p.data ?? []).map((x) => ({ ...x, options: options.filter((y) => y.poll_id === x.id).map((y) => ({ ...y, votes: votes[y.id] ?? 0 })) })),
     performers: (f.data ?? []).map(({ photo_path, ...x }) => ({ ...x, photo_url: urls.get(photo_path) ?? "" })),
   };
@@ -112,6 +116,19 @@ export const getMyPassengers = createServerFn({ method: "POST" })
     return { found: true, passengers: ps ?? [] };
   });
 
+/** 集氣階段車主以車牌查詢自己車上的乘客 */
+export const getMyWishPassengers = createServerFn({ method: "POST" })
+  .inputValidator((i) => z.object({ wish_id: z.string().uuid(), credential: z.string().trim().min(2).max(30) }).parse(i))
+  .handler(async ({ data }) => {
+    const sb = await admin();
+    const { data: drivers } = await sb.from("gathering_wish_joins").select("id,license_plate").eq("wish_id", data.wish_id).eq("ride_role", "driver");
+    const c = normPlate(data.credential);
+    const mine = c.length >= 4 ? (drivers ?? []).filter((d) => d.license_plate && normPlate(d.license_plate) === c).map((d) => d.id) : [];
+    if (!mine.length) return { found: false, passengers: [] as { name: string; phone: string; messenger: string }[] };
+    const { data: ps } = await sb.from("gathering_wish_joins").select("name,phone,messenger").in("ride_driver_id", mine).order("created_at");
+    return { found: true, passengers: ps ?? [] };
+  });
+
 export const castVote = createServerFn({ method: "POST" })
   .inputValidator((i) => voteSchema.parse(i))
   .handler(async ({ data }) => {
@@ -143,8 +160,11 @@ export const joinWish = createServerFn({ method: "POST" })
     if (w?.status !== "approved") throw new Error("此許願目前無法集氣");
     const { data: same } = await sb.from("gathering_wish_joins").select("phone").eq("wish_id", data.wish_id);
     if ((same ?? []).some((r) => r.phone && normPhone(r.phone) === normPhone(data.phone))) throw new Error("您已集氣過這則許願");
-    const { error } = await sb.from("gathering_wish_joins").insert(data);
-    if (error) throw new Error(error.code === "23505" ? "您已集氣過這則許願" : "集氣失敗");
+    const row = data.ride_role === "driver" ? { ...data, ride_driver_id: null }
+      : data.ride_role === "passenger" ? { ...data, seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "", license_plate: "" }
+      : { ...data, seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "", ride_driver_id: null, agree_ride_safety: false, license_plate: "" };
+    const { error } = await sb.from("gathering_wish_joins").insert(row);
+    if (error) throw new Error(error.code === "23505" ? "您已集氣過這則許願" : error.message.includes("seats full") ? "這台車已滿座，請選擇其他車主" : "集氣失敗");
     return { ok: true };
   });
 
@@ -160,7 +180,7 @@ export const getGatheringsAdmin = createServerFn({ method: "POST" })
       sb.from("gathering_poll_options").select("*").order("option_date"),
       sb.from("performers").select("*").order("created_at", { ascending: false }),
       sb.from("gathering_wishes").select("*").order("created_at", { ascending: false }),
-      sb.from("gathering_wish_joins").select("id,wish_id,name,phone,messenger,created_at").order("created_at"),
+      sb.from("gathering_wish_joins").select("*").order("created_at"),
     ]);
     if (g.error || r.error || p.error || o.error || f.error || w.error || j.error) throw new Error("資料載入失敗");
     const [votes, urls] = await Promise.all([
