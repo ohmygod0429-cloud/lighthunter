@@ -150,7 +150,7 @@ export function CourseCard({ course, teacher, onRegistered }: { course: PublicCo
   );
 }
 
-function RegisterDialog({ open, onOpenChange, course, onDone }: { open: boolean; onOpenChange: (o: boolean) => void; course: PublicCourse; onDone?: () => void }) {
+function RegisterDialog({ open, onOpenChange, course, onDone }: { open: boolean; onOpenChange: (o: boolean) => void; course: PublicCourse; onDone?: (() => void) | undefined }) {
   const reg = useServerFn(registerCourse);
   const [f, setF] = useState({ name: "", phone: "", email: "", messenger: "", note: "" });
   const [busy, setBusy] = useState(false);
