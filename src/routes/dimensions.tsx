@@ -3,6 +3,7 @@ import { VideoSlot } from "@/components/video-slot";
 import { useState } from "react";
 import { dimensions } from "@/data/ecosystem";
 import { SectionExternalLinks } from "@/components/section-external-links";
+import { useAdminMode } from "@/lib/admin-mode";
 
 export const Route = createFileRoute("/dimensions")({
   head: () => ({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/dimensions")({
 });
 
 function DimensionsPage() {
+  const admin = useAdminMode();
   const [active, setActive] = useState<string>(dimensions[0]?.no ?? "01");
 
   return (
@@ -62,6 +64,13 @@ function DimensionsPage() {
                 </div>
               )}
             </button>
+            {open && d.no === "03" && (
+              <div className="mt-4 flex flex-wrap gap-2 text-sm">
+                <Link to="/teachers" className="rounded-full bg-gold-gradient px-4 py-1.5 text-primary-foreground">師資與課表報名</Link>
+                <Link to="/teachers/join" className="rounded-full border border-primary/50 px-4 py-1.5 text-primary">師資報名填寫</Link>
+                {admin && <Link to="/academy-admin" className="rounded-full border border-border/70 px-4 py-1.5 text-muted-foreground">課程後台</Link>}
+              </div>
+            )}
             {open && <SectionExternalLinks slotId={`dimension-${d.no}`} />}
             </article>
           );

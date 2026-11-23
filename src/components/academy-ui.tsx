@@ -120,7 +120,7 @@ export function Gallery({ urls }: { urls: string[] }) {
 export type PublicCourse = { id: string; name: string; description: string; region: string; course_date: string; start_time: string; end_time: string; location: string; map_url: string; capacity: number; registered: number; teacher_id: string | null };
 export type PublicTeacher = { id: string; name: string; title: string; category: string; summary: string; photo_url: string };
 
-export function CourseCard({ course, teacher, onRegistered }: { course: PublicCourse; teacher?: PublicTeacher; onRegistered?: () => void }) {
+export function CourseCard({ course, teacher, onRegistered }: { course: PublicCourse; teacher?: PublicTeacher | undefined; onRegistered?: () => void }) {
   const [open, setOpen] = useState(false);
   const left = seatsLeft(course.capacity, course.registered);
   const map = mapLink(course.location, course.map_url);

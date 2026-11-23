@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AcademyAdminRouteImport } from './routes/academy-admin'
 import { Route as ApplyRouteImport } from './routes/apply'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ConsultRouteImport } from './routes/consult'
@@ -20,10 +21,18 @@ import { Route as QaRouteImport } from './routes/qa'
 import { Route as ReserveRouteImport } from './routes/reserve'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as ReserveSuccessRouteImport } from './routes/reserve.success'
+import { Route as TeachersIndexRouteImport } from './routes/teachers.index'
+import { Route as TeachersIdRouteImport } from './routes/teachers.$id'
+import { Route as TeachersJoinRouteImport } from './routes/teachers.join'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcademyAdminRoute = AcademyAdminRouteImport.update({
+  id: '/academy-admin',
+  path: '/academy-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApplyRoute = ApplyRouteImport.update({
@@ -76,9 +85,25 @@ const ReserveSuccessRoute = ReserveSuccessRouteImport.update({
   path: '/success',
   getParentRoute: () => ReserveRoute,
 } as any)
+const TeachersIndexRoute = TeachersIndexRouteImport.update({
+  id: '/teachers/',
+  path: '/teachers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeachersIdRoute = TeachersIdRouteImport.update({
+  id: '/teachers/$id',
+  path: '/teachers/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeachersJoinRoute = TeachersJoinRouteImport.update({
+  id: '/teachers/join',
+  path: '/teachers/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/academy-admin': typeof AcademyAdminRoute
   '/apply': typeof ApplyRoute
   '/compare': typeof CompareRoute
   '/consult': typeof ConsultRoute
@@ -89,9 +114,13 @@ export interface FileRoutesByFullPath {
   '/reserve': typeof ReserveRouteWithChildren
   '/review': typeof ReviewRoute
   '/reserve/success': typeof ReserveSuccessRoute
+  '/teachers/$id': typeof TeachersIdRoute
+  '/teachers/join': typeof TeachersJoinRoute
+  '/teachers/': typeof TeachersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/academy-admin': typeof AcademyAdminRoute
   '/apply': typeof ApplyRoute
   '/compare': typeof CompareRoute
   '/consult': typeof ConsultRoute
@@ -102,10 +131,14 @@ export interface FileRoutesByTo {
   '/reserve': typeof ReserveRouteWithChildren
   '/review': typeof ReviewRoute
   '/reserve/success': typeof ReserveSuccessRoute
+  '/teachers/$id': typeof TeachersIdRoute
+  '/teachers/join': typeof TeachersJoinRoute
+  '/teachers': typeof TeachersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/academy-admin': typeof AcademyAdminRoute
   '/apply': typeof ApplyRoute
   '/compare': typeof CompareRoute
   '/consult': typeof ConsultRoute
@@ -116,11 +149,15 @@ export interface FileRoutesById {
   '/reserve': typeof ReserveRouteWithChildren
   '/review': typeof ReviewRoute
   '/reserve/success': typeof ReserveSuccessRoute
+  '/teachers/$id': typeof TeachersIdRoute
+  '/teachers/join': typeof TeachersJoinRoute
+  '/teachers/': typeof TeachersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/academy-admin'
     | '/apply'
     | '/compare'
     | '/consult'
@@ -131,9 +168,13 @@ export interface FileRouteTypes {
     | '/reserve'
     | '/review'
     | '/reserve/success'
+    | '/teachers/$id'
+    | '/teachers/join'
+    | '/teachers/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/academy-admin'
     | '/apply'
     | '/compare'
     | '/consult'
@@ -144,9 +185,13 @@ export interface FileRouteTypes {
     | '/reserve'
     | '/review'
     | '/reserve/success'
+    | '/teachers/$id'
+    | '/teachers/join'
+    | '/teachers'
   id:
     | '__root__'
     | '/'
+    | '/academy-admin'
     | '/apply'
     | '/compare'
     | '/consult'
@@ -157,10 +202,14 @@ export interface FileRouteTypes {
     | '/reserve'
     | '/review'
     | '/reserve/success'
+    | '/teachers/$id'
+    | '/teachers/join'
+    | '/teachers/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcademyAdminRoute: typeof AcademyAdminRoute
   ApplyRoute: typeof ApplyRoute
   CompareRoute: typeof CompareRoute
   ConsultRoute: typeof ConsultRoute
@@ -170,6 +219,9 @@ export interface RootRouteChildren {
   QaRoute: typeof QaRoute
   ReserveRoute: typeof ReserveRouteWithChildren
   ReviewRoute: typeof ReviewRoute
+  TeachersIdRoute: typeof TeachersIdRoute
+  TeachersJoinRoute: typeof TeachersJoinRoute
+  TeachersIndexRoute: typeof TeachersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -179,6 +231,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/academy-admin': {
+      id: '/academy-admin'
+      path: '/academy-admin'
+      fullPath: '/academy-admin'
+      preLoaderRoute: typeof AcademyAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/apply': {
@@ -251,6 +310,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReserveSuccessRouteImport
       parentRoute: typeof ReserveRoute
     }
+    '/teachers/': {
+      id: '/teachers/'
+      path: '/teachers'
+      fullPath: '/teachers/'
+      preLoaderRoute: typeof TeachersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teachers/$id': {
+      id: '/teachers/$id'
+      path: '/teachers/$id'
+      fullPath: '/teachers/$id'
+      preLoaderRoute: typeof TeachersIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teachers/join': {
+      id: '/teachers/join'
+      path: '/teachers/join'
+      fullPath: '/teachers/join'
+      preLoaderRoute: typeof TeachersJoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -267,6 +347,7 @@ const ReserveRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcademyAdminRoute: AcademyAdminRoute,
   ApplyRoute: ApplyRoute,
   CompareRoute: CompareRoute,
   ConsultRoute: ConsultRoute,
@@ -276,6 +357,9 @@ const rootRouteChildren: RootRouteChildren = {
   QaRoute: QaRoute,
   ReserveRoute: ReserveRouteWithChildren,
   ReviewRoute: ReviewRoute,
+  TeachersIdRoute: TeachersIdRoute,
+  TeachersJoinRoute: TeachersJoinRoute,
+  TeachersIndexRoute: TeachersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
