@@ -335,8 +335,11 @@ export type Database = {
           created_at: string
           id: string
           meet_location: string
+          member_no: string
           min_people: number
           nickname: string
+          proposer_name: string
+          proposer_phone: string
           status: string
           theme: string
         }
@@ -347,8 +350,11 @@ export type Database = {
           created_at?: string
           id?: string
           meet_location?: string
+          member_no?: string
           min_people?: number
           nickname?: string
+          proposer_name?: string
+          proposer_phone?: string
           status?: string
           theme: string
         }
@@ -359,8 +365,11 @@ export type Database = {
           created_at?: string
           id?: string
           meet_location?: string
+          member_no?: string
           min_people?: number
           nickname?: string
+          proposer_name?: string
+          proposer_phone?: string
           status?: string
           theme?: string
         }

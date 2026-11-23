@@ -212,6 +212,7 @@ function AdminPage() {
           {data.wishes.map((w) => (
             <div key={w.id} className={`${glass} flex flex-wrap items-center gap-3 p-3 text-sm`}>
               <div className="min-w-0 flex-1"><p className="text-gold-soft"><span className="mr-2 rounded-full border border-primary/50 px-2 text-xs text-primary">{WISH_LABEL[w.status] ?? w.status}</span>{w.theme}{w.nickname && `・${w.nickname}`}{w.contact && `・${w.contact}`}</p>
+                {(w.member_no || w.proposer_name || w.proposer_phone) && <p className="text-xs text-primary">提案人：{[w.member_no && `會員編號 ${w.member_no}`, w.proposer_name, w.proposer_phone].filter(Boolean).join("・")}</p>}
                 <p className="whitespace-pre-line text-muted-foreground">{w.content}</p>
                 {w.meet_location && <p className="text-xs text-muted-foreground">建議集合地點：{w.meet_location}</p>}
                 {w.conditions && <p className="text-xs text-muted-foreground">參與條件／限制：{w.conditions}</p>}

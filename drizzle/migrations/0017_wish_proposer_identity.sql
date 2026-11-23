@@ -1,0 +1,1 @@
+ALTER TABLE public.gathering_wishes ADD COLUMN member_no text NOT NULL DEFAULT '', ADD COLUMN proposer_name text NOT NULL DEFAULT '', ADD COLUMN proposer_phone text NOT NULL DEFAULT '';

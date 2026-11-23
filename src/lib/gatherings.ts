@@ -76,6 +76,9 @@ export const wishSchema = z.object({
   content: z.string().trim().min(2, "請填寫想參加的活動").max(1000),
   nickname: t(50), contact: t(200),
   meet_location: t(300).default(""), conditions: t(500).default(""),
+  member_no: z.string().trim().min(1, "請填寫全球真愛會員編號").max(50),
+  proposer_name: z.string().trim().min(1, "請填寫姓名").max(100),
+  proposer_phone: z.string().trim().regex(/^[0-9+\-\s]{8,20}$/, "請填寫正確電話"),
 });
 export const wishJoinSchema = z.object({
   wish_id: z.string().uuid(), voter_key: z.string().regex(/^[a-zA-Z0-9-]{8,64}$/),

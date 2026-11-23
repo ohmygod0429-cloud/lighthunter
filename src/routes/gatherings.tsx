@@ -327,13 +327,13 @@ function PollCard({ poll, onDone }: { poll: Data["polls"][number]; onDone: () =>
 
 function WishForm() {
   const send = useServerFn(submitWish);
-  const empty = { theme: THEMES[0] as (typeof THEMES)[number], content: "", nickname: "", contact: "", meet_location: "", conditions: "" };
+  const empty = { theme: THEMES[0] as (typeof THEMES)[number], content: "", nickname: "", contact: "", meet_location: "", conditions: "", member_no: "", proposer_name: "", proposer_phone: "" };
   const [f, setF] = useState(empty);
   const [busy, setBusy] = useState(false);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true);
     try { await send({ data: f }); toast.success("已收到您的活動許願，審核通過後會公開"); setF(empty); }
-    catch { toast.error("送出失敗，請填寫想參加的活動"); }
+    catch (err) { toast.error(errMsg(err, "送出失敗，請檢查必填欄位")); }
     finally { setBusy(false); }
   };
   return (
@@ -341,6 +341,12 @@ function WishForm() {
       <h2 className="text-2xl">活動許願</h2>
       <div className="flex flex-wrap gap-2">{THEMES.map((t) => <button key={t} type="button" className={chip(f.theme === t)} onClick={() => setF({ ...f, theme: t })}>{t}</button>)}</div>
       <Textarea required className={field} rows={3} placeholder="想參加什麼樣的聚會？時間、地點都可以寫" value={f.content} onChange={(e) => setF({ ...f, content: e.target.value })} />
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Input required className={field} placeholder="全球真愛會員編號 *" value={f.member_no} onChange={(e) => setF({ ...f, member_no: e.target.value })} />
+        <Input required className={field} placeholder="姓名 *" value={f.proposer_name} onChange={(e) => setF({ ...f, proposer_name: e.target.value })} />
+        <Input required className={field} placeholder="電話號碼 *" inputMode="tel" value={f.proposer_phone} onChange={(e) => setF({ ...f, proposer_phone: e.target.value })} />
+      </div>
+      <p className="text-xs text-muted-foreground">以上資料僅供審核核對，不會公開。</p>
       <div className="grid gap-3 sm:grid-cols-2">
         <Input className={field} placeholder="建議集合地點（選填）" value={f.meet_location} onChange={(e) => setF({ ...f, meet_location: e.target.value })} />
         <Input className={field} placeholder="參與條件／限制（選填）" value={f.conditions} onChange={(e) => setF({ ...f, conditions: e.target.value })} />
