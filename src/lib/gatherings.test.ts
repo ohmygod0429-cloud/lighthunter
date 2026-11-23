@@ -1,6 +1,6 @@
 import { describe, test } from "node:test";
 import { strict as assert } from "node:assert";
-import { canRegister, formedCount, paymentOpen, stillNeeded, gatheringRegistrationSchema, gatheringState, seatsLeft } from "./gatherings";
+import { normPlate, canRegister, formedCount, paymentOpen, stillNeeded, gatheringRegistrationSchema, gatheringState, seatsLeft } from "./gatherings";
 
 describe("gathering rules", () => {
   test("below minimum is 集氣中, reaching it is 已成團, 0 means no minimum", () => {
@@ -30,6 +30,9 @@ describe("gathering rules", () => {
     assert.equal(paymentOpen("open", 500, 10, 10), true);
     assert.equal(paymentOpen("open", 0, 0, 5), false);
   });
+  test("plate match ignores case, spaces, hyphens", () => {
+    assert.equal(normPlate("abc-1234"), normPlate(" ABC 1234 "));
+  });
   test("ride seats: full car has 0 left", () => {
     assert.equal(seatsLeft(2, 1), 1);
     assert.equal(seatsLeft(2, 2), 0);
@@ -37,7 +40,8 @@ describe("gathering rules", () => {
   test("driver/passenger must agree to safety notice", () => {
     const base = { gathering_id: "11111111-1111-4111-8111-111111111111", name: "A", phone: "0912345678", email: "", messenger: "", note: "" };
     assert.equal(gatheringRegistrationSchema.safeParse({ ...base, ride_role: "driver", seats: 2, ride_meet_location: "台北車站" }).success, false);
-    assert.equal(gatheringRegistrationSchema.safeParse({ ...base, ride_role: "driver", seats: 2, ride_meet_location: "台北車站", agree_ride_safety: true }).success, true);
+    assert.equal(gatheringRegistrationSchema.safeParse({ ...base, ride_role: "driver", seats: 2, ride_meet_location: "台北車站", agree_ride_safety: true, license_plate: "abc-1234" }).success, true);
+    assert.equal(gatheringRegistrationSchema.safeParse({ ...base, ride_role: "driver", seats: 2, ride_meet_location: "台北車站", agree_ride_safety: true }).success, false);
     assert.equal(gatheringRegistrationSchema.safeParse({ ...base, ride_role: "passenger", agree_ride_safety: true }).success, false);
   });
 });

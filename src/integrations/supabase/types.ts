@@ -185,6 +185,7 @@ export type Database = {
           email: string
           gathering_id: string
           id: string
+          license_plate: string
           messenger: string
           name: string
           note: string
@@ -205,6 +206,7 @@ export type Database = {
           email?: string
           gathering_id: string
           id?: string
+          license_plate?: string
           messenger?: string
           name: string
           note?: string
@@ -225,6 +227,7 @@ export type Database = {
           email?: string
           gathering_id?: string
           id?: string
+          license_plate?: string
           messenger?: string
           name?: string
           note?: string

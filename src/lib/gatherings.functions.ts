@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { TEACHER_PHOTO_BUCKET } from "./academy";
-import { canRegister, normPhone, paymentOpen, seatsLeft, wishJoinSchema, gatheringRegistrationSchema, gatheringSchema, performerSchema, pollSchema, voteSchema, wishSchema, WISH_STATUSES } from "./gatherings";
+import { canRegister, normPhone, normPlate, paymentOpen, seatsLeft, wishJoinSchema, gatheringRegistrationSchema, gatheringSchema, performerSchema, pollSchema, voteSchema, wishSchema, WISH_STATUSES } from "./gatherings";
 
 async function admin() {
   return (await import("@/integrations/supabase/client.server")).supabaseAdmin;
@@ -90,8 +90,8 @@ export const registerGathering = createServerFn({ method: "POST" })
     if (data.ride_role !== "none" && !g.rideshare_enabled) throw new Error("此活動未開放順道搭乘");
     const driver_code = data.ride_role === "driver" ? String(crypto.getRandomValues(new Uint32Array(1))[0]! % 900000 + 100000) : "";
     const row = data.ride_role === "driver" ? { ...data, ride_driver_id: null, driver_code }
-      : data.ride_role === "passenger" ? { ...data, seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "" }
-      : { ...data, seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "", ride_driver_id: null, agree_ride_safety: false };
+      : data.ride_role === "passenger" ? { ...data, seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "", license_plate: "" }
+      : { ...data, license_plate: "", seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "", ride_driver_id: null, agree_ride_safety: false };
     const { error } = await sb.from("gathering_registrations").insert(row);
     if (error) throw new Error(error.message.includes("seats full") ? "這台車已滿座，請選擇其他車主" : "報名失敗，請稍後再試");
     const pay = paymentOpen(g.status, g.fee, g.min_people, (count ?? 0) + 1);
@@ -99,15 +99,14 @@ export const registerGathering = createServerFn({ method: "POST" })
     return { ok: true, fee: g.fee, pay_open: pay, payment_url: pay ? g.payment_url : "", payment_note: pay ? g.payment_note : "", payment_qr_url: qr, driver_code };
   });
 
-/** 車主自助查詢：以登記時的電話、LINE ID 或專屬查詢碼核對，只回傳自己車上的乘客 */
+/** 車主自助查詢：以登記的車牌號碼核對，只回傳該車的乘客 */
 export const getMyPassengers = createServerFn({ method: "POST" })
-  .inputValidator((i) => z.object({ gathering_id: z.string().uuid(), credential: z.string().trim().min(4).max(100) }).parse(i))
+  .inputValidator((i) => z.object({ gathering_id: z.string().uuid(), credential: z.string().trim().min(2).max(30) }).parse(i))
   .handler(async ({ data }) => {
     const sb = await admin();
-    const { data: drivers } = await sb.from("gathering_registrations").select("id,phone,messenger,driver_code").eq("gathering_id", data.gathering_id).eq("ride_role", "driver");
-    const norm = (v: string) => v.replace(/[\s-]/g, "").toLowerCase();
-    const c = norm(data.credential);
-    const mine = (drivers ?? []).filter((d) => [d.phone, d.messenger, d.driver_code].some((v) => v && norm(v) === c)).map((d) => d.id);
+    const { data: drivers } = await sb.from("gathering_registrations").select("id,license_plate").eq("gathering_id", data.gathering_id).eq("ride_role", "driver");
+    const c = normPlate(data.credential);
+    const mine = c.length >= 4 ? (drivers ?? []).filter((d) => d.license_plate && normPlate(d.license_plate) === c).map((d) => d.id) : [];
     if (!mine.length) return { found: false, passengers: [] as { name: string; phone: string; messenger: string }[] };
     const { data: ps } = await sb.from("gathering_registrations").select("name,phone,messenger").in("ride_driver_id", mine).order("created_at");
     return { found: true, passengers: ps ?? [] };

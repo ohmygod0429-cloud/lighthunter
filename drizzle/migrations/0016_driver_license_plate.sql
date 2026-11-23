@@ -1,0 +1,1 @@
+ALTER TABLE public.gathering_registrations ADD COLUMN license_plate text NOT NULL DEFAULT '';

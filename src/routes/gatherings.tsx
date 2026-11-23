@@ -229,7 +229,7 @@ function RideSection({ g }: { g: G }) {
       {open.length > 0 && <p className="text-xs leading-relaxed text-muted-foreground">{SAFETY}</p>}
       <button type="button" className="text-xs text-primary underline-offset-4 hover:underline" onClick={() => setShow((v) => !v)}>車主查看乘客名單</button>
       {show && <form onSubmit={check} className="space-y-2">
-        <Input required className={field} placeholder="登記時的電話、LINE ID 或專屬查詢碼" value={cred} onChange={(e) => { setCred(e.target.value); setRes(null); }} />
+        <Input required className={field} placeholder="請輸入登記的車牌號碼" value={cred} onChange={(e) => { setCred(e.target.value); setRes(null); }} />
         <Button type="submit" size="sm" variant="outline" className="rounded-full border-primary/50 text-primary">核對</Button>
         {res && !res.found && <p className="text-xs text-muted-foreground">查無符合的車主資料</p>}
         {res?.found && (res.passengers.length ? res.passengers.map((p, i) => <p key={i} className="text-sm text-gold-soft">{p.name}・{p.phone}{p.messenger && `・LINE ${p.messenger}`}</p>) : <p className="text-xs text-muted-foreground">目前尚無乘客登記</p>)}
@@ -240,7 +240,7 @@ function RideSection({ g }: { g: G }) {
 
 function RegisterDialog({ open, onOpenChange, g, onDone }: { open: boolean; onOpenChange: (o: boolean) => void; g: G; onDone: () => void }) {
   const send = useServerFn(registerGathering);
-  const empty = { name: "", phone: "", email: "", messenger: "", note: "", ride_role: "none" as "none" | "driver" | "passenger", seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "", ride_driver_id: null as string | null, agree_ride_safety: false };
+  const empty = { name: "", phone: "", email: "", messenger: "", note: "", ride_role: "none" as "none" | "driver" | "passenger", seats: 0, ride_meet_location: "", ride_meet_time: "", ride_conditions: "", ride_driver_id: null as string | null, agree_ride_safety: false, license_plate: "" };
   const [f, setF] = useState(empty);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
@@ -260,7 +260,7 @@ function RegisterDialog({ open, onOpenChange, g, onDone }: { open: boolean; onOp
         {done ? (
           <div className="space-y-3 text-sm">
             <p className="text-gold-soft">報名成功，我們會與您聯繫確認。</p>
-            {code && <p className="rounded-xl border border-primary/40 p-3">您的車主專屬查詢碼：<span className="text-lg text-primary">{code}</span><br /><span className="text-xs text-muted-foreground">請截圖保存，可在活動詳情「車主查看我的乘客名單」輸入查詢（也可用登記的電話或 LINE ID）。</span></p>}
+            {code && <p className="rounded-xl border border-primary/40 p-3 text-xs text-muted-foreground">之後可在活動詳情「車主查看乘客名單」輸入車牌號碼，查看您車上的乘客。</p>}
             {g.fee > 0 && <p>費用 NT$ {g.fee.toLocaleString()}</p>}
             {g.fee > 0 && !pay && <p className="text-muted-foreground">尚未成團，報名人數達門檻後會開放付款，請先不用付款。</p>}
             {pay && <PayBlock url={pay.payment_url} note={pay.payment_note} qr={pay.payment_qr_url} />}
@@ -277,6 +277,7 @@ function RegisterDialog({ open, onOpenChange, g, onDone }: { open: boolean; onOp
               <label className="flex items-center gap-2"><input type="checkbox" checked={f.ride_role === "driver"} onChange={(e) => setF({ ...f, ride_role: e.target.checked ? "driver" : "none", ride_driver_id: null, seats: e.target.checked ? 1 : 0 })} />我有車，願意順道載人</label>
               {f.ride_role === "driver" && <>
                 <div><p className="mb-1 text-xs text-gold-soft">可提供座位數上限 *</p><select className={field} value={f.seats} onChange={(e) => setF({ ...f, seats: Number(e.target.value) })}>{[1, 2, 3, 4, 5, 6].map((n) => <option key={n} value={n}>{n} 人</option>)}</select></div>
+                <Input required className={field} placeholder="車牌號碼 *（用於查看您的乘客名單）" value={f.license_plate} onChange={(e) => setF({ ...f, license_plate: e.target.value })} />
                 <Input required className={field} placeholder="順道集合地點 *（會附 Google 地圖連結）" value={f.ride_meet_location} onChange={(e) => setF({ ...f, ride_meet_location: e.target.value })} />
                 <div><p className="mb-1 text-xs text-gold-soft">集合時間</p><Input type="time" className={field} value={f.ride_meet_time} onChange={(e) => setF({ ...f, ride_meet_time: e.target.value })} /></div>
                 <Input className={field} placeholder="搭乘條件／限制（例：不抽菸、可載小型犬、分攤油資）" value={f.ride_conditions} onChange={(e) => setF({ ...f, ride_conditions: e.target.value })} />

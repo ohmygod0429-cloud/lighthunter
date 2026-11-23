@@ -48,12 +48,14 @@ export const gatheringRegistrationSchema = z.object({
   ride_meet_location: t(300).default(""), ride_meet_time: time.default(""), ride_conditions: t(500).default(""),
   ride_driver_id: z.string().uuid().nullable().default(null),
   agree_ride_safety: z.boolean().default(false),
+  license_plate: t(20).default(""),
 }).superRefine((v, ctx) => {
   const bad = (message: string) => ctx.addIssue({ code: "custom", message });
   if (v.ride_role !== "none" && !v.agree_ride_safety) bad("請勾選同意順道搭乘安全提醒");
   if (v.ride_role === "driver") {
     if (v.seats < 1) bad("請填寫可提供座位數");
     if (!v.ride_meet_location) bad("請填寫集合地點");
+    if (normPlate(v.license_plate).length < 4) bad("請填寫車牌號碼");
   }
   if (v.ride_role === "passenger" && !v.ride_driver_id) bad("請選擇要搭乘的車主");
 });
@@ -85,6 +87,9 @@ export const wishJoinSchema = z.object({
 export const normPhone = (v: string) => v.replace(/[\s-]/g, "");
 export const WISH_STATUSES = ["pending", "approved", "rejected"] as const;
 export const WISH_LABEL: Record<string, string> = { pending: "待審核", approved: "已核准公開", rejected: "已駁回／隱藏" };
+
+/** 車牌比對：忽略大小寫、空白、連字號 */
+export const normPlate = (v: string) => v.replace(/[\s\-_.]/g, "").toUpperCase();
 
 /** 順道搭乘剩餘座位（不會小於 0） */
 export function seatsLeft(seats: number, taken: number) {
