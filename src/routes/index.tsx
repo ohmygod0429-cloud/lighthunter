@@ -108,7 +108,7 @@ function Index() {
         </div>
       </section>
 
-      <VideoSlot slotId="home-hero" title="品牌形象影片" className="pt-16" />
+      <VideoSlot slotId="home-hero" title="為什麼要創立獵光者未來俱樂部?" className="pt-16" />
 
       {/* 2. 痛點對比 */}
       <section className="starburst mx-auto max-w-7xl px-5 py-24">
