@@ -16,6 +16,8 @@ import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ConsultRouteImport } from './routes/consult'
 import { Route as DimensionsRouteImport } from './routes/dimensions'
 import { Route as FoundingRouteImport } from './routes/founding'
+import { Route as GatheringsRouteImport } from './routes/gatherings'
+import { Route as GatheringsAdminRouteImport } from './routes/gatherings-admin'
 import { Route as NetworkRouteImport } from './routes/network'
 import { Route as QaRouteImport } from './routes/qa'
 import { Route as ReserveRouteImport } from './routes/reserve'
@@ -58,6 +60,16 @@ const DimensionsRoute = DimensionsRouteImport.update({
 const FoundingRoute = FoundingRouteImport.update({
   id: '/founding',
   path: '/founding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GatheringsRoute = GatheringsRouteImport.update({
+  id: '/gatherings',
+  path: '/gatherings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GatheringsAdminRoute = GatheringsAdminRouteImport.update({
+  id: '/gatherings-admin',
+  path: '/gatherings-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NetworkRoute = NetworkRouteImport.update({
@@ -109,6 +121,8 @@ export interface FileRoutesByFullPath {
   '/consult': typeof ConsultRoute
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
+  '/gatherings': typeof GatheringsRoute
+  '/gatherings-admin': typeof GatheringsAdminRoute
   '/network': typeof NetworkRoute
   '/qa': typeof QaRoute
   '/reserve': typeof ReserveRouteWithChildren
@@ -126,6 +140,8 @@ export interface FileRoutesByTo {
   '/consult': typeof ConsultRoute
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
+  '/gatherings': typeof GatheringsRoute
+  '/gatherings-admin': typeof GatheringsAdminRoute
   '/network': typeof NetworkRoute
   '/qa': typeof QaRoute
   '/reserve': typeof ReserveRouteWithChildren
@@ -144,6 +160,8 @@ export interface FileRoutesById {
   '/consult': typeof ConsultRoute
   '/dimensions': typeof DimensionsRoute
   '/founding': typeof FoundingRoute
+  '/gatherings': typeof GatheringsRoute
+  '/gatherings-admin': typeof GatheringsAdminRoute
   '/network': typeof NetworkRoute
   '/qa': typeof QaRoute
   '/reserve': typeof ReserveRouteWithChildren
@@ -163,6 +181,8 @@ export interface FileRouteTypes {
     | '/consult'
     | '/dimensions'
     | '/founding'
+    | '/gatherings'
+    | '/gatherings-admin'
     | '/network'
     | '/qa'
     | '/reserve'
@@ -180,6 +200,8 @@ export interface FileRouteTypes {
     | '/consult'
     | '/dimensions'
     | '/founding'
+    | '/gatherings'
+    | '/gatherings-admin'
     | '/network'
     | '/qa'
     | '/reserve'
@@ -197,6 +219,8 @@ export interface FileRouteTypes {
     | '/consult'
     | '/dimensions'
     | '/founding'
+    | '/gatherings'
+    | '/gatherings-admin'
     | '/network'
     | '/qa'
     | '/reserve'
@@ -215,6 +239,8 @@ export interface RootRouteChildren {
   ConsultRoute: typeof ConsultRoute
   DimensionsRoute: typeof DimensionsRoute
   FoundingRoute: typeof FoundingRoute
+  GatheringsRoute: typeof GatheringsRoute
+  GatheringsAdminRoute: typeof GatheringsAdminRoute
   NetworkRoute: typeof NetworkRoute
   QaRoute: typeof QaRoute
   ReserveRoute: typeof ReserveRouteWithChildren
@@ -273,6 +299,20 @@ declare module '@tanstack/react-router' {
       path: '/founding'
       fullPath: '/founding'
       preLoaderRoute: typeof FoundingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gatherings': {
+      id: '/gatherings'
+      path: '/gatherings'
+      fullPath: '/gatherings'
+      preLoaderRoute: typeof GatheringsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gatherings-admin': {
+      id: '/gatherings-admin'
+      path: '/gatherings-admin'
+      fullPath: '/gatherings-admin'
+      preLoaderRoute: typeof GatheringsAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/network': {
@@ -353,6 +393,8 @@ const rootRouteChildren: RootRouteChildren = {
   ConsultRoute: ConsultRoute,
   DimensionsRoute: DimensionsRoute,
   FoundingRoute: FoundingRoute,
+  GatheringsRoute: GatheringsRoute,
+  GatheringsAdminRoute: GatheringsAdminRoute,
   NetworkRoute: NetworkRoute,
   QaRoute: QaRoute,
   ReserveRoute: ReserveRouteWithChildren,

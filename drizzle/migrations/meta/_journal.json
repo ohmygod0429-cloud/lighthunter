@@ -85,6 +85,13 @@
       "when": 1795422393981,
       "tag": "0011_teacher_photos_private",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795432183255,
+      "tag": "0012_gatherings_events_polls",
+      "breakpoints": true
     }
   ]
 }

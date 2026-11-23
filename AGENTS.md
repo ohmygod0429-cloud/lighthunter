@@ -17,3 +17,4 @@
 - Prepare application photos server-side using validated image type/size and generated paths with non-overwriting signed upload capabilities; this preserves public applications without granting anonymous bucket writes.
 - Validate application submissions against existing required fields, formats and commitments both in the shared schema and insert policy; this rejects malformed direct writes without restricting legitimate public applicants.
 - Persist original VideoSlot URLs in reserved `legacy-<slotId>` section_media rows through the existing secret-validated writer; this makes videos visible across browsers without replacing introduction videos or attachments.
+- Gatherings (dimension 06) data lives in server-only tables accessed through passcode-checked server functions; performer photos reuse the private teacher-photos bucket.

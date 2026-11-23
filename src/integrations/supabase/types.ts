@@ -114,6 +114,243 @@ export type Database = {
           },
         ]
       }
+      gathering_poll_options: {
+        Row: {
+          end_time: string
+          id: string
+          option_date: string
+          poll_id: string
+          start_time: string
+        }
+        Insert: {
+          end_time?: string
+          id?: string
+          option_date: string
+          poll_id: string
+          start_time?: string
+        }
+        Update: {
+          end_time?: string
+          id?: string
+          option_date?: string
+          poll_id?: string
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gathering_poll_options_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "gathering_polls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gathering_polls: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          is_open: boolean
+          region: string
+          theme: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_open?: boolean
+          region?: string
+          theme: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_open?: boolean
+          region?: string
+          theme?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      gathering_registrations: {
+        Row: {
+          attended: boolean
+          created_at: string
+          email: string
+          gathering_id: string
+          id: string
+          messenger: string
+          name: string
+          note: string
+          paid: boolean
+          phone: string
+        }
+        Insert: {
+          attended?: boolean
+          created_at?: string
+          email?: string
+          gathering_id: string
+          id?: string
+          messenger?: string
+          name: string
+          note?: string
+          paid?: boolean
+          phone: string
+        }
+        Update: {
+          attended?: boolean
+          created_at?: string
+          email?: string
+          gathering_id?: string
+          id?: string
+          messenger?: string
+          name?: string
+          note?: string
+          paid?: boolean
+          phone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gathering_registrations_gathering_id_fkey"
+            columns: ["gathering_id"]
+            isOneToOne: false
+            referencedRelation: "gatherings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gathering_votes: {
+        Row: {
+          created_at: string
+          id: string
+          option_id: string
+          voter_key: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          option_id: string
+          voter_key: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          option_id?: string
+          voter_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gathering_votes_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "gathering_poll_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gathering_wishes: {
+        Row: {
+          contact: string
+          content: string
+          created_at: string
+          id: string
+          nickname: string
+          theme: string
+        }
+        Insert: {
+          contact?: string
+          content: string
+          created_at?: string
+          id?: string
+          nickname?: string
+          theme: string
+        }
+        Update: {
+          contact?: string
+          content?: string
+          created_at?: string
+          id?: string
+          nickname?: string
+          theme?: string
+        }
+        Relationships: []
+      }
+      gatherings: {
+        Row: {
+          capacity: number
+          created_at: string
+          description: string
+          end_time: string
+          event_date: string
+          fee: number
+          id: string
+          is_published: boolean
+          location: string
+          map_url: string
+          min_people: number
+          payment_note: string
+          payment_url: string
+          performer_ids: string[]
+          perks: string
+          region: string
+          start_time: string
+          status: string
+          status_note: string
+          theme: string
+          title: string
+        }
+        Insert: {
+          capacity?: number
+          created_at?: string
+          description?: string
+          end_time?: string
+          event_date: string
+          fee?: number
+          id?: string
+          is_published?: boolean
+          location?: string
+          map_url?: string
+          min_people?: number
+          payment_note?: string
+          payment_url?: string
+          performer_ids?: string[]
+          perks?: string
+          region: string
+          start_time?: string
+          status?: string
+          status_note?: string
+          theme: string
+          title: string
+        }
+        Update: {
+          capacity?: number
+          created_at?: string
+          description?: string
+          end_time?: string
+          event_date?: string
+          fee?: number
+          id?: string
+          is_published?: boolean
+          location?: string
+          map_url?: string
+          min_people?: number
+          payment_note?: string
+          payment_url?: string
+          performer_ids?: string[]
+          perks?: string
+          region?: string
+          start_time?: string
+          status?: string
+          status_note?: string
+          theme?: string
+          title?: string
+        }
+        Relationships: []
+      }
       membership_applications: {
         Row: {
           agree_chatham: boolean
@@ -195,6 +432,36 @@ export type Database = {
           referrer?: string | null
           revenue_band?: string
           title_company?: string
+        }
+        Relationships: []
+      }
+      performers: {
+        Row: {
+          created_at: string
+          id: string
+          is_published: boolean
+          kind: string
+          name: string
+          photo_path: string
+          summary: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          kind?: string
+          name: string
+          photo_path?: string
+          summary?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          kind?: string
+          name?: string
+          photo_path?: string
+          summary?: string
         }
         Relationships: []
       }
