@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Store section external links in the shared Cloud table, with public read-only access and server-side secret validation for writes; browser admin mode only controls editor visibility.
+- Reuse the external-links editor for all video slots and individual dimension panels so limits, validation, and empty-state behavior stay consistent.

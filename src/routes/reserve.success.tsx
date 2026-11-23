@@ -13,6 +13,8 @@ export const Route = createFileRoute("/reserve/success")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "預約成功｜專屬引路人將與你聯繫" },
       {
         name: "description",

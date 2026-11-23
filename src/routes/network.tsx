@@ -6,6 +6,8 @@ import clubLounge from "@/assets/club-lounge.jpg";
 export const Route = createFileRoute("/network")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "人脈變現與人才精準媒合｜頂級共生未來生態圈" },
       {
         name: "description",

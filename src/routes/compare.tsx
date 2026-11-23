@@ -5,6 +5,8 @@ import { compareRows } from "@/data/ecosystem";
 export const Route = createFileRoute("/compare")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "降維打擊對比表與 ROI｜頂級共生未來生態圈" },
       {
         name: "description",

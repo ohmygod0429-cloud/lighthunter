@@ -9,6 +9,8 @@ import { pillars, vettingSteps } from "@/data/pillars";
 export const Route = createFileRoute("/apply")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "申請入會席次審核｜獵光者 未來俱樂部" },
       {
         name: "description",

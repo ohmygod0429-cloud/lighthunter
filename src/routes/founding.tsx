@@ -6,6 +6,8 @@ import { FoundingCountdown } from "@/components/founding-countdown";
 export const Route = createFileRoute("/founding")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "創始會員限時禮遇與世代傳承｜頂級共生未來生態圈" },
       {
         name: "description",

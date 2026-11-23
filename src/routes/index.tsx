@@ -11,6 +11,8 @@ import { VideoSlot } from "@/components/video-slot";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "獵光者 未來俱樂部｜全球頂級生命生態圈・席次審核制" },
       {
         name: "description",

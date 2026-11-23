@@ -2,10 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { VideoSlot } from "@/components/video-slot";
 import { useState } from "react";
 import { dimensions } from "@/data/ecosystem";
+import { SectionExternalLinks } from "@/components/section-external-links";
 
 export const Route = createFileRoute("/dimensions")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "八大頂級維度藍圖｜獵光者 未來俱樂部" },
       {
         name: "description",
@@ -34,15 +37,13 @@ function DimensionsPage() {
         {dimensions.map((d) => {
           const open = active === d.no;
           return (
-            <button
+            <article
               key={d.no}
-              type="button"
-              onClick={() => setActive(d.no)}
-              aria-expanded={open}
               className={`glass-card rounded-2xl p-6 text-left transition-all hover:-translate-y-1 ${
                 open ? "shadow-glow" : "shadow-lux"
               }`}
             >
+              <button type="button" className="block w-full text-left" onClick={() => setActive(d.no)} aria-expanded={open}>
               <div className="flex items-center justify-between">
                 <d.icon className={`size-6 ${open ? "text-primary" : "text-gold-soft"}`} />
                 <span className="font-display text-sm text-muted-foreground">{d.no}</span>
@@ -61,6 +62,8 @@ function DimensionsPage() {
                 </div>
               )}
             </button>
+            {open && <SectionExternalLinks slotId={`dimension-${d.no}`} />}
+            </article>
           );
         })}
       </div>

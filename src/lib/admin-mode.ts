@@ -3,6 +3,15 @@ import { useCallback, useEffect, useState } from "react";
 const ADMIN_KEY = "sfe-admin-unlocked";
 const ADMIN_PASSCODE = "0429";
 const EVENT = "sfe-admin-change";
+let enteredAdminPasscode = "";
+
+export function getEnteredAdminPasscode() {
+  return enteredAdminPasscode;
+}
+
+export function rememberAdminPasscode(passcode: string) {
+  enteredAdminPasscode = passcode;
+}
 
 export function isAdminUnlocked() {
   if (typeof window === "undefined") return false;
@@ -11,12 +20,14 @@ export function isAdminUnlocked() {
 
 export function unlockAdmin(passcode: string) {
   if (passcode.trim() !== ADMIN_PASSCODE) return false;
+  enteredAdminPasscode = passcode.trim();
   window.localStorage.setItem(ADMIN_KEY, "1");
   window.dispatchEvent(new Event(EVENT));
   return true;
 }
 
 export function lockAdmin() {
+  enteredAdminPasscode = "";
   window.localStorage.removeItem(ADMIN_KEY);
   window.dispatchEvent(new Event(EVENT));
 }

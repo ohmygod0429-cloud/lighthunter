@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { pillars } from "@/data/pillars";
+import { SectionExternalLinks } from "@/components/section-external-links";
 
 export function PillarMatrix() {
   const [open, setOpen] = useState<string | null>("01");
@@ -54,6 +55,7 @@ export function PillarMatrix() {
                 <p className="mt-4 text-[11px] tracking-[0.18em] text-muted-foreground">
                   證明元素・{p.proof}
                 </p>
+                <SectionExternalLinks slotId={`pillar-${p.no}`} />
               </div>
             )}
           </article>

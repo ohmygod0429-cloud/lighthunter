@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Film, Link2, Trash2 } from "lucide-react";
 import { useAdminMode, useVideoUrl, toEmbedUrl } from "@/lib/admin-mode";
+import { SectionExternalLinks } from "@/components/section-external-links";
 
 type Props = {
   /** 每個區塊唯一的識別碼 */
@@ -19,7 +20,11 @@ export function VideoSlot({ slotId, title = "區塊影片", className = "" }: Pr
   const embed = toEmbedUrl(url);
 
   // 訪客且尚未設定影片時，完全不顯示這個區塊
-  if (!admin && embed.kind === "none") return null;
+  if (!admin && embed.kind === "none") return (
+    <div className={`mx-auto max-w-4xl px-5 ${className} empty:hidden`}>
+      <SectionExternalLinks slotId={slotId} />
+    </div>
+  );
 
   return (
     <section className={`mx-auto max-w-4xl px-5 ${className}`}>
@@ -82,6 +87,7 @@ export function VideoSlot({ slotId, title = "區塊影片", className = "" }: Pr
           </p>
         )}
       </div>
+      <SectionExternalLinks slotId={slotId} />
     </section>
   );
 }

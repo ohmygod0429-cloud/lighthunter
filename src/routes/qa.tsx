@@ -6,6 +6,8 @@ import { VideoSlot } from "@/components/video-slot";
 export const Route = createFileRoute("/qa")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "常見問題 Q&A｜獵光者生態圈" },
       {
         name: "description",

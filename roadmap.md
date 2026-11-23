@@ -1,0 +1,3 @@
+- [x] Implement and verify external links on the pain comparison section.
+- [x] Apply external links to existing video sections and eight individual pillars.
+- [x] Verify saving, visibility, deletion, limits, external navigation, and mobile layout.

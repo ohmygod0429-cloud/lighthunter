@@ -29,6 +29,13 @@
       "when": 1790079754424,
       "tag": "0003_add_referrer_to_membership_applications",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795413699480,
+      "tag": "0004_section_external_links",
+      "breakpoints": true
     }
   ]
 }

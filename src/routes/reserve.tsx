@@ -11,6 +11,8 @@ import { useAdminMode, useSectionVisible } from "@/lib/admin-mode";
 export const Route = createFileRoute("/reserve")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "立即卡位創始會員｜預約專屬引路人一對一對接" },
       {
         name: "description",
