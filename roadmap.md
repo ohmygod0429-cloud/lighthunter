@@ -5,4 +5,5 @@
 - [x] Verify video playback, file viewing, saving, clearing, and existing links on mobile.
 - [x] Repair original video saving across browsers and verify the current dimensions section for visitors.
 - [x] Tighten the selected membership application insert policy and verify public submission.
-- [ ] Apply and verify the two selected storage restrictions; protected upload/download code is prepared, awaiting user permission because the live site must be republished for these flows.
+- [x] Apply and verify the two selected storage restrictions and protected visitor file access.
+- [x] Restrict public section settings to published content and verify saved, cleared, and unpublished states.

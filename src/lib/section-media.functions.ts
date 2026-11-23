@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import { MAX_MEDIA_BYTES, MEDIA_BUCKET, mediaSchema, publishedMedia, publishedSectionPaths, uploadType } from "./section-media";
+import { MAX_MEDIA_BYTES, MEDIA_BUCKET, hasPublishedMedia, mediaSchema, publishedMedia, publishedSectionPaths, uploadType } from "./section-media";
 
 const identity = z.object({ slotId: z.string().regex(/^[a-z0-9-]{1,80}$/), passcode: z.string().min(1).max(128) });
 
@@ -64,7 +64,7 @@ export const saveSectionMedia = createServerFn({ method: "POST" })
     }
     const { data: old, error: readError } = await supabaseAdmin.from("section_media").select("video_path,file_path").eq("slot_id", data.slotId).maybeSingle();
     if (readError) throw new Error("無法讀取原有檔案");
-    const { error } = await supabaseAdmin.from("section_media").upsert({ slot_id: data.slotId, ...media, updated_at: new Date().toISOString() });
+    const { error } = await supabaseAdmin.from("section_media").upsert({ slot_id: data.slotId, ...media, is_published: hasPublishedMedia(media), updated_at: new Date().toISOString() });
     if (error) throw new Error("儲存失敗，請稍後再試");
     const retired = [old?.video_path, old?.file_path].filter((path): path is string => Boolean(path && path !== media.video_path && path !== media.file_path));
     if (retired.length) await supabaseAdmin.storage.from(MEDIA_BUCKET).remove(retired);

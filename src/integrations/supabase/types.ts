@@ -148,16 +148,19 @@ export type Database = {
       }
       section_external_links: {
         Row: {
+          is_published: boolean
           links: Json
           slot_id: string
           updated_at: string
         }
         Insert: {
+          is_published?: boolean
           links?: Json
           slot_id: string
           updated_at?: string
         }
         Update: {
+          is_published?: boolean
           links?: Json
           slot_id?: string
           updated_at?: string
@@ -169,6 +172,7 @@ export type Database = {
           file_name: string
           file_path: string
           file_title: string
+          is_published: boolean
           slot_id: string
           updated_at: string
           video_path: string
@@ -179,6 +183,7 @@ export type Database = {
           file_name?: string
           file_path?: string
           file_title?: string
+          is_published?: boolean
           slot_id: string
           updated_at?: string
           video_path?: string
@@ -189,6 +194,7 @@ export type Database = {
           file_name?: string
           file_path?: string
           file_title?: string
+          is_published?: boolean
           slot_id?: string
           updated_at?: string
           video_path?: string

@@ -27,6 +27,9 @@ export const mediaSchema = z.object({
   file_title: z.string().trim().max(200), file_path: z.string().max(240), file_name: z.string().max(200),
 }).refine((m) => !m.video_url || Boolean(videoSource(m.video_url)), "請填入 YouTube、Vimeo 或 MP4／WebM／Ogg 影片網址");
 export type SectionMedia = z.infer<typeof mediaSchema>;
+export function hasPublishedMedia(media: SectionMedia) {
+  return Boolean(media.video_url || media.video_path || media.file_path);
+}
 
 export function videoSource(raw: string): { kind: "file" | "iframe"; src: string } | null {
   if (!isExternalUrl(raw)) return null;

@@ -57,6 +57,20 @@
       "when": 1795419008822,
       "tag": "0007_validate_public_membership_applications",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1795419217808,
+      "tag": "0008_publish_only_approved_section_content",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795419244028,
+      "tag": "0009_replace_direct_storage_access_with_capabilities",
+      "breakpoints": true
     }
   ]
 }

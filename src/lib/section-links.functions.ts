@@ -14,11 +14,13 @@ export const saveSectionLinks = createServerFn({ method: "POST" })
     const expected = process.env["ADMIN_REVIEW_PASSCODE"];
     if (!expected || data.passcode.trim() !== expected) throw new Error("管理者密碼不正確");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const links = visibleLinks(data.links);
     const { error } = await supabaseAdmin.from("section_external_links").upsert({
       slot_id: data.slotId,
-      links: visibleLinks(data.links),
+      links,
+      is_published: links.length > 0,
       updated_at: new Date().toISOString(),
     });
     if (error) throw new Error("儲存失敗，請稍後再試");
-    return visibleLinks(data.links);
+    return links;
   });

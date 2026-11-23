@@ -11,6 +11,10 @@ describe("section external links", () => {
     assert.deepEqual(visibleLinks([{ title: "", url: "" }, { title: "標題", url: "" }, { title: "", url: "https://example.com" }, { title: "官網", url: "https://example.com" }]), [{ title: "官網", url: "https://example.com" }]);
     assert.deepEqual(visibleLinks([]), []);
   });
+  test("publication requires at least one complete valid link", () => {
+    assert.equal(visibleLinks([{ title: "尚未填好", url: "" }]).length > 0, false);
+    assert.equal(visibleLinks([{ title: "官網", url: "https://example.com" }]).length > 0, true);
+  });
   test("websites, Facebook, articles and videos are external URLs", () => {
     for (const url of ["https://facebook.com/posts/123", "https://example.com/article", "https://youtube.com/watch?v=123", "https://example.com/video.mp4", "http://example.com"]) assert.equal(isExternalUrl(url), true);
   });

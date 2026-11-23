@@ -1,9 +1,15 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
-import { emptyMedia, legacyVideoSlotId, mediaSchema, publishedMedia, publishedSectionPaths, uploadType, videoSource } from "./section-media";
+import { emptyMedia, hasPublishedMedia, legacyVideoSlotId, mediaSchema, publishedMedia, publishedSectionPaths, uploadType, videoSource } from "./section-media";
 
 test("an unset or cleared introduction video is entirely hidden", () => {
   assert.deepEqual(publishedMedia({ ...emptyMedia, video_title: "介紹" }), emptyMedia);
+});
+test("only saved sources publish media, without requiring titles", () => {
+  assert.equal(hasPublishedMedia(emptyMedia), false);
+  assert.equal(hasPublishedMedia({ ...emptyMedia, video_title: "標題而已" }), false);
+  assert.equal(hasPublishedMedia({ ...emptyMedia, video_url: "https://youtu.be/_SwIq-pwkS4" }), true);
+  assert.equal(hasPublishedMedia({ ...emptyMedia, file_path: "pillar-01/file/12345678-1234-4234-8234-123456789abc.pdf" }), true);
 });
 test("original section videos have a separate shared storage slot", () => {
   assert.equal(legacyVideoSlotId("dimensions-page"), "legacy-dimensions-page");
