@@ -13,7 +13,7 @@ export type Dimension = {
 export const dimensions: Dimension[] = [
   {
     no: "01",
-    title: "泰國皇室御用品牌終身會員 7 折",
+    title: "泰國皇室御用品牌終身會員尊享",
     tagline: "元首級保養與保健，終身 7 折",
     en: "ROYAL BEAUTY & WELLNESS PRIVILEGE",
     detail:
