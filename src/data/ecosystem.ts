@@ -14,7 +14,7 @@ export const dimensions: Dimension[] = [
   {
     no: "01",
     title: "泰國皇室御用品牌終身會員尊享",
-    tagline: "元首級保養與保健，終身 7 折",
+    tagline: "元首級保養與保健，終身折扣與回饋",
     en: "ROYAL BEAUTY & WELLNESS PRIVILEGE",
     detail:
       "享用世界元首級的頂級保養與保健，肌膚與健康一步到位，再享終身 7 折尊榮特權。\n「健康是基石，外在是財富與人脈。」",
