@@ -73,7 +73,7 @@ function DimensionsPage() {
             )}
             {open && d.no === "06" && (
               <div className="mt-4 flex flex-wrap gap-2 text-sm">
-                <Link to="/gatherings" className="rounded-full bg-gold-gradient px-4 py-1.5 text-primary-foreground">活動行事曆與投票</Link>
+                <Link to="/gatherings" className="rounded-full bg-gold-gradient px-4 py-1.5 text-primary-foreground">活動行事曆與集氣中的活動</Link>
                 {admin && <Link to="/gatherings-admin" className="rounded-full border border-border/70 px-4 py-1.5 text-muted-foreground">聚會後台</Link>}
               </div>
             )}
