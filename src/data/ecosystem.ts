@@ -29,7 +29,7 @@ export const dimensions: Dimension[] = [
   {
     no: "02",
     title: "被動收入閉環",
-    tagline: "把會費轉化為資產與收益",
+    tagline: "把你的熱愛轉化為資產與收益",
     en: "PASSIVE INCOME LOOP",
     detail:
       "透過全球真愛生態圈內各板塊互相導流與收益共享機制，讓會員不僅能安心學習、有效拓展人脈，還能與同頻人深度連結找到志同道合的朋友，更能建立可持續的被動收益流。",
